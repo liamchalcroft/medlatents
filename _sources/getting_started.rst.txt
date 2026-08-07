@@ -11,6 +11,15 @@ Prerequisites
 * PyTorch >= 2.0
 * CUDA (optional, for GPU acceleration)
 
+Install from PyPI
+~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   pip install medlatents
+
+This pulls in ``medtokenizers`` and ``medrs`` for tokenization and I/O.
+
 Install from Source
 ~~~~~~~~~~~~~~~~~~~
 
