@@ -8,7 +8,7 @@ and this project adheres to
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-06-02
+## [0.1.0] - 2026-08-07
 
 Initial public release, accompanying the paper "Tokenizer-Generator Coupling in
 Medical Image Generation".
