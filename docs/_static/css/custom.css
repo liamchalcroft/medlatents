@@ -1,0 +1,79 @@
+/* Custom CSS for MedLatents Documentation */
+
+/* Theme customization */
+.wy-nav-content {
+  max-width: 1200px;
+}
+
+.wy-side-nav-search {
+  background-color: #2980B9;
+}
+
+.wy-side-nav-search input[type="text"] {
+  border-color: #2980B9;
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+/* Code block styling */
+.highlight {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+/* Admonition styling */
+.admonition {
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.admonition.note {
+  border-left: 4px solid #2980B9;
+}
+
+.admonition.warning {
+  border-left: 4px solid #f0ad4e;
+}
+
+.admonition.tip {
+  border-left: 4px solid #5cb85c;
+}
+
+/* Table styling */
+.rst-content table.docutils {
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.rst-content table.docutils th,
+.rst-content table.docutils td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+}
+
+.rst-content table.docutils th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .wy-nav-content {
+    max-width: 100%;
+  }
+
+  .wy-nav-top {
+    display: block;
+  }
+}

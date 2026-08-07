@@ -1,0 +1,198 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+cover/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+.vs/
+.atom/
+.buildpath
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+*.tar.gz
+*.tgz
+*.zip
+*.rar
+*.7z
+
+# Model files and data
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.h5
+*.hdf5
+*.npy
+*.npz
+data/
+!src/medlatents/data/
+weights/
+checkpoints/
+runs/
+wandb/
+
+# Documentation
+docs/_build/
+site/
+
+# Misc
+*.bak
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.env.local
+.env.*.local
+
+# Project-specific data and results
+# Large data files
+latent_data/
+latent_data.zip
+*.zip
+*.tar
+*.tar.gz
+*.bin
+
+# Generated plots and visualizations
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+lr_schedule.png
+
+# Experiment results and outputs
+results/
+output/
+experiments/
+samples/
+generated/
+
+# Cache and temporary files
+cache/
+temp/
+tmp/
+.cache/
+
+# Local configuration and data
+local_config/
+local_data/
+user_data/
+
+# Model artifacts and checkpoints (already covered but being explicit)
+models/
+saved_models/
+model_checkpoints/
+
+# Training artifacts
+training_logs/
+training_output/
+*.ckpt
+*.safetensors
+
+# Data processing artifacts
+processed_data/
+preprocessed/
+intermediate_data/
+
+# Evaluation results
+eval_results/
+evaluation/
+metrics/
+!src/medlatents/evaluation/
+!src/medlatents/evaluation/*.py
+
+# Debug and development files
+debug_*
+*.debug
+
+# Paper: kept on-device only, not part of the public repo.
+# Anchored to the repository root, so only the top-level paper/ is ignored.
+/paper/
+
+# Chrome traces written by scripts/profile_models.py
+profile_*.json
+
+# Local agent/tool dirs
+.agents/
+.codex/
+.claude/
+artifact/

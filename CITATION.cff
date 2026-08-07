@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: medlatents
+abstract: >-
+  Discrete and continuous latent generative models for medical imagery,
+  interoperable with pretrained tokenizers from medtokenizers.
+type: software
+authors:
+  - given-names: Liam
+    family-names: Chalcroft
+    email: liamchalcroft@gmail.com
+version: 0.1.0
+date-released: "2026-06-02"
+license: MIT
+repository-code: "https://github.com/liamchalcroft/medlatents"
+url: "https://github.com/liamchalcroft/medlatents"
+keywords:
+  - generative-models
+  - medical-imaging
+  - diffusion-models
+  - flow-matching
+  - discrete-latents
+  - tokenizers
+preferred-citation:
+  type: article
+  title: "Tokenizer-Generator Coupling in Medical Image Generation"
+  authors:
+    - given-names: Liam
+      family-names: Chalcroft
+  year: 2026
+  notes: "arXiv preprint, to appear"
