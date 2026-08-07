@@ -38,12 +38,19 @@ images -> medrs (load) -> medtokenizers (tokenize) -> medlatents (generate) -> m
 ## Installation
 
 ```bash
-# Python 3.10+ is required (modern type hints)
-python -m pip install -e .
-python -m pip install -e ".[dev]"  # For development
+pip install medlatents
 ```
 
-Requires `medtokenizers` and `medrs` for tokenization and I/O operations.
+Python 3.10+ is required (modern type hints). This pulls in `medtokenizers` and
+`medrs` for tokenization and I/O operations.
+
+To work on the library itself, install from a checkout instead:
+
+```bash
+git clone https://github.com/liamchalcroft/medlatents.git
+cd medlatents
+python -m pip install -e ".[dev]"
+```
 
 ## Quickstart
 
