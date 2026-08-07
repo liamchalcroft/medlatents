@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 3: Inpainting &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 4: Evaluating Models" href="04_evaluation.html" />
+    <link rel="prev" title="Tutorial 2: Generating Samples" href="02_generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 3: Inpainting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-workflow">The workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-mask">Creating a mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#end-to-end-inpainting">End-to-end inpainting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#per-architecture-entry-points">Per-architecture entry points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#super-resolution">Super-resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-large-volumes">Working with large volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preserving-metadata">Preserving metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 3: Inpainting</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/tutorials/03_inpainting.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-3-inpainting">
+<h1>Tutorial 3: Inpainting<a class="headerlink" href="#tutorial-3-inpainting" title="Link to this heading"></a></h1>
+<p>Inpainting fills missing or corrupted regions of a medical image while keeping
+the known region fixed. MedLatents supports inpainting for every discrete
+architecture and provides both an end-to-end helper and per-architecture entry
+points. The relevant API lives in <a class="reference internal" href="../api/inference.html"><span class="doc">Inference API</span></a>.</p>
+<section id="the-workflow">
+<h2>The workflow<a class="headerlink" href="#the-workflow" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Encode the known image to latent tokens.</p></li>
+<li><p>Build a mask marking which tokens are unknown.</p></li>
+<li><p>Resample only the masked tokens, conditioned on the known ones.</p></li>
+<li><p>Decode back to image space.</p></li>
+</ol>
+<p>The <a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_volume" title="medlatents.inference.inpaint_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_volume()</span></code></a> helper bundles all four steps;
+the other <code class="xref py py-mod docutils literal notranslate"><span class="pre">medlatents.inference</span></code> functions expose them individually for
+token-level control.</p>
+</section>
+<section id="creating-a-mask">
+<h2>Creating a mask<a class="headerlink" href="#creating-a-mask" title="Link to this heading"></a></h2>
+<p>Use <a class="reference internal" href="../api/inference.html#medlatents.inference.create_spatial_mask" title="medlatents.inference.create_spatial_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_spatial_mask()</span></code></a> to mark the region to
+fill. Masks are defined in image space and converted to token space internally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_spatial_mask</span>
+
+<span class="c1"># Block region in a single 2D slice</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+    <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+    <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">192</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="end-to-end-inpainting">
+<h2>End-to-end inpainting<a class="headerlink" href="#end-to-end-inpainting" title="Link to this heading"></a></h2>
+<p>With a loaded generator, inpaint a masked region in one call using
+<a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_volume" title="medlatents.inference.inpaint_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_volume()</span></code></a>, which encodes, resamples the
+masked tokens, and decodes for you:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteLatentGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">inpaint_volume</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteLatentGenerator</span><span class="o">.</span><span class="n">from_checkpoints</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;checkpoints/model.pt&quot;</span><span class="p">,</span>
+    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">&quot;tokenizer.pt&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">inpainted</span> <span class="o">=</span> <span class="n">inpaint_volume</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+    <span class="n">volume</span><span class="o">=</span><span class="n">corrupted_image</span><span class="p">,</span>
+    <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="per-architecture-entry-points">
+<h2>Per-architecture entry points<a class="headerlink" href="#per-architecture-entry-points" title="Link to this heading"></a></h2>
+<p>When you are working directly with a model and tokens, choose the function that
+matches your architecture:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_maskgit" title="medlatents.inference.inpaint_maskgit"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_maskgit()</span></code></a> – confidence-guided parallel
+refilling for MaskGIT.</p></li>
+<li><p><a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_autoregressive" title="medlatents.inference.inpaint_autoregressive"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_autoregressive()</span></code></a> – causal refilling for
+autoregressive models.</p></li>
+<li><p><a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_flow_matching" title="medlatents.inference.inpaint_flow_matching"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_flow_matching()</span></code></a> – flow-based inpainting.</p></li>
+<li><p><a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_diffusion_repaint" title="medlatents.inference.inpaint_diffusion_repaint"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_diffusion_repaint()</span></code></a> – RePaint-style
+resampling for D3PM.</p></li>
+<li><p><a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_bayesian_flow" title="medlatents.inference.inpaint_bayesian_flow"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_bayesian_flow()</span></code></a> – inpainting for Bayesian
+flow models.</p></li>
+</ul>
+<p>For 3D data, <a class="reference internal" href="../api/inference.html#medlatents.inference.inpaint_volume" title="medlatents.inference.inpaint_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">inpaint_volume()</span></code></a> orchestrates masking
+and decoding over a whole volume.</p>
+</section>
+<section id="super-resolution">
+<h2>Super-resolution<a class="headerlink" href="#super-resolution" title="Link to this heading"></a></h2>
+<p>The same conditional-inference machinery upscales low-resolution scans.
+<a class="reference internal" href="../api/inference.html#medlatents.inference.super_resolve_slices" title="medlatents.inference.super_resolve_slices"><code class="xref py py-func docutils literal notranslate"><span class="pre">super_resolve_slices()</span></code></a> and
+<a class="reference internal" href="../api/inference.html#medlatents.inference.anisotropic_super_resolution" title="medlatents.inference.anisotropic_super_resolution"><code class="xref py py-func docutils literal notranslate"><span class="pre">anisotropic_super_resolution()</span></code></a> are the main entry
+points, with <a class="reference internal" href="../api/inference.html#medlatents.inference.compare_with_interpolation" title="medlatents.inference.compare_with_interpolation"><code class="xref py py-func docutils literal notranslate"><span class="pre">compare_with_interpolation()</span></code></a> for a
+baseline comparison.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">anisotropic_super_resolution</span>
+
+<span class="c1"># target_shape is the absolute (D, H, W) to upscale to; here we 4x the</span>
+<span class="c1"># through-plane axis of a (1, 1, 64, 256, 256) volume and keep the rest.</span>
+<span class="n">high_res</span> <span class="o">=</span> <span class="n">anisotropic_super_resolution</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+    <span class="n">volume</span><span class="o">=</span><span class="n">low_res_volume</span><span class="p">,</span>
+    <span class="n">target_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="working-with-large-volumes">
+<h2>Working with large volumes<a class="headerlink" href="#working-with-large-volumes" title="Link to this heading"></a></h2>
+<p>For volumes that do not fit in memory, tile encode/decode with
+<a class="reference internal" href="../api/inference.html#medlatents.inference.encode_large_volume" title="medlatents.inference.encode_large_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">encode_large_volume()</span></code></a>,
+<a class="reference internal" href="../api/inference.html#medlatents.inference.decode_large_volume" title="medlatents.inference.decode_large_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">decode_large_volume()</span></code></a>, and
+<a class="reference internal" href="../api/inference.html#medlatents.inference.reconstruct_large_volume" title="medlatents.inference.reconstruct_large_volume"><code class="xref py py-func docutils literal notranslate"><span class="pre">reconstruct_large_volume()</span></code></a>.</p>
+</section>
+<section id="preserving-metadata">
+<h2>Preserving metadata<a class="headerlink" href="#preserving-metadata" title="Link to this heading"></a></h2>
+<p>Inpainting and super-resolution operate on latents, but downstream
+reconstruction fidelity depends on orientation and spacing. Carry the
+<code class="docutils literal notranslate"><span class="pre">affine</span></code> / <code class="docutils literal notranslate"><span class="pre">spacing</span></code> metadata attached at load time through your pipeline –
+see <a class="reference internal" href="../token_interface.html"><span class="doc">Token Interface</span></a> for the metadata contract.</p>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="04_evaluation.html"><span class="doc">Tutorial 4: Evaluating Models</span></a> – quantify reconstruction and generation quality.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="02_generation.html" class="btn btn-neutral float-left" title="Tutorial 2: Generating Samples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="04_evaluation.html" class="btn btn-neutral float-right" title="Tutorial 4: Evaluating Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

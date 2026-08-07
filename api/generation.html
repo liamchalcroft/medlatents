@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generation API &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Inference API" href="inference.html" />
+    <link rel="prev" title="Training API" href="training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generation API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#discrete-latent-generation">Discrete Latent Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator.__init__"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator.from_checkpoints"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator.from_checkpoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator.generate"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator.generate_volumes"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator.generate_volumes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.DiscreteLatentGenerator.inpaint_volumes"><code class="docutils literal notranslate"><span class="pre">DiscreteLatentGenerator.inpaint_volumes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#continuous-latent-generation">Continuous Latent Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.generation.ContinuousLatentGenerator"><code class="docutils literal notranslate"><span class="pre">ContinuousLatentGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.ContinuousLatentGenerator.__init__"><code class="docutils literal notranslate"><span class="pre">ContinuousLatentGenerator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.ContinuousLatentGenerator.generate"><code class="docutils literal notranslate"><span class="pre">ContinuousLatentGenerator.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.ContinuousLatentGenerator.decode_latents"><code class="docutils literal notranslate"><span class="pre">ContinuousLatentGenerator.decode_latents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.generation.ContinuousLatentGenerator.generate_volumes"><code class="docutils literal notranslate"><span class="pre">ContinuousLatentGenerator.generate_volumes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Generation API</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/api/generation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generation-api">
+<h1>Generation API<a class="headerlink" href="#generation-api" title="Link to this heading"></a></h1>
+<p>High-level, checkpoint-driven generation for discrete and continuous latent
+models. These classes wrap a trained model together with its tokenizer so you
+can go from a checkpoint to decoded images in a few lines. For low-level
+sampling primitives (schedulers, guidance, early stopping), see
+<a class="reference internal" href="sampling.html"><span class="doc">Sampling</span></a>.</p>
+<section id="discrete-latent-generation">
+<h2>Discrete Latent Generation<a class="headerlink" href="#discrete-latent-generation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.generation.</span></span><span class="sig-name descname"><span class="pre">DiscreteLatentGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L45-L363"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Unified generator for discrete latent generative models.</p>
+<p>Supports:
+- autoreg: Autoregressive generation
+- maskgit: Iterative parallel generation (MaskGIT)
+- flow: Discrete flow matching generation
+- diffusion: D3PM discrete diffusion generation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'autoreg'</span></code>, <code class="docutils literal notranslate"><span class="pre">'maskgit'</span></code>, <code class="docutils literal notranslate"><span class="pre">'flow'</span></code>, <code class="docutils literal notranslate"><span class="pre">'diffusion'</span></code>]</span>)</p></li>
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>tokenizer</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="data.html#medlatents.data.DiscreteTokenizer" title="medtokenizers.networks.discrete.DiscreteTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteTokenizer</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L56-L83"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'autoreg'</span></code>, <code class="docutils literal notranslate"><span class="pre">'maskgit'</span></code>, <code class="docutils literal notranslate"><span class="pre">'flow'</span></code>, <code class="docutils literal notranslate"><span class="pre">'diffusion'</span></code>]</span>)</p></li>
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>tokenizer</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="data.html#medlatents.data.DiscreteTokenizer" title="medtokenizers.networks.discrete.DiscreteTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteTokenizer</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator.from_checkpoints">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_checkpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator.from_checkpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L100-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator.from_checkpoints" title="Link to this definition"></a></dt>
+<dd><p>Load generator from model and tokenizer checkpoints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'autoreg'</span></code>, <code class="docutils literal notranslate"><span class="pre">'maskgit'</span></code>, <code class="docutils literal notranslate"><span class="pre">'flow'</span></code>, <code class="docutils literal notranslate"><span class="pre">'diffusion'</span></code>]</span>)</p></li>
+<li><p><strong>model_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>tokenizer_path</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>weights_only</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L142-L192"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator.generate" title="Link to this definition"></a></dt>
+<dd><p>Generate samples based on model type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of samples to generate</p></li>
+<li><p><strong>seq_length</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Length of sequences</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>) – Sampling temperature</p></li>
+<li><p><strong>top_k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>) – Top-k sampling parameter</p></li>
+<li><p><strong>num_steps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>) – Number of iterative steps (maskgit/flow/diffusion)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>) – Random seed for reproducibility (None for random)</p></li>
+<li><p><strong>**kwargs</strong> – Additional model-specific parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Generated token sequences [num_samples, seq_length]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator.generate_volumes">
+<span class="sig-name descname"><span class="pre">generate_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator.generate_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L284-L320"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator.generate_volumes" title="Link to this definition"></a></dt>
+<dd><p>Generate samples and save as NIfTI volumes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><strong>seq_length</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><strong>output_dir</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>top_k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>num_steps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.DiscreteLatentGenerator.inpaint_volumes">
+<span class="sig-name descname"><span class="pre">inpaint_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">likelihood_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.005</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#DiscreteLatentGenerator.inpaint_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L322-L363"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.DiscreteLatentGenerator.inpaint_volumes" title="Link to this definition"></a></dt>
+<dd><p>Inpaint anomalies in volumes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_pattern</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>output_dir</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>likelihood_threshold</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">0.005</span></code>)</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>top_k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="continuous-latent-generation">
+<h2>Continuous Latent Generation<a class="headerlink" href="#continuous-latent-generation" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.generation.ContinuousLatentGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.generation.</span></span><span class="sig-name descname"><span class="pre">ContinuousLatentGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#ContinuousLatentGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L366-L528"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.ContinuousLatentGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Generator for continuous latent diffusion and flow models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'diffusion'</span></code>, <code class="docutils literal notranslate"><span class="pre">'flow'</span></code>]</span>)</p></li>
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>tokenizer</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="data.html#medlatents.data.ContinuousTokenizer" title="medtokenizers.networks.continuous.ContinuousTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousTokenizer</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+<li><p><strong>diffusion</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="diffusion.html#medlatents.diffusion.ContinuousGaussianDiffusion" title="medlatents.diffusion.continuous.ContinuousGaussianDiffusion"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousGaussianDiffusion</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>flow</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="flow_matching.html#medlatents.flow_matching.RectifiedFlow" title="medlatents.flow_matching.continuous.RectifiedFlow"><code class="xref py py-class docutils literal notranslate"><span class="pre">RectifiedFlow</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.ContinuousLatentGenerator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#ContinuousLatentGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L369-L397"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.ContinuousLatentGenerator.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'diffusion'</span></code>, <code class="docutils literal notranslate"><span class="pre">'flow'</span></code>]</span>)</p></li>
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>tokenizer</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="data.html#medlatents.data.ContinuousTokenizer" title="medtokenizers.networks.continuous.ContinuousTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousTokenizer</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+<li><p><strong>diffusion</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="diffusion.html#medlatents.diffusion.ContinuousGaussianDiffusion" title="medlatents.diffusion.continuous.ContinuousGaussianDiffusion"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousGaussianDiffusion</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>flow</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="flow_matching.html#medlatents.flow_matching.RectifiedFlow" title="medlatents.flow_matching.continuous.RectifiedFlow"><code class="xref py py-class docutils literal notranslate"><span class="pre">RectifiedFlow</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.ContinuousLatentGenerator.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guidance_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#ContinuousLatentGenerator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L428-L473"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.ContinuousLatentGenerator.generate" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><strong>latent_shape</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>guidance_scale</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>num_steps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>initial_noise</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>model_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.ContinuousLatentGenerator.decode_latents">
+<span class="sig-name descname"><span class="pre">decode_latents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latents</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">decode_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#ContinuousLatentGenerator.decode_latents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L475-L489"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.ContinuousLatentGenerator.decode_latents" title="Link to this definition"></a></dt>
+<dd><p>Decode latents to reconstruction using tokenizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>latents</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.generation.ContinuousLatentGenerator.generate_volumes">
+<span class="sig-name descname"><span class="pre">generate_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guidance_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/generation/generator.html#ContinuousLatentGenerator.generate_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/generation/generator.py#L491-L528"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.generation.ContinuousLatentGenerator.generate_volumes" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><strong>output_dir</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>)</p></li>
+<li><p><strong>latent_shape</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>guidance_scale</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>num_steps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</p></li>
+<li><p><strong>initial_noise</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>model_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>affine</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="training.html" class="btn btn-neutral float-left" title="Training API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="inference.html" class="btn btn-neutral float-right" title="Inference API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

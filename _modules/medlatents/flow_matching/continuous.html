@@ -1,0 +1,1015 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>medlatents.flow_matching.continuous &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">medlatents.flow_matching.continuous</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for medlatents.flow_matching.continuous</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Continuous flow-matching utilities for latent spaces.</span>
+
+<span class="sd">Implements:</span>
+<span class="sd">- Rectified flow with straight-line trajectories</span>
+<span class="sd">- RF++ (Reflow iteration for straighter paths)</span>
+<span class="sd">- Higher-order ODE solvers (Euler, Heun, RK4)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..sampling.flow_diffusion</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample_with_cfg_flow</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># ODE Solvers</span>
+<span class="c1"># ============================================================================</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">euler_step</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Euler step for ODE integration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Velocity field v(x, t)</span>
+<span class="sd">        x: Current state</span>
+<span class="sd">        t: Current time</span>
+<span class="sd">        dt: Step size</span>
+<span class="sd">        y: Conditioning</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Next state x + v(x, t) * dt</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">velocity</span> <span class="o">*</span> <span class="n">dt</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">heun_step</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Heun&#39;s method (2nd order Runge-Kutta) for ODE integration.</span>
+
+<span class="sd">    Predictor-corrector method with better accuracy than Euler.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Velocity field v(x, t)</span>
+<span class="sd">        x: Current state</span>
+<span class="sd">        t: Current time</span>
+<span class="sd">        dt: Step size</span>
+<span class="sd">        y: Conditioning</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Next state using Heun&#39;s method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">t_next_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># Predictor (Euler step)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+    <span class="n">x_pred</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">v1</span> <span class="o">*</span> <span class="n">dt</span>
+
+    <span class="c1"># Corrector</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_pred</span><span class="p">,</span> <span class="n">t_next_tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Average of slopes</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">v1</span> <span class="o">+</span> <span class="n">v2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rk4_step</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    4th order Runge-Kutta method for ODE integration.</span>
+
+<span class="sd">    Higher accuracy than Euler or Heun at cost of 4 model evaluations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Velocity field v(x, t)</span>
+<span class="sd">        x: Current state</span>
+<span class="sd">        t: Current time</span>
+<span class="sd">        dt: Step size</span>
+<span class="sd">        y: Conditioning</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Next state using RK4</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="c1"># k1</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># k2</span>
+    <span class="n">t_half</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">k2</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">t_half</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># k3</span>
+    <span class="n">k3</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">k2</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">t_half</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># k4</span>
+    <span class="n">t_next</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">k4</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">k3</span> <span class="o">*</span> <span class="n">dt</span><span class="p">,</span> <span class="n">t_next</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Weighted average</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">k1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k3</span> <span class="o">+</span> <span class="n">k4</span><span class="p">)</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">/</span> <span class="mi">6</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call model with standardized (x, t, y) signature.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RectifiedFlow">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RectifiedFlow</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rectified flow matching for continuous latent variables.</span>
+
+<span class="sd">    Rectified flow learns straight-line trajectories between noise and data.</span>
+<span class="sd">    Instead of curved diffusion paths, the flow follows</span>
+<span class="sd">    ``x(t) = (1-t)·x_0 + t·x_1``,</span>
+<span class="sd">    where x_0 is Gaussian noise and x_1 is the data distribution.</span>
+<span class="sd">    The model learns to predict the constant velocity: ``v = x_1 - x_0``.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Liu et al., &quot;Flow Straight and Fast: Learning to Generate and Transfer</span>
+<span class="sd">        Data with Rectified Flow&quot; https://arxiv.org/abs/2209.03003</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RectifiedFlow.__init__">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">latent_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="n">latent_shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span> <span class="o">=</span> <span class="n">base_std</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+<div class="viewcode-block" id="RectifiedFlow.sample_base">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.sample_base">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;latent_shape unknown. Call compute_loss at least once before sampling or set explicitly.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span></div>
+
+
+<div class="viewcode-block" id="RectifiedFlow.sample_path">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.sample_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_path</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x0</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample a point along the straight-line path from x_0 to x_1.</span>
+
+<span class="sd">        The rectified flow follows a straight path: x(t) = (1-t)·x_0 + t·x_1</span>
+<span class="sd">        with constant velocity: v = dx/dt = x_1 - x_0</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x0: Starting point (noise) [batch, ...]</span>
+<span class="sd">            x1: Ending point (data) [batch, ...]</span>
+<span class="sd">            t: Time in [0, 1] [batch]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            x_t: Point on path at time t</span>
+<span class="sd">            target_v: Constant velocity vector (x_1 - x_0)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x_t</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">x1</span>
+        <span class="n">target_v</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x0</span>
+        <span class="k">return</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">target_v</span></div>
+
+
+<div class="viewcode-block" id="RectifiedFlow.compute_loss">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.compute_loss">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_samples</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute rectified flow training loss.</span>
+
+<span class="sd">        The model learns to predict the velocity field v(x_t, t) = x_1 - x_0</span>
+<span class="sd">        that pushes noise x_0 to data x_1 along straight paths.</span>
+
+<span class="sd">        Loss: E_{t~U(0,1), x_0~p_0, x_1~p_data} ||v_θ(x_t, t) - (x_1 - x_0)||²</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: Velocity prediction network</span>
+<span class="sd">            x1: Data samples [batch, ...]</span>
+<span class="sd">            y: Optional conditioning (e.g., class labels)</span>
+<span class="sd">            base_samples: Optional pre-sampled noise x_0. Must have same shape as x1.</span>
+<span class="sd">            model_kwargs: Additional model arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            MSE loss between predicted and true velocity</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If base_samples shape doesn&#39;t match x1 shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">base_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">base_samples</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;base_samples shape </span><span class="si">{</span><span class="n">base_samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> must match x1 shape </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">base_samples</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span>
+
+        <span class="n">x_t</span><span class="p">,</span> <span class="n">target_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_path</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="n">pred_v</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target_v</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RectifiedFlow.sample">
+<a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.sample">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euler&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">null_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample from the learned flow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: Velocity field v(x, t)</span>
+<span class="sd">            batch_size: Number of samples</span>
+<span class="sd">            num_steps: Number of integration steps</span>
+<span class="sd">            solver: ODE solver (&#39;euler&#39;, &#39;heun&#39;, &#39;rk4&#39;)</span>
+<span class="sd">            y: Conditioning</span>
+<span class="sd">            guidance_scale: CFG scale</span>
+<span class="sd">            null_y: Null conditioning for CFG</span>
+<span class="sd">            initial_state: Optional initial state</span>
+<span class="sd">            model_kwargs: Additional model arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Generated samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">initial_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_base</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">initial_state</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">time_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Select solver</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;euler&quot;</span><span class="p">:</span>
+            <span class="n">step_fn</span> <span class="o">=</span> <span class="n">euler_step</span>
+        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;heun&quot;</span><span class="p">:</span>
+            <span class="n">step_fn</span> <span class="o">=</span> <span class="n">heun_step</span>
+        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;rk4&quot;</span><span class="p">:</span>
+            <span class="n">step_fn</span> <span class="o">=</span> <span class="n">rk4_step</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown solver: </span><span class="si">{</span><span class="n">solver</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create CFG model wrapper outside loop to avoid closure issues</span>
+        <span class="n">use_cfg</span> <span class="o">=</span> <span class="n">guidance_scale</span> <span class="o">!=</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">null_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">use_cfg</span><span class="p">:</span>
+            <span class="c1"># Capture current values explicitly to avoid closure variable capture issues</span>
+            <span class="n">_y</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="n">_null_y</span> <span class="o">=</span> <span class="n">null_y</span>
+            <span class="n">_guidance_scale</span> <span class="o">=</span> <span class="n">guidance_scale</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">cfg_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">sample_with_cfg_flow</span><span class="p">(</span>
+                    <span class="n">model</span><span class="p">,</span>
+                    <span class="n">x</span><span class="p">,</span>
+                    <span class="n">t</span><span class="p">,</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="n">_y</span><span class="p">,</span>
+                    <span class="n">guidance_scale</span><span class="o">=</span><span class="n">_guidance_scale</span><span class="p">,</span>
+                    <span class="n">null_condition</span><span class="o">=</span><span class="n">_null_y</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="n">effective_model</span> <span class="o">=</span> <span class="n">cfg_model</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">effective_model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+            <span class="n">t_scalar</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_grid</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">step_fn</span><span class="p">(</span><span class="n">effective_model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_scalar</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">dt</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RectifiedFlowPP</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rectified Flow++ (RF++): Iterative reflow for straighter paths.</span>
+
+<span class="sd">    RF++ improves rectified flow by iteratively straightening the trajectories:</span>
+
+<span class="sd">    1. Train initial RF model</span>
+<span class="sd">    2. Generate trajectories using the learned model</span>
+<span class="sd">    3. Retrain on the generated trajectories (not straight lines)</span>
+<span class="sd">    4. Repeat for further straightening</span>
+
+<span class="sd">    Reference: &quot;Improving the Training of Rectified Flows&quot; (arXiv:2405.20320)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        base_rf: Base RectifiedFlow instance</span>
+<span class="sd">        num_reflow_iterations: Number of reflow iterations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">base_rf</span><span class="p">:</span> <span class="n">RectifiedFlow</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_reflow_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">latent_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_reflow_iterations</span> <span class="o">=</span> <span class="n">num_reflow_iterations</span>
+
+        <span class="k">if</span> <span class="n">base_rf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">base_rf</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="n">base_rf</span><span class="o">.</span><span class="n">latent_shape</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span> <span class="o">=</span> <span class="n">base_rf</span><span class="o">.</span><span class="n">base_std</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">base_rf</span><span class="o">.</span><span class="n">device</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">RectifiedFlow</span><span class="p">(</span>
+                <span class="n">latent_shape</span><span class="o">=</span><span class="n">latent_shape</span><span class="p">,</span>
+                <span class="n">base_std</span><span class="o">=</span><span class="n">base_std</span><span class="p">,</span>
+                <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="n">latent_shape</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span> <span class="o">=</span> <span class="n">base_std</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample_base</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_trajectory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">x0</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a trajectory from x0 to x1 using the current model.</span>
+
+<span class="sd">        This trajectory is used as the training target for reflow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: Current velocity model</span>
+<span class="sd">            x0: Starting point (noise)</span>
+<span class="sd">            x1: Target point (data) - used to get endpoint</span>
+<span class="sd">            num_steps: Number of integration steps</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            x0_trajectory: Re-generated starting point</span>
+<span class="sd">            x1: Target (same as input)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># For reflow, we generate a trajectory from x0</span>
+        <span class="c1"># The target is still x1, but we use the model&#39;s learned path</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">time_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_steps</span><span class="p">):</span>
+            <span class="n">t_scalar</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_grid</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">euler_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_scalar</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">x1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_reflow_loss</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_trajectory_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute reflow loss using trajectories from the previous iteration.</span>
+
+<span class="sd">        In reflow, we train on model-generated trajectories instead of straight lines.</span>
+<span class="sd">        This progressively straightens the paths.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model: Velocity model</span>
+<span class="sd">            x1: Data samples</span>
+<span class="sd">            y: Conditioning</span>
+<span class="sd">            num_trajectory_steps: Steps for trajectory generation</span>
+<span class="sd">            model_kwargs: Additional model arguments</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Reflow loss</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Sample initial noise</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span>
+
+        <span class="c1"># First iteration: standard rectified flow on straight noise-&gt;data lines.</span>
+        <span class="c1"># Later iterations (reflow): integrate the current model from x0 to obtain</span>
+        <span class="c1"># x1_hat, then learn the straight path x0 -&gt; x1_hat. Training on the model&#39;s</span>
+        <span class="c1"># own endpoints is what progressively straightens the trajectories.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">x_t</span><span class="p">,</span> <span class="n">target_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample_path</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1_hat</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_trajectory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="n">num_trajectory_steps</span><span class="p">)</span>
+            <span class="n">x_t</span><span class="p">,</span> <span class="n">target_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample_path</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1_hat</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="n">pred_v</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target_v</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">advance_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance to next reflow iteration.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euler&quot;</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">null_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample using the reflow-trained model.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_steps</span><span class="o">=</span><span class="n">num_steps</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">guidance_scale</span><span class="o">=</span><span class="n">guidance_scale</span><span class="p">,</span>
+            <span class="n">null_y</span><span class="o">=</span><span class="n">null_y</span><span class="p">,</span>
+            <span class="n">initial_state</span><span class="o">=</span><span class="n">initial_state</span><span class="p">,</span>
+            <span class="n">model_kwargs</span><span class="o">=</span><span class="n">model_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;RectifiedFlow&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;RectifiedFlowPP&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;euler_step&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;heun_step&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rk4_step&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

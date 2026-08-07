@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Autoregressive Models" href="guides/autoregressive.html" />
+    <link rel="prev" title="MedLatents Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-from-source">Install from Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-with-development-dependencies">Install with Development Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-with-documentation-dependencies">Install with Documentation Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#train-your-first-model">Train Your First Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-samples">Generate Samples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#maskgit-training">MaskGIT Training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inpainting">Inpainting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/getting_started.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Python &gt;= 3.10</p></li>
+<li><p>PyTorch &gt;= 2.0</p></li>
+<li><p>CUDA (optional, for GPU acceleration)</p></li>
+</ul>
+</section>
+<section id="install-from-source">
+<h3>Install from Source<a class="headerlink" href="#install-from-source" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/liamchalcroft/medlatents.git
+<span class="nb">cd</span><span class="w"> </span>medlatents
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="install-with-development-dependencies">
+<h3>Install with Development Dependencies<a class="headerlink" href="#install-with-development-dependencies" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="install-with-documentation-dependencies">
+<h3>Install with Documentation Dependencies<a class="headerlink" href="#install-with-documentation-dependencies" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[docs]&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<section id="train-your-first-model">
+<h3>Train Your First Model<a class="headerlink" href="#train-your-first-model" title="Link to this heading"></a></h3>
+<p>The snippet below trains a tiny model with a plain next-token loop – a complete,
+copy-pasteable starting point. For the full, runnable version see
+<code class="docutils literal notranslate"><span class="pre">examples/quickstart.py</span></code>; for real workloads on tokenized medical imagery use
+<a class="reference internal" href="api/training.html#medlatents.training.DiscreteLatentTrainer" title="medlatents.training.DiscreteLatentTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteLatentTrainer</span></code></a> with dataloaders (see
+<code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code> and <a class="reference internal" href="tutorials/01_training.html"><span class="doc">Tutorial 1: Training Models</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoregressiveTransformer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.configs</span><span class="w"> </span><span class="kn">import</span> <span class="n">MODEL_CONFIGS</span>
+
+<span class="c1"># Create a &quot;nano&quot; model from the shared size presets</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">MODEL_CONFIGS</span><span class="p">[</span><span class="s2">&quot;nano&quot;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoregressiveTransformer</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># Synthetic token sequences (replace with your tokenized data)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>           <span class="c1"># [B, L-1, vocab]</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-samples">
+<h3>Generate Samples<a class="headerlink" href="#generate-samples" title="Link to this heading"></a></h3>
+<p>Autoregressive generation is prompt-driven: pass a starting context and the
+target length.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>   <span class="c1"># [batch, prompt_len]</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated samples shape: </span><span class="si">{</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Output: Generated samples shape: torch.Size([4, 256])</span>
+</pre></div>
+</div>
+</section>
+<section id="maskgit-training">
+<h3>MaskGIT Training<a class="headerlink" href="#maskgit-training" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaskGIT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaskGITScheduler</span>
+
+<span class="c1"># Create MaskGIT model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MaskGIT</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="mi">192</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Create scheduler for masked training</span>
+<span class="n">scheduler</span> <span class="o">=</span> <span class="n">MaskGITScheduler</span><span class="p">(</span><span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="c1"># Train with masked language modeling objective</span>
+<span class="c1"># (See tutorials/01_training for the full example)</span>
+</pre></div>
+</div>
+</section>
+<section id="inpainting">
+<h3>Inpainting<a class="headerlink" href="#inpainting" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_spatial_mask</span><span class="p">,</span> <span class="n">inpaint_volume</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteLatentGenerator</span>
+
+<span class="c1"># Load generator (exposes the loaded .model and .tokenizer)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteLatentGenerator</span><span class="o">.</span><span class="n">from_checkpoints</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;checkpoints/model.pt&quot;</span><span class="p">,</span>
+    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">&quot;tokenizer.pt&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Create inpainting mask (block region); True keeps the known region,</span>
+<span class="c1"># False marks voxels to inpaint.</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+    <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+    <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">192</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Inpaint the masked region end-to-end (volume -&gt; tokens -&gt; inpaint -&gt; volume)</span>
+<span class="n">inpainted</span> <span class="o">=</span> <span class="n">inpaint_volume</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">tokenizer</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
+    <span class="n">volume</span><span class="o">=</span><span class="n">corrupted_image</span><span class="p">,</span>
+    <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Tutorials</strong>: Learn by doing with our step-by-step guides/tutorials</p></li>
+<li><p><strong>User Guides</strong>: Dive deeper into specific model types</p></li>
+<li><p><strong>API Reference</strong>: Detailed documentation for all modules</p></li>
+<li><p><strong>Research</strong>: Learn about the implemented methods</p></li>
+</ul>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>See the <code class="docutils literal notranslate"><span class="pre">scripts/</span></code> directory for complete examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code> - Unified training script for all model types</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/generate.py</span></code> - Generate samples from trained models</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/inpaint.py</span></code> - Inpaint missing regions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scripts/evaluate_model.py</span></code> - Evaluate model quality</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code> requires a discrete tokenizer checkpoint (<code class="docutils literal notranslate"><span class="pre">--tokenizer_path</span></code>) for on-the-fly tokenization.</p>
+</section>
+<section id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Link to this heading"></a></h2>
+<p>If you use MedLatents in your research, please cite:</p>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@software</span><span class="p">{</span><span class="nl">medlatents2026</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="p">=</span><span class="s">{MedLatents: Discrete and Continuous Latent Generative Models for Medical Imagery}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="p">=</span><span class="s">{Chalcroft, Liam}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="p">=</span><span class="s">{2026}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">url</span><span class="p">=</span><span class="s">{https://github.com/liamchalcroft/medlatents}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>GitHub Issues</strong>: Report bugs and request features</p></li>
+<li><p><strong>Documentation</strong>: <a class="reference external" href="https://liamchalcroft.github.io/medlatents">https://liamchalcroft.github.io/medlatents</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="MedLatents Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guides/autoregressive.html" class="btn btn-neutral float-right" title="Autoregressive Models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

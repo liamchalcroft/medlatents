@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 1: Training Models &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 2: Generating Samples" href="02_generation.html" />
+    <link rel="prev" title="Configs API" href="../api/configs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 1: Training Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-synthetic-data">Create synthetic data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autoregressive-transformer">1. Autoregressive Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maskgit">2. MaskGIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discrete-diffusion-d3pm">3. Discrete Diffusion (D3PM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flow-matching">4. Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bayesian-flow-networks">5. Bayesian Flow Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scaling-up-the-full-trainer">Scaling up: the full trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#saving-checkpoints">Saving checkpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-tips">Training tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 1: Training Models</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/tutorials/01_training.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-1-training-models">
+<h1>Tutorial 1: Training Models<a class="headerlink" href="#tutorial-1-training-models" title="Link to this heading"></a></h1>
+<p>This tutorial covers training the model families in MedLatents:</p>
+<ul class="simple">
+<li><p>Autoregressive Transformer</p></li>
+<li><p>MaskGIT</p></li>
+<li><p>Discrete Diffusion (D3PM)</p></li>
+<li><p>Flow Matching</p></li>
+<li><p>Bayesian Flow Networks</p></li>
+</ul>
+<p>There are two layers of API:</p>
+<ul class="simple">
+<li><p><strong>Self-contained training loops</strong> – a few lines of standard PyTorch around a
+model’s forward pass. These are the copy-pasteable starting points used below
+and in <code class="docutils literal notranslate"><span class="pre">examples/quickstart.py</span></code>; they run on CPU with synthetic tokens.</p></li>
+<li><p><strong>The full trainer</strong> (<a class="reference internal" href="../api/training.html"><span class="doc">Training API</span></a>):
+<a class="reference internal" href="../api/training.html#medlatents.training.DiscreteLatentTrainer" title="medlatents.training.DiscreteLatentTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteLatentTrainer</span></code></a> wraps
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">accelerate</span></code>, EMA, checkpointing, mixed precision, and Weights &amp; Biases
+logging for real workloads. It consumes <a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a>
+objects over tokenized medical imagery; see <code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code> for the
+command-line entry point.</p></li>
+</ul>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>All models share the same size presets and a common set of constructor
+arguments (<code class="docutils literal notranslate"><span class="pre">seq_length</span></code>, <code class="docutils literal notranslate"><span class="pre">vocab_size</span></code>, <code class="docutils literal notranslate"><span class="pre">hidden_size</span></code>, <code class="docutils literal notranslate"><span class="pre">depth</span></code>,
+<code class="docutils literal notranslate"><span class="pre">num_heads</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.configs</span><span class="w"> </span><span class="kn">import</span> <span class="n">MODEL_CONFIGS</span>
+
+<span class="c1"># Problem size and the shared &quot;nano&quot; preset.</span>
+<span class="n">SEQ_LENGTH</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">NUM_STEPS</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">DEVICE</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">MODEL_CONFIGS</span><span class="p">[</span><span class="s2">&quot;nano&quot;</span><span class="p">]</span>   <span class="c1"># {&#39;hidden_size&#39;: 192, &#39;depth&#39;: 8, &#39;num_heads&#39;: 3}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">DEVICE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-synthetic-data">
+<h2>Create synthetic data<a class="headerlink" href="#create-synthetic-data" title="Link to this heading"></a></h2>
+<p>For this tutorial we use synthetic token sequences in place of tokenized medical
+imagery. In a real workflow these tokens come from a discrete tokenizer (see
+<a class="reference internal" href="../token_interface.html"><span class="doc">Token Interface</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">VOCAB_SIZE</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">SEQ_LENGTH</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+<span class="n">val_data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">VOCAB_SIZE</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">SEQ_LENGTH</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training data shape: </span><span class="si">{</span><span class="n">train_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation data shape: </span><span class="si">{</span><span class="n">val_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="autoregressive-transformer">
+<h2>1. Autoregressive Transformer<a class="headerlink" href="#autoregressive-transformer" title="Link to this heading"></a></h2>
+<p>The autoregressive model is trained with a next-token cross-entropy objective:
+<code class="docutils literal notranslate"><span class="pre">model(x)</span></code> returns <code class="docutils literal notranslate"><span class="pre">[batch,</span> <span class="pre">seq,</span> <span class="pre">vocab]</span></code> logits, and each position predicts
+the following token.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoregressiveTransformer</span>
+
+<span class="n">ar_model</span> <span class="o">=</span> <span class="n">AutoregressiveTransformer</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="n">SEQ_LENGTH</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+    <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">ar_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="n">ar_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_STEPS</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,))]</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">ar_model</span><span class="p">(</span><span class="n">batch</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>          <span class="c1"># [B, L-1, vocab]</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="n">batch</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final AR training loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="maskgit">
+<h2>2. MaskGIT<a class="headerlink" href="#maskgit" title="Link to this heading"></a></h2>
+<p>MaskGIT is trained with a masked-token objective. <code class="docutils literal notranslate"><span class="pre">model(x)</span></code> returns logits of
+shape <code class="docutils literal notranslate"><span class="pre">[batch,</span> <span class="pre">seq,</span> <span class="pre">vocab]</span></code>; replace a random subset of tokens with the
+model’s <code class="docutils literal notranslate"><span class="pre">mask_token</span></code> and predict the originals at the masked positions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaskGIT</span>
+
+<span class="n">maskgit_model</span> <span class="o">=</span> <span class="n">MaskGIT</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="n">SEQ_LENGTH</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+    <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">maskgit_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="n">maskgit_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_STEPS</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,))]</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+    <span class="c1"># Randomly mask ~50% of the tokens for this step.</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+    <span class="n">masked</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">maskgit_model</span><span class="o">.</span><span class="n">mask_token</span><span class="p">)</span>
+
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">maskgit_model</span><span class="p">(</span><span class="n">masked</span><span class="p">)</span>            <span class="c1"># [B, L, vocab]</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="n">batch</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final MaskGIT training loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="discrete-diffusion-d3pm">
+<h2>3. Discrete Diffusion (D3PM)<a class="headerlink" href="#discrete-diffusion-d3pm" title="Link to this heading"></a></h2>
+<p>D3PM trains a denoising network over a discrete corruption process. The
+<a class="reference internal" href="../api/diffusion.html#medlatents.diffusion.D3PM" title="medlatents.diffusion.D3PM"><code class="xref py py-class docutils literal notranslate"><span class="pre">D3PM</span></code></a> object owns the forward process and its
+<a class="reference internal" href="../api/diffusion.html#medlatents.diffusion.D3PM.compute_loss" title="medlatents.diffusion.D3PM.compute_loss"><code class="xref py py-meth docutils literal notranslate"><span class="pre">compute_loss()</span></code></a> method samples a timestep,
+corrupts the batch, and scores the network’s prediction – so the training loop
+stays short.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteDiT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.diffusion</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3PM</span>
+
+<span class="n">d3pm_model</span> <span class="o">=</span> <span class="n">DiscreteDiT</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="n">SEQ_LENGTH</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="n">diffusion</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s2">&quot;absorbing&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">n_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">d3pm_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span> <span class="o">/</span> <span class="mf">1e6</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;D3PM network with </span><span class="si">{</span><span class="n">n_params</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">M parameters&quot;</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">d3pm_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="n">d3pm_model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">NUM_STEPS</span><span class="p">):</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">train_data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,))]</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">diffusion</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">d3pm_model</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">loss_type</span><span class="o">=</span><span class="s2">&quot;cross_entropy&quot;</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final D3PM training loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="flow-matching">
+<h2>4. Flow Matching<a class="headerlink" href="#flow-matching" title="Link to this heading"></a></h2>
+<p>Flow matching learns a transport map between a source distribution and the data
+distribution. Discrete flow matching composes a probability path with a
+timestep sampler; the <a class="reference internal" href="../guides/flow_matching.html"><span class="doc">Flow Matching Guide</span></a> guide and
+<a class="reference internal" href="../api/flow_matching.html#medlatents.flow_matching.DiscreteFlowTrainer" title="medlatents.flow_matching.DiscreteFlowTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteFlowTrainer</span></code></a> walk through a full path
+setup. The backbone is the same <code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteDiT</span></code> used for D3PM.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteDiT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.flow_matching</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_source_distribution</span>
+
+<span class="n">flow_model</span> <span class="o">=</span> <span class="n">DiscreteDiT</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="n">SEQ_LENGTH</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="c1"># A uniform source distribution over the vocabulary.</span>
+<span class="n">source_dist</span> <span class="o">=</span> <span class="n">get_source_distribution</span><span class="p">(</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Flow matching uses a path + trainer; see the flow-matching guide.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="bayesian-flow-networks">
+<h2>5. Bayesian Flow Networks<a class="headerlink" href="#bayesian-flow-networks" title="Link to this heading"></a></h2>
+<p>BFN frames generation as iterative Bayesian updating of a belief over tokens.
+The model takes the same constructor arguments as the other families; the
+<a class="reference internal" href="../guides/bayesian_flow.html"><span class="doc">Bayesian Flow Networks Guide</span></a> guide covers the accuracy schedules and training
+objective in detail.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">BayesianFlowTransformer</span>
+
+<span class="n">bfn_model</span> <span class="o">=</span> <span class="n">BayesianFlowTransformer</span><span class="p">(</span>
+    <span class="n">seq_length</span><span class="o">=</span><span class="n">SEQ_LENGTH</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="n">VOCAB_SIZE</span><span class="p">,</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+<span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">DEVICE</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BFN training uses an accuracy schedule; see the Bayesian flow guide.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="scaling-up-the-full-trainer">
+<h2>Scaling up: the full trainer<a class="headerlink" href="#scaling-up-the-full-trainer" title="Link to this heading"></a></h2>
+<p>The loops above are deliberately minimal. For real training runs use
+<a class="reference internal" href="../api/training.html#medlatents.training.DiscreteLatentTrainer" title="medlatents.training.DiscreteLatentTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteLatentTrainer</span></code></a>, which adds
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">accelerate</span></code> orchestration, EMA, checkpointing, mixed precision, gradient
+accumulation, and Weights &amp; Biases logging. It takes a <code class="docutils literal notranslate"><span class="pre">model_type</span></code> string,
+<a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a> objects, and a configuration object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">TensorDataset</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteLatentTrainer</span>
+
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">train_data</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">TensorDataset</span><span class="p">(</span><span class="n">val_data</span><span class="p">),</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">DiscreteLatentTrainer</span><span class="p">(</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span>       <span class="c1"># &quot;autoreg&quot;, &quot;maskgit&quot;, &quot;d3pm&quot;, &quot;flow&quot;, &quot;bayesian_flow&quot;</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">ar_model</span><span class="p">,</span>
+    <span class="n">train_loader</span><span class="o">=</span><span class="n">train_loader</span><span class="p">,</span>
+    <span class="n">val_loader</span><span class="o">=</span><span class="n">val_loader</span><span class="p">,</span>
+    <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>                   <span class="c1"># run configuration (lr, epochs, output_dir, ...)</span>
+<span class="p">)</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The command-line entry point <code class="docutils literal notranslate"><span class="pre">scripts/train.py</span></code> builds the model, dataloaders,
+and <code class="docutils literal notranslate"><span class="pre">args</span></code> for you and requires a discrete tokenizer checkpoint
+(<code class="docutils literal notranslate"><span class="pre">--tokenizer_path</span></code>) for on-the-fly tokenization of medical imagery.</p>
+</section>
+<section id="saving-checkpoints">
+<h2>Saving checkpoints<a class="headerlink" href="#saving-checkpoints" title="Link to this heading"></a></h2>
+<p>After training, save the model weights together with the hyper-parameters needed
+to rebuild it. This is the format the generation utilities expect (see
+<a class="reference internal" href="02_generation.html"><span class="doc">Tutorial 2: Generating Samples</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;checkpoints&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;model_state_dict&quot;</span><span class="p">:</span> <span class="n">ar_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+        <span class="s2">&quot;hparams&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;seq_length&quot;</span><span class="p">:</span> <span class="n">SEQ_LENGTH</span><span class="p">,</span>
+            <span class="s2">&quot;vocab_size&quot;</span><span class="p">:</span> <span class="n">VOCAB_SIZE</span><span class="p">,</span>
+            <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;checkpoints/ar_model.pt&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model saved to checkpoints/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="training-tips">
+<h2>Training tips<a class="headerlink" href="#training-tips" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Gradient checkpointing</strong>: enable <code class="docutils literal notranslate"><span class="pre">gradient_checkpointing=True</span></code> for long
+sequences to trade compute for memory.</p></li>
+<li><p><strong>Mixed precision</strong>: use <a class="reference external" href="https://docs.pytorch.org/docs/stable/amp.html#module-torch.amp" title="(in PyTorch v2.13)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">torch.amp</span></code></a> (or let <code class="docutils literal notranslate"><span class="pre">DiscreteLatentTrainer</span></code>
+handle it) for faster training on GPU.</p></li>
+<li><p><strong>Learning-rate scheduling</strong>: add warmup and decay for better convergence;
+<a class="reference internal" href="../api/training.html#medlatents.training.get_cosine_schedule_with_warmup" title="medlatents.training.get_cosine_schedule_with_warmup"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_cosine_schedule_with_warmup()</span></code></a> is provided.</p></li>
+<li><p><strong>Batch size</strong>: larger batches for stability, smaller for memory constraints.</p></li>
+<li><p><strong>Validation</strong>: validate frequently to detect overfitting early.</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="02_generation.html"><span class="doc">Tutorial 2: Generating Samples</span></a> – generate samples from a trained model.</p></li>
+<li><p><a class="reference internal" href="03_inpainting.html"><span class="doc">Tutorial 3: Inpainting</span></a> – fill missing regions in images.</p></li>
+<li><p><a class="reference internal" href="04_evaluation.html"><span class="doc">Tutorial 4: Evaluating Models</span></a> – compute quality metrics (FID, PSNR, SSIM).</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../api/configs.html" class="btn btn-neutral float-left" title="Configs API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="02_generation.html" class="btn btn-neutral float-right" title="Tutorial 2: Generating Samples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

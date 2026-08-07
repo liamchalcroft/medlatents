@@ -1,0 +1,1373 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>medlatents.networks.transformer &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">medlatents.networks.transformer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for medlatents.networks.transformer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core transformer infrastructure for discrete latent models.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Complex</span><span class="p">,</span> <span class="n">Float</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecialTokenIds</span>
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Weight Initialization</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="init_weights">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.init_weights">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">init_weights</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard transformer weight initialization (GPT-2 style).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        module: The module to initialize</span>
+<span class="sd">        std: Standard deviation for normal initialization (default: 0.02)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">std</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">):</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">std</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">ones_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># RoPE (Rotary Position Embeddings) utilities</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="precompute_freqs_cis">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.precompute_freqs_cis">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">precompute_freqs_cis</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Precompute RoPE (Rotary Position Embedding) rotation frequencies.</span>
+
+<span class="sd">    RoPE encodes position information by rotating query and key vectors in the</span>
+<span class="sd">    attention mechanism. This is more robust than learned position embeddings</span>
+<span class="sd">    and naturally extends to longer sequences at inference time.</span>
+
+<span class="sd">    The rotation is applied pairwise to dimensions: (d₀,d₁), (d₂,d₃), ..., (d_{dim-2},d_{dim-1})</span>
+<span class="sd">    Each pair rotates by an angle θ·position, where θ decreases exponentially with dimension.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim: Head dimension (must be even). Each pair of dimensions forms a 2D rotation.</span>
+<span class="sd">        length: Maximum sequence length to precompute</span>
+<span class="sd">        theta: Base frequency (default 10000, as in RoFormer paper)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Complex rotation frequencies [length, dim//2] in polar form e^{iθ·pos}</span>
+<span class="sd">        These are multiplied with complex views of Q and K to apply rotations.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Su et al., &quot;RoFormer: Enhanced Transformer with Rotary Position Embedding&quot;</span>
+<span class="sd">        https://arxiv.org/abs/2104.09864</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> must be even for RoPE (got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute inverse frequencies: θ_d = 1 / (base^(2d/dim)) for d = 0, 2, 4, ...</span>
+    <span class="c1"># This creates slower rotations for higher dimensions</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">inv_freq</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">theta</span> <span class="o">**</span> <span class="p">(</span><span class="n">index</span> <span class="o">/</span> <span class="n">dim</span><span class="p">))</span>
+
+    <span class="c1"># Create rotation angles: position × θ_d for all positions and dimensions</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">freqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">inv_freq</span><span class="p">)</span>  <span class="c1"># [length, dim//2]</span>
+
+    <span class="c1"># Convert to complex exponentials e^{iθ} using polar form (magnitude=1, angle=θ)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">polar</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">freqs</span><span class="p">),</span> <span class="n">freqs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="apply_rotary_emb">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.apply_rotary_emb">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_rotary_emb</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply rotary position embeddings using real-valued operations.</span>
+
+<span class="sd">    This implementation avoids complex number operations which don&#39;t support BF16,</span>
+<span class="sd">    instead computing the rotation directly using cos/sin components.</span>
+
+<span class="sd">    RoPE rotates adjacent pairs of dimensions: [x₀, x₁], [x₂, x₃], ..., [x_{D-2}, x_{D-1}]</span>
+<span class="sd">    Each pair is treated as a 2D vector and rotated by an angle θ·position.</span>
+
+<span class="sd">    Mathematically:</span>
+<span class="sd">        [x&#39;₀]   [cos(θ)  -sin(θ)] [x₀]</span>
+<span class="sd">        [x&#39;₁] = [sin(θ)   cos(θ)] [x₁]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor [batch, heads, seq_len, head_dim]</span>
+<span class="sd">        freqs_cis: Precomputed rotation frequencies [seq_len, head_dim//2] (complex)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Rotated tensor with same shape as input</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">D</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Head dimension must be even for RoPE (got </span><span class="si">{</span><span class="n">D</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract cos and sin from complex frequencies (works with any dtype)</span>
+    <span class="c1"># freqs_cis is complex64, extract real (cos) and imag (sin) parts</span>
+    <span class="n">freqs_cos</span> <span class="o">=</span> <span class="n">freqs_cis</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># [L, D//2]</span>
+    <span class="n">freqs_sin</span> <span class="o">=</span> <span class="n">freqs_cis</span><span class="o">.</span><span class="n">imag</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># [L, D//2]</span>
+
+    <span class="c1"># Reshape x to separate even and odd dimensions: [B, H, L, D] -&gt; [B, H, L, D//2, 2]</span>
+    <span class="n">x_reshape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">D</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">x_even</span> <span class="o">=</span> <span class="n">x_reshape</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># [B, H, L, D//2]</span>
+    <span class="n">x_odd</span> <span class="o">=</span> <span class="n">x_reshape</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># [B, H, L, D//2]</span>
+
+    <span class="c1"># Broadcast cos/sin to match batch and head dimensions</span>
+    <span class="c1"># [L, D//2] -&gt; [1, 1, L, D//2]</span>
+    <span class="n">freqs_cos</span> <span class="o">=</span> <span class="n">freqs_cos</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">freqs_sin</span> <span class="o">=</span> <span class="n">freqs_sin</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Apply rotation: (cos * x_even - sin * x_odd, sin * x_even + cos * x_odd)</span>
+    <span class="n">x_even_rot</span> <span class="o">=</span> <span class="n">freqs_cos</span> <span class="o">*</span> <span class="n">x_even</span> <span class="o">-</span> <span class="n">freqs_sin</span> <span class="o">*</span> <span class="n">x_odd</span>
+    <span class="n">x_odd_rot</span> <span class="o">=</span> <span class="n">freqs_sin</span> <span class="o">*</span> <span class="n">x_even</span> <span class="o">+</span> <span class="n">freqs_cos</span> <span class="o">*</span> <span class="n">x_odd</span>
+
+    <span class="c1"># Interleave back: [B, H, L, D//2] -&gt; [B, H, L, D]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x_even_rot</span><span class="p">,</span> <span class="n">x_odd_rot</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">D</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Normalization Layers</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="RMSNorm">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RMSNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Root Mean Square Layer Normalization.</span>
+
+<span class="sd">    RMSNorm is a simpler and faster alternative to LayerNorm that only</span>
+<span class="sd">    normalizes by RMS (root mean square) without centering (mean subtraction).</span>
+<span class="sd">    This reduces computation and is shown to be equally effective.</span>
+
+<span class="sd">    Used in:</span>
+<span class="sd">    - LLaMA (Meta)</span>
+<span class="sd">    - Mistral</span>
+<span class="sd">    - Modern diffusion transformers</span>
+
+<span class="sd">    Formula:</span>
+<span class="sd">        RMSNorm(x) = x / sqrt(mean(x²) + eps) * gamma</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Zhang &amp; Sennrich, &quot;Root Mean Square Layer Normalization&quot;</span>
+<span class="sd">        https://arxiv.org/abs/1910.07467</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim: Feature dimension to normalize</span>
+<span class="sd">        eps: Epsilon for numerical stability</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RMSNorm.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">rsqrt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RMSNorm.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor [..., dim]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Normalized tensor with same shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RMSNormZero">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RMSNormZero</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RMSNorm with zero-initialized modulation (gate) for stable training.</span>
+
+<span class="sd">    Similar to AdaLN-Zero but using RMSNorm instead of LayerNorm.</span>
+<span class="sd">    Starts as identity and gradually learns normalization.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim: Feature dimension to normalize</span>
+<span class="sd">        condition_dim: Conditioning dimension for modulation</span>
+<span class="sd">        eps: Epsilon for numerical stability</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RMSNormZero.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">condition_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+
+        <span class="c1"># Learnable scale (gamma)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+
+        <span class="c1"># Modulation: predict scale_mod and gate from condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modulation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">condition_dim</span><span class="p">,</span> <span class="n">dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span>  <span class="c1"># scale_mod, gate</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Zero-init for stable training start</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">rsqrt</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RMSNormZero.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor [batch, seq_len, dim]</span>
+<span class="sd">            condition: Conditioning tensor [batch, condition_dim]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Modulated normalized tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># RMS normalize</span>
+        <span class="n">x_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x_norm</span> <span class="o">=</span> <span class="n">x_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
+
+        <span class="c1"># Get modulation parameters</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulation</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">mod</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">scale_mod</span><span class="p">,</span> <span class="n">gate</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Apply gated modulation</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_norm</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">scale_mod</span><span class="p">))</span></div>
+</div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Attention and Transformer Block</span>
+<span class="c1"># ============================================================================</span>
+
+
+<div class="viewcode-block" id="Attention">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Attention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Self-attention with RoPE supporting both causal and bidirectional modes.</span>
+
+<span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
+<span class="sd">    Supports KV-caching for efficient autoregressive generation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Attention.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">causal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">qkv_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="o">=</span> <span class="n">causal</span>
+
+        <span class="c1"># Combined QKV projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+
+        <span class="c1"># QK LayerNorm for stability (prevents attention score explosions)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Attention.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">]:</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Fused QKV transform</span>
+        <span class="n">qkv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Transpose to (B, H, L, D) for attention</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Apply rotary embeddings</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="c1"># Apply QK LayerNorm for stability (after RoPE, before attention)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Use Flash Attention when available</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span>
+            <span class="n">q</span><span class="p">,</span>
+            <span class="n">k</span><span class="p">,</span>
+            <span class="n">v</span><span class="p">,</span>
+            <span class="n">attn_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+            <span class="n">is_causal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="ow">and</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="Attention.forward_with_cache">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.forward_with_cache">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cache</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">past_kv</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with KV-cache support for efficient autoregressive generation.</span>
+
+<span class="sd">        When past_kv is provided, only the new tokens in x are processed and their</span>
+<span class="sd">        K/V are concatenated with the cached values. This reduces per-step complexity</span>
+<span class="sd">        from O(N²) to O(N) for autoregressive generation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor [batch_size, seq_len, hidden_size]. When using cache,</span>
+<span class="sd">               seq_len should be 1 (the new token only).</span>
+<span class="sd">            freqs_cis: RoPE frequencies for the NEW positions only.</span>
+<span class="sd">                When using cache, should be [1, head_dim//2] for the new position.</span>
+<span class="sd">            past_kv: Cached (key, value) tensors from previous steps.</span>
+<span class="sd">                Each has shape [batch_size, num_heads, past_len, head_dim].</span>
+<span class="sd">            attention_mask: Optional attention mask.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            output: Attention output [batch_size, seq_len, hidden_size]</span>
+<span class="sd">            new_kv: Updated (key, value) cache including new tokens.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Compute Q, K, V for new tokens</span>
+        <span class="n">qkv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Transpose to (B, H, L, D) for attention</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Apply rotary embeddings to new tokens</span>
+        <span class="c1"># freqs_cis should be positioned for the new token&#39;s position</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="c1"># Apply QK LayerNorm for stability</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Concatenate with cached K, V</span>
+        <span class="k">if</span> <span class="n">past_kv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">past_k</span><span class="p">,</span> <span class="n">past_v</span> <span class="o">=</span> <span class="n">past_kv</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">past_k</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">past_v</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Store new cache</span>
+        <span class="n">new_kv</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="c1"># Attention - for cached generation with single new token, use is_causal=False</span>
+        <span class="c1"># since we&#39;re only computing attention for the last token against all previous</span>
+        <span class="c1"># The causal masking is implicit: we only have access to past tokens in cache</span>
+        <span class="n">is_causal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="ow">and</span> <span class="n">past_kv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="kc">None</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span>
+            <span class="n">q</span><span class="p">,</span>
+            <span class="n">k</span><span class="p">,</span>
+            <span class="n">v</span><span class="p">,</span>
+            <span class="n">attn_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+            <span class="n">is_causal</span><span class="o">=</span><span class="n">is_causal</span><span class="p">,</span>
+            <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">new_kv</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AttentionWithValueResidual">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AttentionWithValueResidual</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Self-attention with Value Residual Learning for very deep networks.</span>
+
+<span class="sd">    Adds a learnable residual path to the value computation, which helps</span>
+<span class="sd">    gradient flow in very deep transformers (60+ layers). The residual</span>
+<span class="sd">    is a weighted combination of the input and the computed value.</span>
+
+<span class="sd">    Based on:</span>
+<span class="sd">    - &quot;Stabilizing Transformer Training by Preventing Attention Entropy Collapse&quot;</span>
+<span class="sd">    - DeepNet, DeepSeek-V2 (value residual for deep scaling)</span>
+
+<span class="sd">    Formula:</span>
+<span class="sd">        v_effective = v + lambda * x_projected</span>
+<span class="sd">        where lambda is a learnable per-head scale (initialized to 0)</span>
+
+<span class="sd">    This allows the model to learn when to use pure attention values</span>
+<span class="sd">    vs. when to blend in the input representation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_size: Model hidden dimension</span>
+<span class="sd">        num_heads: Number of attention heads</span>
+<span class="sd">        causal: Whether to use causal masking</span>
+<span class="sd">        qkv_bias: Whether to use bias in QKV projections</span>
+<span class="sd">        qk_norm: Whether to apply QK LayerNorm</span>
+<span class="sd">        value_residual_mix: Initial mixing coefficient (default 0.0 for pure attention)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AttentionWithValueResidual.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">causal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">qkv_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">value_residual_mix</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="o">=</span> <span class="n">causal</span>
+
+        <span class="c1"># Combined QKV projection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+
+        <span class="c1"># QK LayerNorm for stability</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># Value residual: project input to value space and learn mixing weight</span>
+        <span class="c1"># Separate projection for value residual (can share weights with v projection)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_residual_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Per-head learnable mixing coefficient (lambda in the paper)</span>
+        <span class="c1"># Initialized to value_residual_mix (usually 0 for pure attention at start)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_residual_lambda</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">num_heads</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">value_residual_mix</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="AttentionWithValueResidual.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">]:</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Fused QKV transform</span>
+        <span class="n">qkv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Transpose to (B, H, L, D) for attention</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Compute value residual: project input to value space</span>
+        <span class="n">v_residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_residual_proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">v_residual</span> <span class="o">=</span> <span class="n">v_residual</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Mix value with residual using learnable lambda</span>
+        <span class="c1"># v_effective = v + lambda * v_residual</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_residual_lambda</span> <span class="o">*</span> <span class="n">v_residual</span>
+
+        <span class="c1"># Apply rotary embeddings</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="c1"># Apply QK LayerNorm for stability</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Use Flash Attention when available</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span>
+            <span class="n">q</span><span class="p">,</span>
+            <span class="n">k</span><span class="p">,</span>
+            <span class="n">v</span><span class="p">,</span>
+            <span class="n">attn_mask</span><span class="o">=</span><span class="n">attention_mask</span><span class="p">,</span>
+            <span class="n">is_causal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="ow">and</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TransformerBlock">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransformerBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transformer block supporting both causal and bidirectional attention.</span>
+
+<span class="sd">    Supports:</span>
+<span class="sd">    - QK LayerNorm for attention stability (arXiv:2312.16903)</span>
+<span class="sd">    - Peri-LN (peripheral LayerNorm) for training stability (arXiv:2502.02732)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TransformerBlock.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">causal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">peri_ln</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Input norms (standard Pre-LN)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+
+        <span class="c1"># Output norms for Peri-LN (additional stability)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">peri_ln</span> <span class="o">=</span> <span class="n">peri_ln</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1_out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span> <span class="k">if</span> <span class="n">peri_ln</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2_out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span> <span class="k">if</span> <span class="n">peri_ln</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">Attention</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">causal</span><span class="o">=</span><span class="n">causal</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+
+        <span class="n">mlp_hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">mlp_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">mlp_hidden_dim</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TransformerBlock.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="c1"># Attention with optional Peri-LN</span>
+        <span class="n">attn_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">attention_mask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm1_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attn_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm1_out</span><span class="p">(</span><span class="n">attn_out</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">attn_out</span>
+
+        <span class="c1"># MLP with optional Peri-LN</span>
+        <span class="n">mlp_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm2_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mlp_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm2_out</span><span class="p">(</span><span class="n">mlp_out</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">mlp_out</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="TransformerBlock.forward_with_cache">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock.forward_with_cache">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cache</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">past_kv</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with KV-cache support.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor [batch_size, seq_len, hidden_size]</span>
+<span class="sd">            freqs_cis: RoPE frequencies for the positions being processed</span>
+<span class="sd">            past_kv: Cached (key, value) from previous steps</span>
+<span class="sd">            attention_mask: Optional attention mask</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            output: Block output [batch_size, seq_len, hidden_size]</span>
+<span class="sd">            new_kv: Updated KV cache</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Attention with cache</span>
+        <span class="n">attn_out</span><span class="p">,</span> <span class="n">new_kv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="o">.</span><span class="n">forward_with_cache</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">past_kv</span><span class="p">,</span> <span class="n">attention_mask</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm1_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attn_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm1_out</span><span class="p">(</span><span class="n">attn_out</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">attn_out</span>
+
+        <span class="c1"># MLP (no cache needed)</span>
+        <span class="n">mlp_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm2_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mlp_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm2_out</span><span class="p">(</span><span class="n">mlp_out</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">mlp_out</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">new_kv</span></div>
+</div>
+
+
+
+<span class="c1"># ============================================================================</span>
+<span class="c1"># Base Transformer</span>
+<span class="c1"># ============================================================================</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_BaseTransformer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shared infrastructure for transformer backbones.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">rope_theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">allow_dynamic_seq_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gradient_checkpointing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">hidden_size</span> <span class="o">%</span> <span class="n">num_heads</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;hidden_size </span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2"> must be divisible by num_heads </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;head dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="si">}</span><span class="s2"> must be even (hidden_size=</span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2">, num_heads=</span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rope_theta</span> <span class="o">=</span> <span class="n">rope_theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="o">=</span> <span class="n">allow_dynamic_seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient_checkpointing</span> <span class="o">=</span> <span class="n">gradient_checkpointing</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;freqs_cis&quot;</span><span class="p">,</span>
+            <span class="n">precompute_freqs_cis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span> <span class="o">=</span> <span class="n">seq_length</span>
+
+        <span class="c1"># Enable optimized attention kernels if available</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">enable_flash_sdp</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">enable_mem_efficient_sdp</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the device of model parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">device</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_rotary_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pre-compute and cache rotary embeddings for given sequence length.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">seq_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
+            <span class="s2">&quot;freqs_cis&quot;</span><span class="p">,</span>
+            <span class="n">precompute_freqs_cis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rope_theta</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+                <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span> <span class="o">=</span> <span class="n">seq_length</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_chunk_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or disable sequence chunking.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">chunk_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">chunk_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;chunk_size must be positive&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ckpt_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper for gradient checkpointing.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">ckpt_forward</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">module</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ckpt_forward</span>
+
+
+<div class="viewcode-block" id="DiscreteTransformer">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteTransformer</span><span class="p">(</span><span class="n">_BaseTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformer backbone purpose-built for discrete token sequences.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiscreteTransformer.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">rope_theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">allow_dynamic_seq_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gradient_checkpointing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">special_tokens</span><span class="p">:</span> <span class="n">SpecialTokenIds</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">rope_theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+            <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="n">gradient_checkpointing</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="o">=</span> <span class="n">special_tokens</span></div>
+
+
+<div class="viewcode-block" id="DiscreteTransformer.detect_anomalies">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer.detect_anomalies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">detect_anomalies</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">likelihood_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="o">**</span><span class="n">forward_kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detect anomalies by finding low likelihood tokens.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input sequence [batch_size, seq_len]</span>
+<span class="sd">            likelihood_threshold: Threshold for marking tokens as anomalous</span>
+<span class="sd">            **forward_kwargs: Additional arguments for forward pass</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            anomaly_mask: Binary mask of detected anomalies [batch_size, seq_len]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">forward_kwargs</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">forward_kwargs</span> <span class="k">else</span> <span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">token_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">token_probs</span> <span class="o">&lt;</span> <span class="n">likelihood_threshold</span></div>
+
+
+<div class="viewcode-block" id="DiscreteTransformer.inpaint_anomalies">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer.inpaint_anomalies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inpaint_anomalies</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">likelihood_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">forward_kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detect and inpaint anomalies in the latent sequence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input sequence [batch_size, seq_len]</span>
+<span class="sd">            likelihood_threshold: Threshold for marking tokens as anomalous</span>
+<span class="sd">            temperature: Sampling temperature</span>
+<span class="sd">            top_k: Optional top-k sampling parameter</span>
+<span class="sd">            **forward_kwargs: Additional arguments for forward pass</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            inpainted_sequence: Sequence with anomalies replaced [batch_size, seq_len]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="c1"># Detect anomalies</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">forward_kwargs</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">forward_kwargs</span> <span class="k">else</span> <span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">token_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">anomaly_mask</span> <span class="o">=</span> <span class="n">token_probs</span> <span class="o">&lt;</span> <span class="n">likelihood_threshold</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">anomaly_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">x</span>
+
+            <span class="c1"># Sample replacements</span>
+            <span class="n">logits_temp</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">/</span> <span class="n">temperature</span>
+            <span class="k">if</span> <span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits_temp</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">logits_temp</span><span class="p">[</span><span class="n">logits_temp</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits_temp</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">probs</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">anomaly_mask</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ContinuousTransformer">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousTransformer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContinuousTransformer</span><span class="p">(</span><span class="n">_BaseTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformer backbone for continuous latent representations.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContinuousTransformer.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousTransformer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">rope_theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">allow_dynamic_seq_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gradient_checkpointing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">rope_theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+            <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="n">gradient_checkpointing</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+    <span class="c1"># Continuous transformer variants do not currently expose anomaly tooling.</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

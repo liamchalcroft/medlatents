@@ -1,0 +1,1104 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>medlatents.training.repa &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">medlatents.training.repa</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for medlatents.training.repa</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;REPA: Representation Alignment for faster diffusion training.</span>
+
+<span class="sd">Implements:</span>
+<span class="sd">- REPALoss: Alignment loss between DiT hidden states and pretrained encoder features</span>
+<span class="sd">- REPAProjection: MLP projection head for feature alignment</span>
+<span class="sd">- HASTEScheduler: Stage-wise termination of alignment loss (HASTE)</span>
+<span class="sd">- AttentionAlignmentLoss: Attention map distillation for holistic alignment</span>
+
+<span class="sd">Reference papers:</span>
+<span class="sd">- REPA: &quot;Representation Alignment for Generation&quot; (arXiv:2410.06940, ICLR&#39;25 Oral)</span>
+<span class="sd">- HASTE: &quot;REPA Works Until It Doesn&#39;t&quot; (arXiv:2505.16792)</span>
+
+<span class="sd">Key insight: Aligning DiT hidden states with frozen encoder (DINOv2, SigLIP)</span>
+<span class="sd">features at high-noise timesteps dramatically accelerates training (17x speedup).</span>
+<span class="sd">However, alignment helps early but can hurt later - HASTE terminates it optimally.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+
+<div class="viewcode-block" id="REPAProjection">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAProjection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">REPAProjection</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MLP projection head for REPA feature alignment.</span>
+
+<span class="sd">    Projects DiT hidden states to the same dimension as the target encoder</span>
+<span class="sd">    for similarity computation. Applied after early-to-mid transformer blocks.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim: DiT hidden dimension (input)</span>
+<span class="sd">        target_dim: Target encoder dimension (e.g., 768 for DINOv2-B)</span>
+<span class="sd">        proj_dim: Projection space dimension (for similarity computation)</span>
+<span class="sd">        num_layers: Number of MLP layers</span>
+<span class="sd">        activation: Activation function</span>
+<span class="sd">        dropout: Dropout probability</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        proj = REPAProjection(hidden_dim=1024, target_dim=768, proj_dim=256)</span>
+
+<span class="sd">        # In forward pass, after block k:</span>
+<span class="sd">        hidden = dit_block_k(x)</span>
+<span class="sd">        proj_hidden = proj(hidden)  # [batch, seq, proj_dim]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">projection</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span>
+    <span class="n">target_proj</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span>
+
+<div class="viewcode-block" id="REPAProjection.__init__">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAProjection.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">target_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">768</span><span class="p">,</span>
+        <span class="n">proj_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="n">num_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;gelu&quot;</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_dim</span> <span class="o">=</span> <span class="n">target_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj_dim</span> <span class="o">=</span> <span class="n">proj_dim</span>
+
+        <span class="c1"># Build MLP</span>
+        <span class="n">act_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">()</span> <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;gelu&quot;</span> <span class="k">else</span> <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">()</span>
+
+        <span class="n">layers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">in_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_dim</span><span class="p">,</span> <span class="n">proj_dim</span><span class="p">),</span>
+                    <span class="n">act_fn</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">dropout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout</span><span class="p">))</span>
+            <span class="n">in_dim</span> <span class="o">=</span> <span class="n">proj_dim</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_dim</span><span class="p">,</span> <span class="n">proj_dim</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
+
+        <span class="c1"># Target projection (if target_dim != proj_dim)</span>
+        <span class="k">if</span> <span class="n">target_dim</span> <span class="o">!=</span> <span class="n">proj_dim</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">target_dim</span><span class="p">,</span> <span class="n">proj_dim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_weights</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize projection weights.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+                <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+
+<div class="viewcode-block" id="REPAProjection.forward">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAProjection.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Project hidden states to alignment space.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hidden_states: DiT hidden states [batch, seq, hidden_dim]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Projected features [batch, seq, proj_dim]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="REPAProjection.project_target">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAProjection.project_target">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">project_target</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">target_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Project target encoder features to alignment space.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_features: Encoder features [batch, seq, target_dim]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Projected features [batch, seq, proj_dim]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_proj</span><span class="p">(</span><span class="n">target_features</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="REPALoss">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPALoss">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">REPALoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;REPA: Representation Alignment Loss for accelerated diffusion training.</span>
+
+<span class="sd">    Aligns DiT hidden states with frozen pretrained encoder features using</span>
+<span class="sd">    cosine similarity. Applied only at high-noise timesteps where semantic</span>
+<span class="sd">    alignment provides the most benefit.</span>
+
+<span class="sd">    The key insight from REPA is that early in denoising (high t), the model</span>
+<span class="sd">    benefits from semantic guidance from a pretrained encoder. As denoising</span>
+<span class="sd">    progresses (low t), the model needs to focus on fine details.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Yu et al., &quot;Representation Alignment for Generation&quot; (ICLR&#39;25 Oral)</span>
+<span class="sd">        https://arxiv.org/abs/2410.06940</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim: DiT hidden dimension</span>
+<span class="sd">        target_dim: Target encoder dimension</span>
+<span class="sd">        proj_dim: Projection dimension for alignment</span>
+<span class="sd">        timestep_threshold: Only apply at t &gt; threshold (default 0.5)</span>
+<span class="sd">        weight: Loss weight relative to denoising loss</span>
+<span class="sd">        normalize: Whether to L2-normalize before similarity</span>
+<span class="sd">        loss_type: &#39;cosine&#39; or &#39;mse&#39;</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        repa = REPALoss(hidden_dim=1024, target_dim=768)</span>
+
+<span class="sd">        # In training loop:</span>
+<span class="sd">        hidden_states = extract_hidden_from_dit(model, x_t, t)</span>
+<span class="sd">        target_features = frozen_encoder(clean_images)</span>
+
+<span class="sd">        repa_loss = repa(hidden_states, target_features, t)</span>
+<span class="sd">        total_loss = denoising_loss + repa_loss</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="REPALoss.__init__">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPALoss.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">target_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">768</span><span class="p">,</span>
+        <span class="n">proj_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="n">timestep_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;mse&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
+        <span class="n">num_proj_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">timestep_threshold</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">timestep_threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;timestep_threshold must be in [0, 1], got </span><span class="si">{</span><span class="n">timestep_threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;weight must be non-negative, got </span><span class="si">{</span><span class="n">weight</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span> <span class="o">=</span> <span class="n">timestep_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">=</span> <span class="n">loss_type</span>
+
+        <span class="c1"># Projection head</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">REPAProjection</span><span class="p">(</span>
+            <span class="n">hidden_dim</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span>
+            <span class="n">target_dim</span><span class="o">=</span><span class="n">target_dim</span><span class="p">,</span>
+            <span class="n">proj_dim</span><span class="o">=</span><span class="n">proj_dim</span><span class="p">,</span>
+            <span class="n">num_layers</span><span class="o">=</span><span class="n">num_proj_layers</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="REPALoss.forward">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPALoss.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute REPA alignment loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hidden_states: DiT hidden states [batch, seq, hidden_dim]</span>
+<span class="sd">            target_features: Encoder features [batch, seq, target_dim]</span>
+<span class="sd">            timesteps: Current timesteps [batch], in [0, 1]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Weighted alignment loss (scalar)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Only apply at high-noise timesteps</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">timesteps</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="c1"># Select samples above threshold</span>
+        <span class="n">hidden_masked</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">target_masked</span> <span class="o">=</span> <span class="n">target_features</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+        <span class="c1"># Project to alignment space</span>
+        <span class="n">proj_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">(</span><span class="n">hidden_masked</span><span class="p">)</span>
+        <span class="n">proj_target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">project_target</span><span class="p">(</span><span class="n">target_masked</span><span class="p">)</span>
+
+        <span class="c1"># Normalize if requested</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+            <span class="n">proj_hidden</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">proj_hidden</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">proj_target</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">proj_target</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Compute loss</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+            <span class="c1"># Negative cosine similarity (minimize to maximize similarity)</span>
+            <span class="c1"># Per-token similarity, averaged</span>
+            <span class="n">similarity</span> <span class="o">=</span> <span class="p">(</span><span class="n">proj_hidden</span> <span class="o">*</span> <span class="n">proj_target</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [masked_batch, seq]</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">similarity</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># mse</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">proj_hidden</span><span class="p">,</span> <span class="n">proj_target</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="n">loss</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AttentionAlignmentLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Attention map alignment loss for HASTE holistic alignment.</span>
+
+<span class="sd">    Distills attention patterns from teacher encoder to DiT.</span>
+<span class="sd">    Provides relational priors that complement feature alignment.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Wang et al., &quot;REPA Works Until It Doesn&#39;t&quot; (arXiv:2505.16792)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        temperature: Temperature for attention softmax</span>
+<span class="sd">        weight: Loss weight</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        attn_loss = AttentionAlignmentLoss()</span>
+
+<span class="sd">        # Extract attention maps from both models</span>
+<span class="sd">        dit_attn = extract_attention_maps(dit_model)</span>
+<span class="sd">        teacher_attn = extract_attention_maps(teacher_encoder)</span>
+
+<span class="sd">        loss = attn_loss(dit_attn, teacher_attn, timesteps)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">timestep_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span> <span class="o">=</span> <span class="n">timestep_threshold</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">student_attn</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">teacher_attn</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute attention alignment loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            student_attn: DiT attention maps [batch, heads, seq, seq]</span>
+<span class="sd">            teacher_attn: Teacher attention maps [batch, heads, seq, seq]</span>
+<span class="sd">            timesteps: Current timesteps [batch]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Attention distillation loss</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">timesteps</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">student_attn</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">student_attn</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="n">student_masked</span> <span class="o">=</span> <span class="n">student_attn</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">teacher_masked</span> <span class="o">=</span> <span class="n">teacher_attn</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+        <span class="c1"># Ensure same shape (may need to interpolate if different resolutions)</span>
+        <span class="k">if</span> <span class="n">student_masked</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">teacher_masked</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="c1"># Interpolate teacher to match student</span>
+            <span class="n">teacher_masked</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
+                <span class="n">teacher_masked</span><span class="p">,</span>
+                <span class="n">size</span><span class="o">=</span><span class="n">student_masked</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
+                <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span>
+                <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># KL divergence on attention distributions</span>
+        <span class="n">student_log_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">student_masked</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">teacher_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">teacher_masked</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span>
+            <span class="n">student_log_probs</span><span class="p">,</span>
+            <span class="n">teacher_probs</span><span class="p">,</span>
+            <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;batchmean&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="n">loss</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HASTEScheduler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;HASTE: Holistic Alignment with Stage-wise Termination for Efficient training.</span>
+
+<span class="sd">    Implements a two-phase training schedule:</span>
+<span class="sd">    - Phase I: Apply full alignment (REPA + attention) for rapid convergence</span>
+<span class="sd">    - Phase II: Terminate alignment to free generative capacity</span>
+
+<span class="sd">    The key insight is that alignment helps early but hurts later due to</span>
+<span class="sd">    capacity mismatch - the teacher&#39;s lower-dimensional embeddings become</span>
+<span class="sd">    a straitjacket once the student starts modeling the full data distribution.</span>
+
+<span class="sd">    Reference:</span>
+<span class="sd">        Wang et al., &quot;REPA Works Until It Doesn&#39;t&quot; (arXiv:2505.16792)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        termination_step: Step at which to terminate alignment</span>
+<span class="sd">        termination_mode: How to terminate</span>
+<span class="sd">            - &#39;hard&#39;: Immediate cutoff (recommended)</span>
+<span class="sd">            - &#39;linear&#39;: Linear decay over transition_steps</span>
+<span class="sd">            - &#39;cosine&#39;: Cosine decay over transition_steps</span>
+<span class="sd">        transition_steps: Steps over which to decay (for &#39;linear&#39;/&#39;cosine&#39;)</span>
+<span class="sd">        use_attention_alignment: Whether to use attention distillation in Phase I</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        scheduler = HASTEScheduler(termination_step=50000)</span>
+
+<span class="sd">        for step in range(total_steps):</span>
+<span class="sd">            # Get current weights</span>
+<span class="sd">            repa_weight = scheduler.get_repa_weight(step)</span>
+<span class="sd">            attn_weight = scheduler.get_attention_weight(step)</span>
+
+<span class="sd">            if repa_weight &gt; 0:</span>
+<span class="sd">                loss += repa_weight * repa_loss</span>
+<span class="sd">            if attn_weight &gt; 0:</span>
+<span class="sd">                loss += attn_weight * attention_loss</span>
+
+<span class="sd">            # Log phase</span>
+<span class="sd">            if scheduler.phase == 1:</span>
+<span class="sd">                log(&quot;Phase I: Alignment active&quot;)</span>
+<span class="sd">            else:</span>
+<span class="sd">                log(&quot;Phase II: Pure denoising&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">termination_step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">termination_mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hard&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hard&quot;</span><span class="p">,</span>
+        <span class="n">transition_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">use_attention_alignment</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">initial_repa_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">initial_attention_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">termination_step</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;termination_step must be positive, got </span><span class="si">{</span><span class="n">termination_step</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">termination_step</span> <span class="o">=</span> <span class="n">termination_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">termination_mode</span> <span class="o">=</span> <span class="n">termination_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transition_steps</span> <span class="o">=</span> <span class="n">transition_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_attention_alignment</span> <span class="o">=</span> <span class="n">use_attention_alignment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span> <span class="o">=</span> <span class="n">initial_repa_weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_attention_weight</span> <span class="o">=</span> <span class="n">initial_attention_weight</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">phase</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current training phase (1 = alignment, 2 = pure denoising).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_repa_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get REPA loss weight at current step.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            step: Current training step</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Weight for REPA loss (0 if terminated)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_step</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_steps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_step</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span>
+
+        <span class="c1"># In transition</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_mode</span> <span class="o">==</span> <span class="s2">&quot;hard&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="n">progress</span> <span class="o">=</span> <span class="p">(</span><span class="n">step</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_step</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_steps</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_mode</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span>
+                <span class="o">*</span> <span class="mf">0.5</span>
+                <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="mf">3.14159</span><span class="p">))</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_attention_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get attention alignment loss weight at current step.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_attention_alignment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Same schedule as REPA</span>
+        <span class="n">repa_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_repa_weight</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">repa_weight</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_attention_weight</span> <span class="o">*</span> <span class="p">(</span><span class="n">repa_weight</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_compute_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if alignment should be computed at this step.</span>
+
+<span class="sd">        Useful for skipping expensive encoder forward passes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_repa_weight</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">state_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get scheduler state for checkpointing.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;termination_step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_step</span><span class="p">,</span>
+            <span class="s2">&quot;termination_mode&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">termination_mode</span><span class="p">,</span>
+            <span class="s2">&quot;transition_steps&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_steps</span><span class="p">,</span>
+            <span class="s2">&quot;use_attention_alignment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_attention_alignment</span><span class="p">,</span>
+            <span class="s2">&quot;initial_repa_weight&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_repa_weight</span><span class="p">,</span>
+            <span class="s2">&quot;initial_attention_weight&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_attention_weight</span><span class="p">,</span>
+            <span class="s2">&quot;phase&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load scheduler state from checkpoint.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_phase</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MultiEncoderREPA</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;REPA with multiple encoder targets (as in original implementation).</span>
+
+<span class="sd">    Supports aligning to multiple encoders simultaneously (e.g., DINOv2 + SigLIP)</span>
+<span class="sd">    with separate projection heads for each.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_dim: DiT hidden dimension</span>
+<span class="sd">        encoder_dims: List of encoder dimensions</span>
+<span class="sd">        proj_dim: Shared projection dimension</span>
+<span class="sd">        timestep_threshold: Only apply at t &gt; threshold</span>
+<span class="sd">        weight: Total loss weight (distributed across encoders)</span>
+
+<span class="sd">    Usage:</span>
+<span class="sd">        repa = MultiEncoderREPA(</span>
+<span class="sd">            hidden_dim=1024,</span>
+<span class="sd">            encoder_dims=[768, 768],  # DINOv2-B + SigLIP-B</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Get features from multiple encoders</span>
+<span class="sd">        dino_features = dino_encoder(images)</span>
+<span class="sd">        siglip_features = siglip_encoder(images)</span>
+
+<span class="sd">        loss = repa(hidden_states, [dino_features, siglip_features], timesteps)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">encoder_dims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">proj_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="n">timestep_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span> <span class="o">=</span> <span class="n">timestep_threshold</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_encoders</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoder_dims</span><span class="p">)</span>
+
+        <span class="c1"># Separate projection for each encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projections</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">REPAProjection</span><span class="p">(</span>
+                    <span class="n">hidden_dim</span><span class="o">=</span><span class="n">hidden_dim</span><span class="p">,</span>
+                    <span class="n">target_dim</span><span class="o">=</span><span class="n">enc_dim</span><span class="p">,</span>
+                    <span class="n">proj_dim</span><span class="o">=</span><span class="n">proj_dim</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">enc_dim</span> <span class="ow">in</span> <span class="n">encoder_dims</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">target_features_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute multi-encoder REPA loss.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hidden_states: DiT hidden states [batch, seq, hidden_dim]</span>
+<span class="sd">            target_features_list: List of encoder features, each [batch, seq, enc_dim]</span>
+<span class="sd">            timesteps: Current timesteps [batch]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Combined alignment loss</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_features_list</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_encoders</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_encoders</span><span class="si">}</span><span class="s2"> encoder features, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">target_features_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">timesteps</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_threshold</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="n">hidden_masked</span> <span class="o">=</span> <span class="n">hidden_states</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">hidden_states</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">projection</span><span class="p">,</span> <span class="n">target_features</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projections</span><span class="p">,</span> <span class="n">target_features_list</span><span class="p">):</span>
+            <span class="n">target_masked</span> <span class="o">=</span> <span class="n">target_features</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+            <span class="c1"># Project both to alignment space</span>
+            <span class="n">proj_hidden</span> <span class="o">=</span> <span class="n">projection</span><span class="p">(</span><span class="n">hidden_masked</span><span class="p">)</span>
+            <span class="n">proj_target</span> <span class="o">=</span> <span class="n">projection</span><span class="o">.</span><span class="n">project_target</span><span class="p">(</span><span class="n">target_masked</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
+
+            <span class="c1"># Normalize</span>
+            <span class="n">proj_hidden</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">proj_hidden</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">proj_target</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">proj_target</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># Cosine similarity loss</span>
+            <span class="n">similarity</span> <span class="o">=</span> <span class="p">(</span><span class="n">proj_hidden</span> <span class="o">*</span> <span class="n">proj_target</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">similarity</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+            <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">+</span> <span class="n">loss</span>
+
+        <span class="c1"># Average over encoders</span>
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_encoders</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="n">total_loss</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;REPAProjection&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;REPALoss&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AttentionAlignmentLoss&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HASTEScheduler&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MultiEncoderREPA&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

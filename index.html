@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedLatents Documentation &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MedLatents Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="medlatents-documentation">
+<h1>MedLatents Documentation<a class="headerlink" href="#medlatents-documentation" title="Link to this heading"></a></h1>
+<p>Discrete and continuous latent generative models for medical imagery.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#citation">Citation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#support">Support</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/autoregressive.html">Autoregressive Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#architecture">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#advanced-features">Advanced Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#sampling-strategies">Sampling Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#long-sequences">Long Sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#rasterization">Rasterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#api-reference">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/autoregressive.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/maskgit.html">MaskGIT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#architecture">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#advanced-features">Advanced Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#masking-strategies">Masking Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#api-reference">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/maskgit.html#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/diffusion.html">Diffusion Models Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#discrete-diffusion-d3pm">Discrete Diffusion (D3PM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#score-entropy-discrete-diffusion-sedd">Score Entropy Discrete Diffusion (SEDD)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#continuous-gaussian-diffusion">Continuous Gaussian Diffusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#sampling-strategies">Sampling Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#classifier-free-guidance">Classifier-Free Guidance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/diffusion.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/flow_matching.html">Flow Matching Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#discrete-flow-matching">Discrete Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#continuous-flow-matching">Continuous Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#optimal-transport-coupling">Optimal Transport Coupling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#shortcut-flow-matching">Shortcut Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#evaluation">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#polynomial-schedulers">Polynomial Schedulers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/flow_matching.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/bayesian_flow.html">Bayesian Flow Networks Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#bayesianflowtransformer">BayesianFlowTransformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#accuracy-schedules">Accuracy Schedules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#training">Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#entropy-encoding">Entropy Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#generation-with-solvers">Generation with Solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#stochastic-sampling">Stochastic Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#guided-sampling">Guided Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#advanced-features">Advanced Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#comparison-with-other-methods">Comparison with Other Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/bayesian_flow.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/rasterization.html">Rasterization Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#available-methods">Available Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#comparison">Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#practical-usage">Practical Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#choosing-a-method">Choosing a Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#handling-non-power-of-2-dimensions">Handling Non-Power-of-2 Dimensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#performance-tips">Performance Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/rasterization.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides/post_training.html">Post-Training Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#shared-configuration">Shared configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#building-preference-data">Building preference data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#direct-preference-optimization-dpo">Direct Preference Optimization (DPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#step-by-step-preference-optimization-spo">Step-by-step Preference Optimization (SPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#reinforcement-learning">Reinforcement learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#distillation">Distillation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#reward-modeling-and-feedback">Reward modeling and feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#self-play">Self-play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#choosing-a-method">Choosing a method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guides/post_training.html#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="token_interface.html">Token Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#discrete-tokens-codebook-indices">Discrete tokens (codebook indices)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#continuous-latents">Continuous latents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#metadata">Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#batching-and-variable-sizes">Batching and variable sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#determinism">Determinism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_interface.html#failure-mode-policy">Failure-mode policy</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/autoregressive.html">Autoregressive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer"><code class="docutils literal notranslate"><span class="pre">AutoregressiveTransformer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.SpeculativeDecoder"><code class="docutils literal notranslate"><span class="pre">SpeculativeDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.MultiDraftSpeculativeDecoder"><code class="docutils literal notranslate"><span class="pre">MultiDraftSpeculativeDecoder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.MedusaModel"><code class="docutils literal notranslate"><span class="pre">MedusaModel</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.MedusaHead"><code class="docutils literal notranslate"><span class="pre">MedusaHead</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.MedusaTrainer"><code class="docutils literal notranslate"><span class="pre">MedusaTrainer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/autoregressive.html#medlatents.autoregressive.MultiTokenPredictionLoss"><code class="docutils literal notranslate"><span class="pre">MultiTokenPredictionLoss</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/maskgit.html">MaskGIT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/maskgit.html#medlatents.maskgit.MaskGIT"><code class="docutils literal notranslate"><span class="pre">MaskGIT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffusion.html">Diffusion API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/diffusion.html#d3pm-discrete-diffusion">D3PM (Discrete Diffusion)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/diffusion.html#continuous-diffusion">Continuous Diffusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/diffusion.html#sedd-mdlm">SEDD / MDLM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/diffusion.html#schedules">Schedules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/diffusion.html#zero-terminal-snr">Zero-Terminal SNR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/flow_matching.html">Flow Matching API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#discrete-flow-matching">Discrete Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#continuous-flow-matching">Continuous Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#generation">Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#timestep-sampling">Timestep Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#optimal-transport">Optimal Transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#evaluation">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/flow_matching.html#shortcut-flow-matching">Shortcut Flow Matching</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/bayesian_flow.html">Bayesian Flow Networks API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#core-model">Core Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#entropy-encoding">Entropy Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#guided-sampling">Guided Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#accuracy-schedules">Accuracy Schedules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#training-utilities">Training Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/bayesian_flow.html#ode-sde-solvers">ODE/SDE Solvers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/networks.html">Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiscreteTransformer"><code class="docutils literal notranslate"><span class="pre">DiscreteTransformer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.ContinuousTransformer"><code class="docutils literal notranslate"><span class="pre">ContinuousTransformer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.Attention"><code class="docutils literal notranslate"><span class="pre">Attention</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.AttentionWithValueResidual"><code class="docutils literal notranslate"><span class="pre">AttentionWithValueResidual</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.TransformerBlock"><code class="docutils literal notranslate"><span class="pre">TransformerBlock</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.precompute_freqs_cis"><code class="docutils literal notranslate"><span class="pre">precompute_freqs_cis()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.apply_rotary_emb"><code class="docutils literal notranslate"><span class="pre">apply_rotary_emb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.init_weights"><code class="docutils literal notranslate"><span class="pre">init_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.RMSNorm"><code class="docutils literal notranslate"><span class="pre">RMSNorm</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.RMSNormZero"><code class="docutils literal notranslate"><span class="pre">RMSNormZero</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiscreteDiT"><code class="docutils literal notranslate"><span class="pre">DiscreteDiT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.ContinuousDiT"><code class="docutils literal notranslate"><span class="pre">ContinuousDiT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiTBlock"><code class="docutils literal notranslate"><span class="pre">DiTBlock</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiTBlockWithCrossAttention"><code class="docutils literal notranslate"><span class="pre">DiTBlockWithCrossAttention</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiTCrossAttention"><code class="docutils literal notranslate"><span class="pre">DiTCrossAttention</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.MMDiTBlock"><code class="docutils literal notranslate"><span class="pre">MMDiTBlock</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiTAttention"><code class="docutils literal notranslate"><span class="pre">DiTAttention</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.FinalLayer"><code class="docutils literal notranslate"><span class="pre">FinalLayer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.LabelEmbedder"><code class="docutils literal notranslate"><span class="pre">LabelEmbedder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.DiscreteSequenceEmbedder"><code class="docutils literal notranslate"><span class="pre">DiscreteSequenceEmbedder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.ContinuousSequenceEmbedder"><code class="docutils literal notranslate"><span class="pre">ContinuousSequenceEmbedder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.TimestepEmbedder"><code class="docutils literal notranslate"><span class="pre">TimestepEmbedder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.SPRINTConfig"><code class="docutils literal notranslate"><span class="pre">SPRINTConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.SPRINTDiT"><code class="docutils literal notranslate"><span class="pre">SPRINTDiT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.SPRINTScheduler"><code class="docutils literal notranslate"><span class="pre">SPRINTScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.TokenSelector"><code class="docutils literal notranslate"><span class="pre">TokenSelector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/networks.html#medlatents.networks.TokenRestorer"><code class="docutils literal notranslate"><span class="pre">TokenRestorer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/sampling.html">Sampling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_nucleus"><code class="docutils literal notranslate"><span class="pre">sample_nucleus()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_min_p"><code class="docutils literal notranslate"><span class="pre">sample_min_p()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_autoregressive"><code class="docutils literal notranslate"><span class="pre">sample_autoregressive()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_with_cfg"><code class="docutils literal notranslate"><span class="pre">sample_with_cfg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.TemperatureScheduler"><code class="docutils literal notranslate"><span class="pre">TemperatureScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.confidence_based_schedule"><code class="docutils literal notranslate"><span class="pre">confidence_based_schedule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.adaptive_masking"><code class="docutils literal notranslate"><span class="pre">adaptive_masking()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.gumbel_max_sampling"><code class="docutils literal notranslate"><span class="pre">gumbel_max_sampling()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.MaskGITScheduler"><code class="docutils literal notranslate"><span class="pre">MaskGITScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.RunningConfidenceRemasker"><code class="docutils literal notranslate"><span class="pre">RunningConfidenceRemasker</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.RunningConfidenceScheduler"><code class="docutils literal notranslate"><span class="pre">RunningConfidenceScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.RCRGenerator"><code class="docutils literal notranslate"><span class="pre">RCRGenerator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.KLASSGenerator"><code class="docutils literal notranslate"><span class="pre">KLASSGenerator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.DDIMScheduler"><code class="docutils literal notranslate"><span class="pre">DDIMScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.DPMSolverScheduler"><code class="docutils literal notranslate"><span class="pre">DPMSolverScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.EulerDiscreteScheduler"><code class="docutils literal notranslate"><span class="pre">EulerDiscreteScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.AncestralSamplingScheduler"><code class="docutils literal notranslate"><span class="pre">AncestralSamplingScheduler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_with_cfg_flow"><code class="docutils literal notranslate"><span class="pre">sample_with_cfg_flow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_with_cfg_diffusion"><code class="docutils literal notranslate"><span class="pre">sample_with_cfg_diffusion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.CFGFlowMatcher"><code class="docutils literal notranslate"><span class="pre">CFGFlowMatcher</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.CFGDiffuser"><code class="docutils literal notranslate"><span class="pre">CFGDiffuser</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.generate_with_cfg"><code class="docutils literal notranslate"><span class="pre">generate_with_cfg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.rescale_cfg"><code class="docutils literal notranslate"><span class="pre">rescale_cfg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_with_dynamic_cfg"><code class="docutils literal notranslate"><span class="pre">sample_with_dynamic_cfg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_bayesian_flow"><code class="docutils literal notranslate"><span class="pre">sample_bayesian_flow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.sample_with_early_stopping"><code class="docutils literal notranslate"><span class="pre">sample_with_early_stopping()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.get_confidence"><code class="docutils literal notranslate"><span class="pre">get_confidence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.BayesianFlowSampler"><code class="docutils literal notranslate"><span class="pre">BayesianFlowSampler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.DecoupledSTGumbelSoftmax"><code class="docutils literal notranslate"><span class="pre">DecoupledSTGumbelSoftmax</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.ReinMax"><code class="docutils literal notranslate"><span class="pre">ReinMax</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.GuidedSampler"><code class="docutils literal notranslate"><span class="pre">GuidedSampler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.get_guidance_schedule"><code class="docutils literal notranslate"><span class="pre">get_guidance_schedule()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.constant_guidance"><code class="docutils literal notranslate"><span class="pre">constant_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.linear_guidance"><code class="docutils literal notranslate"><span class="pre">linear_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.cosine_guidance"><code class="docutils literal notranslate"><span class="pre">cosine_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.cosine_decay_guidance"><code class="docutils literal notranslate"><span class="pre">cosine_decay_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.triangular_guidance"><code class="docutils literal notranslate"><span class="pre">triangular_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.cfg_zero_guidance"><code class="docutils literal notranslate"><span class="pre">cfg_zero_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.cfg_zero_star_guidance"><code class="docutils literal notranslate"><span class="pre">cfg_zero_star_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.dynamic_guidance"><code class="docutils literal notranslate"><span class="pre">dynamic_guidance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.is_compile_available"><code class="docutils literal notranslate"><span class="pre">is_compile_available()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.compile_model"><code class="docutils literal notranslate"><span class="pre">compile_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.compile_function"><code class="docutils literal notranslate"><span class="pre">compile_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampling.html#medlatents.sampling.CompiledSampler"><code class="docutils literal notranslate"><span class="pre">CompiledSampler</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/training.html">Training API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#trainers">Trainers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#schedules">Schedules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#curriculum-learning">Curriculum Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#conditional-training">Conditional Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#representation-alignment-repa-repa-e">Representation Alignment (REPA / REPA-E)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#checkpointing">Checkpointing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#distributed-training">Distributed Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#data-loading">Data Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/training.html#performance-and-profiling">Performance and Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/generation.html">Generation API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/generation.html#discrete-latent-generation">Discrete Latent Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/generation.html#continuous-latent-generation">Continuous Latent Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/inference.html">Inference API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#masking-and-spatial-utilities">Masking and Spatial Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#inpainting">Inpainting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#super-resolution">Super-Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#large-volume-processing">Large-Volume Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#kv-cache">KV-Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/inference.html#quantization-and-pruning">Quantization and Pruning</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/post_training.html">Post-Training API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#preference-data-and-reward-models">Preference Data and Reward Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#direct-preference-optimization-dpo">Direct Preference Optimization (DPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#reinforcement-learning">Reinforcement Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#distillation">Distillation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/post_training.html#self-play">Self-Play</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/evaluation.html">Evaluation API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html#generative-quality">Generative Quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html#fid-bootstrap-and-feature-extraction">FID Bootstrap and Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html#reconstruction-metrics">Reconstruction Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html#memorization-probing">Memorization Probing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/evaluation.html#classifier-utility">Classifier Utility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/conditioning.html">Conditioning API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/conditioning.html#conditioning-bundle">Conditioning Bundle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/conditioning.html#frozen-encoders">Frozen Encoders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/conditioning.html#data-pipeline">Data Pipeline</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/rasterization.html">Rasterization API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/rasterization.html#rasterization-methods">Rasterization Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/rasterization.html#convenience-functions">Convenience Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/data.html">Data API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html#datasets">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html#dataloaders">Dataloaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html#tokenizers">Tokenizers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/configs.html">Configs API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/configs.html#registries">Registries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/configs.html#data-classes-and-helpers">Data Classes and Helpers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_training.html">Tutorial 1: Training Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#create-synthetic-data">Create synthetic data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#autoregressive-transformer">1. Autoregressive Transformer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#maskgit">2. MaskGIT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#discrete-diffusion-d3pm">3. Discrete Diffusion (D3PM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#flow-matching">4. Flow Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#bayesian-flow-networks">5. Bayesian Flow Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#scaling-up-the-full-trainer">Scaling up: the full trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#saving-checkpoints">Saving checkpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#training-tips">Training tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/01_training.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_generation.html">Tutorial 2: Generating Samples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#high-level-generation">High-level generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#direct-model-sampling">Direct model sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#sampling-strategies">Sampling strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#maskgit-and-klass-early-stopping">MaskGIT and KLASS early stopping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#classifier-free-guidance-cfg">Classifier-free guidance (CFG)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#reproducibility">Reproducibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/02_generation.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03_inpainting.html">Tutorial 3: Inpainting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#the-workflow">The workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#creating-a-mask">Creating a mask</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#end-to-end-inpainting">End-to-end inpainting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#per-architecture-entry-points">Per-architecture entry points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#super-resolution">Super-resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#working-with-large-volumes">Working with large volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#preserving-metadata">Preserving metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/03_inpainting.html#next-steps">Next steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#reconstruction-metrics">Reconstruction metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#generative-quality">Generative quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#confidence-intervals">Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#memorization-probe">Memorization probe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#reproducible-baselines">Reproducible baselines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/04_evaluation.html#where-to-go-next">Where to go next</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="research/implemented_methods.html">Implemented Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#generative-model-families">Generative model families</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#sampling-and-inference-techniques">Sampling and inference techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#training-techniques">Training techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#post-training-and-alignment">Post-training and alignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#spatial-to-sequence-conversion">Spatial-to-sequence conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/implemented_methods.html#research-process">Research process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="research/references.html">References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#generative-model-families">Generative model families</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#sampling-and-inference">Sampling and inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#training-and-representation-alignment">Training and representation alignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#preference-optimization">Preference optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#reinforcement-learning">Reinforcement learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#distillation">Distillation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#self-play">Self-play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research/references.html#citing-medlatents">Citing MedLatents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+<section id="features">
+<h1>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h1>
+<p><strong>Core Models</strong></p>
+<ul class="simple">
+<li><p><strong>Autoregressive Transformer</strong>: Unidirectional generation with causal attention</p></li>
+<li><p><strong>MaskGIT</strong>: Bidirectional masked transformer for parallel decoding</p></li>
+<li><p><strong>Discrete DiT</strong>: Diffusion transformer for discrete latent spaces (D3PM)</p></li>
+<li><p><strong>Flow Matching</strong>: Discrete and continuous flow-based generation</p></li>
+<li><p><strong>Bayesian Flow Networks</strong>: Probabilistic flow models</p></li>
+</ul>
+<p><strong>Advanced Features</strong></p>
+<ul class="simple">
+<li><p><strong>Halton Scheduler</strong>: Spatially-dispersed unmasking for MaskGIT</p></li>
+<li><p><strong>KLASS Early Stopping</strong>: Adaptive stopping based on KL divergence</p></li>
+<li><p><strong>Time-Dependent CFG</strong>: Dynamic classifier-free guidance schedules</p></li>
+<li><p><strong>Speculative Decoding</strong>: Accelerated autoregressive generation</p></li>
+<li><p><strong>Rectified Flow++</strong>: Iterative reflow for straighter trajectories</p></li>
+</ul>
+<p><strong>Medical Domain</strong></p>
+<ul class="simple">
+<li><p><strong>Rasterization</strong>: Space-filling curves (Hilbert, Z-order) for spatial-to-sequence</p></li>
+<li><p><strong>Inpainting</strong>: Fill missing regions in medical images</p></li>
+<li><p><strong>Super-Resolution</strong>: Upscale low-resolution medical scans</p></li>
+<li><p><strong>Clinical Metrics</strong>: Dice, IoU, PSNR, SSIM evaluation</p></li>
+</ul>
+</section>
+<section id="quick-links">
+<h1>Quick Links<a class="headerlink" href="#quick-links" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference external" href="getting_started.html#installation">Installation</a></p></li>
+<li><p><a class="reference external" href="tutorials/01_training.html">Train a Model</a></p></li>
+<li><p><a class="reference external" href="tutorials/02_generation.html">Generate Samples</a></p></li>
+<li><p><a class="reference external" href="api/autoregressive.html">API Reference</a></p></li>
+<li><p><a class="reference external" href="research/implemented_methods.html">Research Methods</a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

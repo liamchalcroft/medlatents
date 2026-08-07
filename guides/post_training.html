@@ -1,0 +1,531 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post-Training Guide &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Token Interface" href="../token_interface.html" />
+    <link rel="prev" title="Rasterization Guide" href="rasterization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Post-Training Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#shared-configuration">Shared configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-preference-data">Building preference data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-preference-optimization-dpo">Direct Preference Optimization (DPO)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#discrete-models-autoregressive-maskgit">Discrete models (autoregressive, MaskGIT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#diffusion-models-d3pm">Diffusion models (D3PM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flow-matching-models">Flow-matching models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loss-variants">Loss variants</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-by-step-preference-optimization-spo">Step-by-step Preference Optimization (SPO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning">Reinforcement learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distillation">Distillation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reflow">Reflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consistency-distillation">Consistency distillation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reward-modeling-and-feedback">Reward modeling and feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#self-play">Self-play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-a-method">Choosing a method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Post-Training Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/guides/post_training.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="post-training-guide">
+<h1>Post-Training Guide<a class="headerlink" href="#post-training-guide" title="Link to this heading"></a></h1>
+<p>Post-training refines a <em>pretrained</em> generative model so its samples better
+match human or automated preferences, optimize an explicit reward, or sample in
+far fewer steps. MedLatents ships a unified post-training stack that works
+across every architecture in the library – autoregressive, MaskGIT, D3PM, flow
+matching, and Bayesian flow – through one shared configuration object.</p>
+<p>There are five families of methods:</p>
+<ul class="simple">
+<li><p><strong>Preference optimization</strong> – DPO and its per-architecture variants, plus
+step-level SPO.</p></li>
+<li><p><strong>Reinforcement learning</strong> – DDPO, GRPO, and GARDO for reward-driven
+fine-tuning.</p></li>
+<li><p><strong>Distillation</strong> – reflow and consistency distillation for few-step sampling.</p></li>
+<li><p><strong>Reward modeling and feedback</strong> – trained reward models and AI/discriminator
+feedback used to generate or score preference data.</p></li>
+<li><p><strong>Self-play</strong> – SPIN and rejection fine-tuning (RFT) for iterative
+self-improvement.</p></li>
+</ul>
+<p>The API reference for every class below is in <a class="reference internal" href="../api/post_training.html"><span class="doc">Post-Training API</span></a>.</p>
+<section id="shared-configuration">
+<h2>Shared configuration<a class="headerlink" href="#shared-configuration" title="Link to this heading"></a></h2>
+<p>Every trainer takes a <a class="reference internal" href="../api/post_training.html#medlatents.post_training.PostTrainingConfig" title="medlatents.post_training.PostTrainingConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">PostTrainingConfig</span></code></a>,
+which carries optimization, EMA, distributed (FSDP), logging, and
+method-specific hyperparameters. Construct it directly or from a named preset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
+
+<span class="c1"># Direct construction</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;dpo&quot;</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+
+<span class="c1"># Or from a preset, overriding individual fields</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;dpo_standard&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ready-made preset constants are also exported:
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.DPO_SMALL" title="medlatents.post_training.DPO_SMALL"><code class="xref py py-data docutils literal notranslate"><span class="pre">DPO_SMALL</span></code></a>,
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.DPO_STANDARD" title="medlatents.post_training.DPO_STANDARD"><code class="xref py py-data docutils literal notranslate"><span class="pre">DPO_STANDARD</span></code></a>,
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.DPO_LARGE" title="medlatents.post_training.DPO_LARGE"><code class="xref py py-data docutils literal notranslate"><span class="pre">DPO_LARGE</span></code></a>,
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.SPO_STANDARD" title="medlatents.post_training.SPO_STANDARD"><code class="xref py py-data docutils literal notranslate"><span class="pre">SPO_STANDARD</span></code></a>,
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.DDPO_STANDARD" title="medlatents.post_training.DDPO_STANDARD"><code class="xref py py-data docutils literal notranslate"><span class="pre">DDPO_STANDARD</span></code></a>, and
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.GRPO_EFFICIENT" title="medlatents.post_training.GRPO_EFFICIENT"><code class="xref py py-data docutils literal notranslate"><span class="pre">GRPO_EFFICIENT</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">PostTrainingConfig</span></code> enables FSDP by default (<code class="docutils literal notranslate"><span class="pre">use_fsdp=True</span></code>). On a
+single device, pass <code class="docutils literal notranslate"><span class="pre">use_fsdp=False</span></code> or hand the trainer a pre-configured
+<code class="xref py py-class docutils literal notranslate"><span class="pre">accelerate.Accelerator</span></code>.</p>
+</div>
+</section>
+<section id="building-preference-data">
+<h2>Building preference data<a class="headerlink" href="#building-preference-data" title="Link to this heading"></a></h2>
+<p>DPO, SPO, and reward-model training all consume <em>preference pairs</em>. The
+recommended path is to generate samples from your current model and rank them
+with a reward function via
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.PreferenceDataset.from_generations" title="medlatents.post_training.PreferenceDataset.from_generations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_generations()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreferenceDataset</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">PreferenceDataset</span><span class="o">.</span><span class="n">from_generations</span><span class="p">(</span>
+    <span class="n">generator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>                 <span class="c1"># any model with a .generate() method</span>
+    <span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span>                 <span class="c1"># conditioning labels / prompts</span>
+    <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>             <span class="c1"># scores samples; higher is better</span>
+    <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">pair_strategy</span><span class="o">=</span><span class="s2">&quot;best_worst&quot;</span><span class="p">,</span>      <span class="c1"># &quot;all&quot;, &quot;adjacent&quot;, or &quot;best_worst&quot;</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also assemble pairs manually with
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.PreferencePair" title="medlatents.post_training.PreferencePair"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreferencePair</span></code></a> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">PreferenceDataset.add_pair()</span></code>, and batch them with
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.collate_preference_pairs" title="medlatents.post_training.collate_preference_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">collate_preference_pairs()</span></code></a>.</p>
+</section>
+<section id="direct-preference-optimization-dpo">
+<h2>Direct Preference Optimization (DPO)<a class="headerlink" href="#direct-preference-optimization-dpo" title="Link to this heading"></a></h2>
+<p>DPO optimizes the policy directly against preference pairs, using a frozen
+<em>reference</em> model to regularize the update (set <code class="docutils literal notranslate"><span class="pre">ref_model=None</span></code> for
+reference-free training). Each architecture has a trainer that knows how to
+compute log-probabilities for that model family.</p>
+<section id="discrete-models-autoregressive-maskgit">
+<h3>Discrete models (autoregressive, MaskGIT)<a class="headerlink" href="#discrete-models-autoregressive-maskgit" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span><span class="p">,</span> <span class="n">AutoregressiveDPOTrainer</span>
+
+<span class="n">ref_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ref_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;dpo&quot;</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">AutoregressiveDPOTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>          <span class="c1"># inferred from the model if omitted</span>
+<span class="p">)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.MaskGITDPOTrainer" title="medlatents.post_training.MaskGITDPOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskGITDPOTrainer</span></code></a> follows the same signature
+for bidirectional masked models, and
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer" title="medlatents.post_training.DiscreteDPOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteDPOTrainer</span></code></a> is the shared base for
+discrete-token DPO.</p>
+</section>
+<section id="diffusion-models-d3pm">
+<h3>Diffusion models (D3PM)<a class="headerlink" href="#diffusion-models-d3pm" title="Link to this heading"></a></h3>
+<p>Diffusion DPO scores pairs through the ELBO of the discrete diffusion process,
+so the trainer needs the <a class="reference internal" href="../api/diffusion.html#medlatents.diffusion.D3PM" title="medlatents.diffusion.D3PM"><code class="xref py py-class docutils literal notranslate"><span class="pre">D3PM</span></code></a> object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3PMDPOTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">D3PMDPOTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">d3pm</span><span class="o">=</span><span class="n">d3pm</span><span class="p">,</span>                       <span class="c1"># the D3PM diffusion process</span>
+    <span class="n">num_timestep_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c1"># Monte-Carlo timesteps for the ELBO</span>
+    <span class="n">elbo_mode</span><span class="o">=</span><span class="s2">&quot;monte_carlo&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="flow-matching-models">
+<h3>Flow-matching models<a class="headerlink" href="#flow-matching-models" title="Link to this heading"></a></h3>
+<p>Flow DPO estimates likelihood along the flow trajectory and needs the
+probability path:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteFlowDPOTrainer</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">DiscreteFlowDPOTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>                       <span class="c1"># e.g. MixtureDiscreteProbPath</span>
+    <span class="n">likelihood_strategy</span><span class="o">=</span><span class="s2">&quot;trajectory&quot;</span><span class="p">,</span>
+    <span class="n">num_timestep_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.FlowDPOTrainer" title="medlatents.post_training.FlowDPOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlowDPOTrainer</span></code></a> provides the continuous
+counterpart.</p>
+</section>
+<section id="loss-variants">
+<h3>Loss variants<a class="headerlink" href="#loss-variants" title="Link to this heading"></a></h3>
+<p>All DPO trainers share <a class="reference internal" href="../api/post_training.html#medlatents.post_training.DPOLoss" title="medlatents.post_training.DPOLoss"><code class="xref py py-class docutils literal notranslate"><span class="pre">DPOLoss</span></code></a>, which
+supports <code class="docutils literal notranslate"><span class="pre">sigmoid</span></code> (standard DPO), <code class="docutils literal notranslate"><span class="pre">hinge</span></code>, <code class="docutils literal notranslate"><span class="pre">ipo</span></code>, and <code class="docutils literal notranslate"><span class="pre">kto</span></code> objectives.
+Select the variant with <code class="docutils literal notranslate"><span class="pre">config.loss_type</span></code>.</p>
+</section>
+</section>
+<section id="step-by-step-preference-optimization-spo">
+<h2>Step-by-step Preference Optimization (SPO)<a class="headerlink" href="#step-by-step-preference-optimization-spo" title="Link to this heading"></a></h2>
+<p>SPO optimizes preferences at the level of individual denoising/decoding steps
+rather than only final samples. It generates <code class="docutils literal notranslate"><span class="pre">num_candidates</span></code> continuations
+per step and scores intermediate states with a step preference model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span><span class="p">,</span> <span class="n">SPOTrainer</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;spo&quot;</span><span class="p">,</span> <span class="n">num_candidates</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">SPOTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">diffusion</span><span class="o">=</span><span class="n">d3pm</span><span class="p">,</span>                  <span class="c1"># or flow_path=path for flow models</span>
+    <span class="n">num_candidates</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The trainable step scorer is
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.StepPreferenceModel" title="medlatents.post_training.StepPreferenceModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">StepPreferenceModel</span></code></a>.</p>
+</section>
+<section id="reinforcement-learning">
+<h2>Reinforcement learning<a class="headerlink" href="#reinforcement-learning" title="Link to this heading"></a></h2>
+<p>RL trainers treat generation as a multi-step MDP and optimize a reward function
+directly. They share <a class="reference internal" href="../api/post_training.html#medlatents.post_training.rl.BaseRLTrainer" title="medlatents.post_training.rl.BaseRLTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRLTrainer</span></code></a>, which
+takes a <code class="docutils literal notranslate"><span class="pre">reward_fn</span></code> and exposes <code class="docutils literal notranslate"><span class="pre">generate_trajectories</span></code> and
+<code class="docutils literal notranslate"><span class="pre">train(seq_length=...)</span></code>.</p>
+<ul class="simple">
+<li><p><strong>DDPO</strong> (<a class="reference internal" href="../api/post_training.html#medlatents.post_training.rl.DDPOTrainer" title="medlatents.post_training.rl.DDPOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DDPOTrainer</span></code></a>) – PPO-style
+policy optimization over the denoising trajectory, with GAE advantages
+(<code class="docutils literal notranslate"><span class="pre">config.gae_lambda</span></code>). <a class="reference internal" href="../api/post_training.html#medlatents.post_training.rl.DDPODiscreteFlowTrainer" title="medlatents.post_training.rl.DDPODiscreteFlowTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DDPODiscreteFlowTrainer</span></code></a>
+targets discrete flow models.</p></li>
+<li><p><strong>GRPO</strong> (<a class="reference internal" href="../api/post_training.html#medlatents.post_training.rl.GRPOTrainer" title="medlatents.post_training.rl.GRPOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GRPOTrainer</span></code></a>) – group-relative
+policy optimization that drops the value network and normalizes rewards within
+a group of samples per prompt (memory-efficient).</p></li>
+<li><p><strong>GARDO</strong> (<a class="reference internal" href="../api/post_training.html#medlatents.post_training.rl.GARDOTrainer" title="medlatents.post_training.rl.GARDOTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GARDOTrainer</span></code></a>) – adds an
+adaptive KL/distance penalty (<code class="docutils literal notranslate"><span class="pre">config.reward_threshold</span></code>,
+<code class="docutils literal notranslate"><span class="pre">config.distance_penalty</span></code>).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.rl</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRPOTrainer</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;grpo&quot;</span><span class="p">,</span>
+    <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">clip_range</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reward_fn</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+    <span class="c1"># Return a scalar reward per sample; higher is better.</span>
+    <span class="k">return</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">GRPOTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>             <span class="c1"># optional KL anchor</span>
+<span class="p">)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="distillation">
+<h2>Distillation<a class="headerlink" href="#distillation" title="Link to this heading"></a></h2>
+<p>Distillation compresses a many-step sampler into a few-step one.</p>
+<section id="reflow">
+<h3>Reflow<a class="headerlink" href="#reflow" title="Link to this heading"></a></h3>
+<p>Reflow iteratively straightens flow trajectories by retraining on
+<code class="docutils literal notranslate"><span class="pre">(noise,</span> <span class="pre">data)</span></code> pairs generated by the current model. Generate pairs with
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.distillation.ReflowPairGenerator" title="medlatents.post_training.distillation.ReflowPairGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReflowPairGenerator</span></code></a>, then fit
+them with <a class="reference internal" href="../api/post_training.html#medlatents.post_training.distillation.ReflowTrainer" title="medlatents.post_training.distillation.ReflowTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReflowTrainer</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.distillation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReflowPairGenerator</span>
+
+<span class="n">pair_gen</span> <span class="o">=</span> <span class="n">ReflowPairGenerator</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+    <span class="n">num_inference_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">noise</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pair_gen</span><span class="o">.</span><span class="n">generate_pairs</span><span class="p">(</span><span class="n">data_samples</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="consistency-distillation">
+<h3>Consistency distillation<a class="headerlink" href="#consistency-distillation" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.distillation.ConsistencyTrainer" title="medlatents.post_training.distillation.ConsistencyTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConsistencyTrainer</span></code></a> learns to map
+any noise level directly to data, enabling 1–4 step sampling. In
+<code class="docutils literal notranslate"><span class="pre">&quot;distillation&quot;</span></code> mode it requires a frozen teacher; in <code class="docutils literal notranslate"><span class="pre">&quot;training&quot;</span></code> mode it
+trains a consistency model from scratch.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.distillation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConsistencyTrainer</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;consistency&quot;</span><span class="p">,</span> <span class="n">teacher_path</span><span class="o">=</span><span class="s2">&quot;teacher.pt&quot;</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">ConsistencyTrainer</span><span class="p">(</span>
+    <span class="n">student</span><span class="o">=</span><span class="n">student</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">teacher</span><span class="o">=</span><span class="n">teacher</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distillation&quot;</span><span class="p">,</span>
+    <span class="n">s0</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">s1</span><span class="o">=</span><span class="mi">1280</span><span class="p">,</span>                  <span class="c1"># discretization schedule endpoints</span>
+<span class="p">)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The pseudo-Huber objective is available standalone as
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.distillation.pseudo_huber_loss" title="medlatents.post_training.distillation.pseudo_huber_loss"><code class="xref py py-func docutils literal notranslate"><span class="pre">pseudo_huber_loss()</span></code></a>.</p>
+</section>
+</section>
+<section id="reward-modeling-and-feedback">
+<h2>Reward modeling and feedback<a class="headerlink" href="#reward-modeling-and-feedback" title="Link to this heading"></a></h2>
+<p>Reward models and feedback scorers power both RL and synthetic preference data.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.create_reward_model" title="medlatents.post_training.create_reward_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_reward_model()</span></code></a> builds a sized
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.RewardModel" title="medlatents.post_training.RewardModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">RewardModel</span></code></a> (<code class="docutils literal notranslate"><span class="pre">nano</span></code>/<code class="docutils literal notranslate"><span class="pre">small</span></code>/<code class="docutils literal notranslate"><span class="pre">base</span></code>/
+<code class="docutils literal notranslate"><span class="pre">large</span></code>; set <code class="docutils literal notranslate"><span class="pre">timestep_aware=True</span></code> for SPO-style step scoring).</p></li>
+<li><p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.RewardModelTrainer" title="medlatents.post_training.RewardModelTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RewardModelTrainer</span></code></a> fits a reward model on a
+<a class="reference internal" href="../api/post_training.html#medlatents.post_training.PreferenceDataset" title="medlatents.post_training.PreferenceDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreferenceDataset</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="../api/post_training.html#medlatents.post_training.preference.AIPreferenceScorer" title="medlatents.post_training.preference.AIPreferenceScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AIPreferenceScorer</span></code></a> wraps any
+scoring callable (e.g. <code class="docutils literal notranslate"><span class="pre">AIPreferenceScorer.from_reward_model(rm)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">from_discriminator(...)</span></code>) for AI-feedback labeling.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_reward_model</span><span class="p">,</span> <span class="n">RewardModelTrainer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.preference</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIPreferenceScorer</span>
+
+<span class="n">reward_model</span> <span class="o">=</span> <span class="n">create_reward_model</span><span class="p">(</span><span class="n">model_size</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">,</span> <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">rm_trainer</span> <span class="o">=</span> <span class="n">RewardModelTrainer</span><span class="p">(</span><span class="n">reward_model</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<span class="n">rm_trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+<span class="c1"># Turn the trained reward model into a standalone scorer</span>
+<span class="n">scorer</span> <span class="o">=</span> <span class="n">AIPreferenceScorer</span><span class="o">.</span><span class="n">from_reward_model</span><span class="p">(</span><span class="n">reward_model</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="self-play">
+<h2>Self-play<a class="headerlink" href="#self-play" title="Link to this heading"></a></h2>
+<p>Self-play methods improve a model by training on its own generations.</p>
+<ul class="simple">
+<li><p><strong>SPIN</strong> (<a class="reference internal" href="../api/post_training.html#medlatents.post_training.self_play.SPINTrainer" title="medlatents.post_training.self_play.SPINTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPINTrainer</span></code></a>) treats the
+model’s current samples as negatives against higher-quality targets, creating
+an implicit curriculum. It needs no external reward.</p></li>
+<li><p><strong>RFT</strong> (<a class="reference internal" href="../api/post_training.html#medlatents.post_training.self_play.RFTTrainer" title="medlatents.post_training.self_play.RFTTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RFTTrainer</span></code></a>) – rejection
+fine-tuning: generate <code class="docutils literal notranslate"><span class="pre">num_samples_per_prompt</span></code> candidates, keep the top-<code class="docutils literal notranslate"><span class="pre">k</span></code>
+by reward, and fine-tune on those.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.self_play</span><span class="w"> </span><span class="kn">import</span> <span class="n">RFTTrainer</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;rft&quot;</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">RFTTrainer</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="choosing-a-method">
+<h2>Choosing a method<a class="headerlink" href="#choosing-a-method" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.0%" />
+<col style="width: 26.0%" />
+<col style="width: 52.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Goal</p></th>
+<th class="head"><p>Method</p></th>
+<th class="head"><p>When to use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Align to preferences, have pairs</p></td>
+<td><p>DPO (per-architecture)</p></td>
+<td><p>You can rank pairs of samples and want a stable, reward-free update.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Align at the step level</p></td>
+<td><p>SPO</p></td>
+<td><p>Final-sample preferences are too coarse; you want per-step credit.</p></td>
+</tr>
+<tr class="row-even"><td><p>Optimize an explicit reward</p></td>
+<td><p>GRPO / DDPO / GARDO</p></td>
+<td><p>You have a differentiable or black-box reward and a compute budget for
+rollouts. GRPO is the most memory-frugal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sample in fewer steps</p></td>
+<td><p>Reflow / consistency</p></td>
+<td><p>Inference latency matters; you can afford a distillation phase.</p></td>
+</tr>
+<tr class="row-even"><td><p>Improve without external labels</p></td>
+<td><p>SPIN / RFT</p></td>
+<td><p>No human labels available; you have a usable quality signal (SPIN) or a
+reward function (RFT).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/post_training.html"><span class="doc">Post-Training API</span></a> – full API reference.</p></li>
+<li><p><a class="reference internal" href="../research/implemented_methods.html"><span class="doc">Implemented Methods</span></a> – the methods and their source papers.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rasterization.html" class="btn btn-neutral float-left" title="Rasterization Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../token_interface.html" class="btn btn-neutral float-right" title="Token Interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

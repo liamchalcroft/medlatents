@@ -1,0 +1,825 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluation API &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Conditioning API" href="conditioning.html" />
+    <link rel="prev" title="Post-Training API" href="post_training.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="post_training.html">Post-Training API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Evaluation API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generative-quality">Generative Quality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.calculate_fid"><code class="docutils literal notranslate"><span class="pre">calculate_fid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.calculate_precision_recall"><code class="docutils literal notranslate"><span class="pre">calculate_precision_recall()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.calculate_nll"><code class="docutils literal notranslate"><span class="pre">calculate_nll()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator"><code class="docutils literal notranslate"><span class="pre">FIDCalculator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator.__init__"><code class="docutils literal notranslate"><span class="pre">FIDCalculator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator.update_real"><code class="docutils literal notranslate"><span class="pre">FIDCalculator.update_real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator.update_generated"><code class="docutils literal notranslate"><span class="pre">FIDCalculator.update_generated()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator.compute"><code class="docutils literal notranslate"><span class="pre">FIDCalculator.compute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.FIDCalculator.reset"><code class="docutils literal notranslate"><span class="pre">FIDCalculator.reset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator.__init__"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator.update_real"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator.update_real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator.update_generated"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator.update_generated()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator.compute"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator.compute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.PrecisionRecallCalculator.reset"><code class="docutils literal notranslate"><span class="pre">PrecisionRecallCalculator.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fid-bootstrap-and-feature-extraction">FID Bootstrap and Feature Extraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.fid_from_features"><code class="docutils literal notranslate"><span class="pre">fid_from_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.bootstrap_fid_real_vs_gen"><code class="docutils literal notranslate"><span class="pre">bootstrap_fid_real_vs_gen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.bootstrap_fid_noise_floor"><code class="docutils literal notranslate"><span class="pre">bootstrap_fid_noise_floor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reconstruction-metrics">Reconstruction Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.calculate_psnr"><code class="docutils literal notranslate"><span class="pre">calculate_psnr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.calculate_ssim"><code class="docutils literal notranslate"><span class="pre">calculate_ssim()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#memorization-probing">Memorization Probing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.InceptionPool3FeatureExtractor"><code class="docutils literal notranslate"><span class="pre">InceptionPool3FeatureExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.InceptionPool3FeatureExtractor.__init__"><code class="docutils literal notranslate"><span class="pre">InceptionPool3FeatureExtractor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.evaluation.InceptionPool3FeatureExtractor.extract"><code class="docutils literal notranslate"><span class="pre">InceptionPool3FeatureExtractor.extract()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.memorization_metrics"><code class="docutils literal notranslate"><span class="pre">memorization_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.memorization_pairs"><code class="docutils literal notranslate"><span class="pre">memorization_pairs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.nearest_neighbor_gallery_pairs"><code class="docutils literal notranslate"><span class="pre">nearest_neighbor_gallery_pairs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.cosine_distance_matrix"><code class="docutils literal notranslate"><span class="pre">cosine_distance_matrix()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#classifier-utility">Classifier Utility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.build_grayscale_resnet18"><code class="docutils literal notranslate"><span class="pre">build_grayscale_resnet18()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.train_classifier"><code class="docutils literal notranslate"><span class="pre">train_classifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.evaluate_auc"><code class="docutils literal notranslate"><span class="pre">evaluate_auc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.evaluation.classifier_fid"><code class="docutils literal notranslate"><span class="pre">classifier_fid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Evaluation API</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/api/evaluation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="evaluation-api">
+<h1>Evaluation API<a class="headerlink" href="#evaluation-api" title="Link to this heading"></a></h1>
+<p>Metrics for reconstruction quality, generative quality, memorization probing,
+and bootstrap confidence intervals. The generative-quality entry points (FID,
+precision/recall, NLL) are convenient one-call functions, with stateful
+calculator classes for streaming features over many batches.</p>
+<section id="generative-quality">
+<h2>Generative Quality<a class="headerlink" href="#generative-quality" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.calculate_fid">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">calculate_fid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#calculate_fid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L19-L67"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.calculate_fid" title="Link to this definition"></a></dt>
+<dd><p>Calculate Fréchet Inception Distance (FID) between real and generated features.</p>
+<p>FID = ||mu_real - mu_gen||^2 + Tr(Sigma_real + Sigma_gen - 2*sqrt(Sigma_real &#64; Sigma_gen))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real_features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'n_real</span> <span class="pre">features']</span></code></span>) – Features from real images [N_real, D]</p></li>
+<li><p><strong>generated_features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'n_gen</span> <span class="pre">features']</span></code></span>) – Features from generated images [N_gen, D]</p></li>
+<li><p><strong>eps</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1e-06</span></code>) – Small constant for numerical stability</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FID score (lower is better)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.calculate_precision_recall">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">calculate_precision_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generated_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#calculate_precision_recall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L70-L121"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.calculate_precision_recall" title="Link to this definition"></a></dt>
+<dd><p>Calculate Precision and Recall for generative models.</p>
+<p>Precision: What fraction of generated samples are realistic?
+Recall: What fraction of real samples are covered by the generator?</p>
+<p>Based on “Improved Precision and Recall Metric for Assessing Generative Models”
+(Kynkäänniemi et al., 2019)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real_features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'n_real</span> <span class="pre">features']</span></code></span>) – Features from real images [N_real, D]</p></li>
+<li><p><strong>generated_features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'n_gen</span> <span class="pre">features']</span></code></span>) – Features from generated images [N_gen, D]</p></li>
+<li><p><strong>k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">3</span></code>) – Number of nearest neighbors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(precision, recall) tuple, both in [0, 1]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.calculate_nll">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">calculate_nll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokens</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#calculate_nll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L134-L165"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.calculate_nll" title="Link to this definition"></a></dt>
+<dd><p>Calculate Negative Log-Likelihood for discrete latent models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>) – Model with forward pass returning logits</p></li>
+<li><p><strong>tokens</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Tensor,</span> <span class="pre">'batch</span> <span class="pre">seq']</span></code></span>) – Token sequences [batch, seq_len]</p></li>
+<li><p><strong>reduction</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'mean'</span></code>, <code class="docutils literal notranslate"><span class="pre">'sum'</span></code>, <code class="docutils literal notranslate"><span class="pre">'none'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'mean'</span></code>) – How to reduce across batch/sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NLL value (lower is better)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">FIDCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extractor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radimagenet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extractor_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L168-L244"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>FID calculator with feature extraction.</p>
+<p>Handles feature extraction and FID calculation in one class.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">calculator</span> <span class="o">=</span> <span class="n">FIDCalculator</span><span class="p">(</span><span class="n">extractor_type</span><span class="o">=</span><span class="s1">&#39;radimagenet&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract features from real images</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">real_loader</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">calculator</span><span class="o">.</span><span class="n">update_real</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract features from generated images</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">gen_loader</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">calculator</span><span class="o">.</span><span class="n">update_generated</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fid</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extractor_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'inception'</span></code>, <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extractor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radimagenet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extractor_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L185-L202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize FID calculator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extractor_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'inception'</span></code>, <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>) – Type of feature extractor</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>) – Device to run on</p></li>
+<li><p><strong>**extractor_kwargs</strong> – Additional kwargs for feature extractor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator.update_real">
+<span class="sig-name descname"><span class="pre">update_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator.update_real"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L204-L213"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator.update_real" title="Link to this definition"></a></dt>
+<dd><p>Extract and store features from real images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>images</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'batch</span> <span class="pre">channel</span> <span class="pre">height</span> <span class="pre">width']</span></code></span>) – Real images [B, C, H, W]</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator.update_generated">
+<span class="sig-name descname"><span class="pre">update_generated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator.update_generated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L215-L224"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator.update_generated" title="Link to this definition"></a></dt>
+<dd><p>Extract and store features from generated images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>images</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'batch</span> <span class="pre">channel</span> <span class="pre">height</span> <span class="pre">width']</span></code></span>) – Generated images [B, C, H, W]</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L226-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator.compute" title="Link to this definition"></a></dt>
+<dd><p>Compute FID from accumulated features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>FID score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.FIDCalculator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#FIDCalculator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L241-L244"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.FIDCalculator.reset" title="Link to this definition"></a></dt>
+<dd><p>Clear accumulated features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">PrecisionRecallCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radimagenet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extractor_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L247-L312"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Precision/Recall calculator with feature extraction.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">calculator</span> <span class="o">=</span> <span class="n">PrecisionRecallCalculator</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">real_loader</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">calculator</span><span class="o">.</span><span class="n">update_real</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">gen_loader</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">calculator</span><span class="o">.</span><span class="n">update_generated</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</p></li>
+<li><p><strong>extractor_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'inception'</span></code>, <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extractor_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radimagenet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extractor_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L260-L280"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize Precision/Recall calculator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">3</span></code>) – Number of nearest neighbors</p></li>
+<li><p><strong>extractor_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'inception'</span></code>, <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'radimagenet'</span></code>) – Type of feature extractor</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cuda'</span></code>) – Device to run on</p></li>
+<li><p><strong>**extractor_kwargs</strong> – Additional kwargs for feature extractor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator.update_real">
+<span class="sig-name descname"><span class="pre">update_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator.update_real"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L282-L286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator.update_real" title="Link to this definition"></a></dt>
+<dd><p>Extract and store features from real images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>images</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'batch</span> <span class="pre">channel</span> <span class="pre">height</span> <span class="pre">width']</span></code></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator.update_generated">
+<span class="sig-name descname"><span class="pre">update_generated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator.update_generated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L288-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator.update_generated" title="Link to this definition"></a></dt>
+<dd><p>Extract and store features from generated images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>images</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Float[Tensor,</span> <span class="pre">'batch</span> <span class="pre">channel</span> <span class="pre">height</span> <span class="pre">width']</span></code></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L294-L307"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator.compute" title="Link to this definition"></a></dt>
+<dd><p>Compute Precision and Recall from accumulated features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(precision, recall) tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.PrecisionRecallCalculator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/generative.html#PrecisionRecallCalculator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/generative.py#L309-L312"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.PrecisionRecallCalculator.reset" title="Link to this definition"></a></dt>
+<dd><p>Clear accumulated features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fid-bootstrap-and-feature-extraction">
+<h2>FID Bootstrap and Feature Extraction<a class="headerlink" href="#fid-bootstrap-and-feature-extraction" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.fid_from_features">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">fid_from_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real_feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/fid.html#fid_from_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/fid.py#L52-L85"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.fid_from_features" title="Link to this definition"></a></dt>
+<dd><p>Closed-form Fréchet Inception Distance on already-extracted features.</p>
+<p>Uses the symmetric form
+<code class="docutils literal notranslate"><span class="pre">tr(</span> <span class="pre">(sigma_r</span> <span class="pre">sigma_g)^{1/2}</span> <span class="pre">)</span> <span class="pre">=</span> <span class="pre">sum</span> <span class="pre">sqrt</span> <span class="pre">eig(</span> <span class="pre">sigma_r^{1/2}</span> <span class="pre">sigma_g</span> <span class="pre">sigma_r^{1/2}</span> <span class="pre">)</span></code>
+computed via two <code class="docutils literal notranslate"><span class="pre">eigh</span></code> calls. ~50× faster than <code class="docutils literal notranslate"><span class="pre">scipy.linalg.sqrtm</span></code>
+on the 192-dim covariances used for FID-192 at low resolution, and
+numerically more stable (eigenvalues are non-negative by construction).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real_feats</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>)</p></li>
+<li><p><strong>gen_feats</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>)</p></li>
+<li><p><strong>ridge</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1e-06</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.bootstrap_fid_real_vs_gen">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">bootstrap_fid_real_vs_gen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">real_feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/fid.html#bootstrap_fid_real_vs_gen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/fid.py#L136-L177"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.bootstrap_fid_real_vs_gen" title="Link to this definition"></a></dt>
+<dd><p>95% CI for FID(real, gen) via paired bootstrap of feature indices.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">B</span></code> reps, sample <code class="docutils literal notranslate"><span class="pre">n</span></code> indices with replacement from each of
+<code class="docutils literal notranslate"><span class="pre">real_feats</span></code> and <code class="docutils literal notranslate"><span class="pre">gen_feats</span></code>, recompute FID. The resulting
+distribution captures the <em>estimator</em> uncertainty at the given sample
+size, given a fixed underlying generator. It does <em>not</em> capture
+train-time stochasticity (which requires re-sampling the model itself).
+Defaults <code class="docutils literal notranslate"><span class="pre">n</span></code> to <code class="docutils literal notranslate"><span class="pre">min(len(real_feats),</span> <span class="pre">len(gen_feats))</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real_feats</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>)</p></li>
+<li><p><strong>gen_feats</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>)</p></li>
+<li><p><strong>n</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>B</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">200</span></code>)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">42</span></code>)</p></li>
+<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.bootstrap_fid_noise_floor">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">bootstrap_fid_noise_floor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_per_half</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1000,</span> <span class="pre">2500,</span> <span class="pre">5000,</span> <span class="pre">10000)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/fid.html#bootstrap_fid_noise_floor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/fid.py#L88-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.bootstrap_fid_noise_floor" title="Link to this definition"></a></dt>
+<dd><p>Estimate FID’s <em>estimator-variance</em> noise floor via random splits.</p>
+<p>For each <code class="docutils literal notranslate"><span class="pre">n</span></code> in <code class="docutils literal notranslate"><span class="pre">n_per_half</span></code>, draw <code class="docutils literal notranslate"><span class="pre">B</span></code> random splits of
+<code class="docutils literal notranslate"><span class="pre">features</span></code> into two disjoint halves of size <code class="docutils literal notranslate"><span class="pre">n</span></code> each, compute
+FID(half_A, half_B), and return summary statistics. Because both halves
+come from the same underlying distribution, the resulting FID
+distribution characterises the <em>minimum detectable</em> FID gap at sample
+size <code class="docutils literal notranslate"><span class="pre">n</span></code> — gaps below this floor are within metric noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>)</p></li>
+<li><p><strong>n_per_half</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>, default: <code class="docutils literal notranslate"><span class="pre">(1000,</span> <span class="pre">2500,</span> <span class="pre">5000,</span> <span class="pre">10000)</span></code>)</p></li>
+<li><p><strong>B</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">200</span></code>)</p></li>
+<li><p><strong>seed</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">42</span></code>)</p></li>
+<li><p><strong>verbose</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="reconstruction-metrics">
+<h2>Reconstruction Metrics<a class="headerlink" href="#reconstruction-metrics" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.calculate_psnr">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">calculate_psnr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/reconstruction.html#calculate_psnr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/reconstruction.py#L47-L65"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.calculate_psnr" title="Link to this definition"></a></dt>
+<dd><p>Compute peak signal-to-noise ratio in dB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>prediction</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>data_range</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.calculate_ssim">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">calculate_ssim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prediction</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/reconstruction.html#calculate_ssim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/reconstruction.py#L95-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.calculate_ssim" title="Link to this definition"></a></dt>
+<dd><p>Compute structural similarity index (SSIM).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reference</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>prediction</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>window_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">11</span></code>)</p></li>
+<li><p><strong>data_range</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+<li><p><strong>k1</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">0.01</span></code>)</p></li>
+<li><p><strong>k2</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">0.03</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="memorization-probing">
+<h2>Memorization Probing<a class="headerlink" href="#memorization-probing" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.evaluation.InceptionPool3FeatureExtractor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">InceptionPool3FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#InceptionPool3FeatureExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L61-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.InceptionPool3FeatureExtractor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Extract 192-d Inception V3 pool3 features (matches FID-192).</p>
+<p>The backbone is the same one used by <code class="docutils literal notranslate"><span class="pre">torchmetrics.image.fid</span></code> with
+<code class="docutils literal notranslate"><span class="pre">feature=192</span></code>; sharing the feature space ensures the memorization
+metric and the reported FID values live on the same Inception manifold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>)</p></li>
+<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">64</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.InceptionPool3FeatureExtractor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#InceptionPool3FeatureExtractor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L69-L77"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.InceptionPool3FeatureExtractor.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>)</p></li>
+<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">64</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.evaluation.InceptionPool3FeatureExtractor.extract">
+<span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#InceptionPool3FeatureExtractor.extract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/../../../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/torch/utils/_contextlib.py#L79-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.InceptionPool3FeatureExtractor.extract" title="Link to this definition"></a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">192)</span></code> float features for the given images.</p>
+<p><code class="docutils literal notranslate"><span class="pre">images</span></code> may be <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">1,</span> <span class="pre">H,</span> <span class="pre">W)</span></code> or <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">3,</span> <span class="pre">H,</span> <span class="pre">W)</span></code>, dtype uint8 or
+float in [0,1]. Grayscale inputs are tiled to RGB. The inception
+backbone in <code class="docutils literal notranslate"><span class="pre">torchmetrics.image.fid</span></code> expects uint8 inputs (the
+normalisation is handled internally), so floats are rescaled to
+<code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">255]</span></code> and cast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>images</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.memorization_metrics">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">memorization_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gen_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#memorization_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L139-L186"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.memorization_metrics" title="Link to this definition"></a></dt>
+<dd><p>Compute the memorization-ratio and AuthPct scalars.</p>
+<p>Returns a dict with keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">memorization_ratio</span></code>: median(d_g-&gt;t) / median(d_t-&gt;t)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auth_pct</span></code>: fraction of generated samples for which
+d(gen, NN_train) &lt; d(NN_train, NN2_train)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">median_d_gen_to_train</span></code>: median nearest-neighbor distance from generated to training</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">median_d_train_to_train</span></code>: median nearest-neighbor distance within training (excluding self)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mean_d_gen_to_train</span></code>: mean version of the above</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mean_d_train_to_train</span></code>: ditto</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_gen</span></code>, <code class="docutils literal notranslate"><span class="pre">n_train</span></code>: sample counts</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gen_features</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>train_features</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.memorization_pairs">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">memorization_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gen_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#memorization_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L189-L205"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.memorization_pairs" title="Link to this definition"></a></dt>
+<dd><p>Return the <code class="docutils literal notranslate"><span class="pre">top_k</span></code> (gen_idx, train_idx, cosine_distance) pairs with
+the smallest gen→train distances — the most likely memorisation
+suspects to display in a side-by-side gallery.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gen_features</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>train_features</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>top_k</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">8</span></code>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.nearest_neighbor_gallery_pairs">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">nearest_neighbor_gallery_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generated_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#nearest_neighbor_gallery_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L208-L236"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.nearest_neighbor_gallery_pairs" title="Link to this definition"></a></dt>
+<dd><p>Select image tensors for generated/training nearest-neighbor galleries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>generated_images</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>train_images</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>pairs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]</span>)</p></li>
+<li><p><strong>max_pairs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.cosine_distance_matrix">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">cosine_distance_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/memorization.html#cosine_distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/memorization.py#L113-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.cosine_distance_matrix" title="Link to this definition"></a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">(N_q,</span> <span class="pre">N_r)</span></code> cosine-distance matrix in blocks.</p>
+<p>Returns a CPU tensor; switches to GPU for the matmul if <code class="docutils literal notranslate"><span class="pre">device</span></code> is
+cuda. Block size keeps memory bounded for large reference sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>reference</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">'cpu'</span></code>)</p></li>
+<li><p><strong>block</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1024</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classifier-utility">
+<h2>Classifier Utility<a class="headerlink" href="#classifier-utility" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.build_grayscale_resnet18">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">build_grayscale_resnet18</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/classifier_utility.html#build_grayscale_resnet18"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/classifier_utility.py#L45-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.build_grayscale_resnet18" title="Link to this definition"></a></dt>
+<dd><p>ResNet-18 with single-channel conv1 + multi-label classification head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num_classes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.train_classifier">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">train_classifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;built-in</span> <span class="pre">function</span> <span class="pre">print&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/classifier_utility.html#train_classifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/classifier_utility.py#L61-L123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.train_classifier" title="Link to this definition"></a></dt>
+<dd><p>Train <code class="docutils literal notranslate"><span class="pre">model</span></code> with BCE-with-logits, AdamW, per-epoch val AUC.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">{&quot;best_val_mean_auc&quot;,</span> <span class="pre">&quot;best_state_dict&quot;,</span> <span class="pre">&quot;history&quot;:</span> <span class="pre">[...]}</span></code>.
+The model is mutated in place; restore best state via
+<code class="docutils literal notranslate"><span class="pre">model.load_state_dict(returned[&quot;best_state_dict&quot;])</span></code> before evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>train_loader</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a></span>)</p></li>
+<li><p><strong>val_loader</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a></span>)</p></li>
+<li><p><strong>epochs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+<li><p><strong>lr</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">0.001</span></code>)</p></li>
+<li><p><strong>weight_decay</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">0.0001</span></code>)</p></li>
+<li><p><strong>log_fn</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</span>, default: <code class="docutils literal notranslate"><span class="pre">&lt;built-in</span> <span class="pre">function</span> <span class="pre">print&gt;</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.evaluate_auc">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">evaluate_auc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/classifier_utility.html#evaluate_auc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/../../../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/torch/utils/_contextlib.py#L126-L161"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.evaluate_auc" title="Link to this definition"></a></dt>
+<dd><p>Per-class + mean ROC-AUC over a DataLoader (multi-label).</p>
+<p>Classes for which the loader contains all-positive or all-negative
+labels yield NaN AUC and are excluded from the mean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>loader</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataLoader</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+<li><p><strong>class_names</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.evaluation.classifier_fid">
+<span class="sig-prename descclassname"><span class="pre">medlatents.evaluation.</span></span><span class="sig-name descname"><span class="pre">classifier_fid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gen_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ridge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/evaluation/classifier_utility.html#classifier_fid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/evaluation/classifier_utility.py#L209-L224"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.evaluation.classifier_fid" title="Link to this definition"></a></dt>
+<dd><p>FID in a trained classifier’s penultimate feature space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></span>)</p></li>
+<li><p><strong>real_images</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>gen_images</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>device</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">device</span></code></a></span>)</p></li>
+<li><p><strong>batch_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">256</span></code>)</p></li>
+<li><p><strong>ridge</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">1e-06</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="post_training.html" class="btn btn-neutral float-left" title="Post-Training API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="conditioning.html" class="btn btn-neutral float-right" title="Conditioning API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

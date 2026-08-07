@@ -1,0 +1,1026 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bayesian Flow Networks Guide &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rasterization Guide" href="rasterization.html" />
+    <link rel="prev" title="Flow Matching Guide" href="flow_matching.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bayesian Flow Networks Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bayesianflowtransformer">BayesianFlowTransformer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model-variants">Model Variants</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#accuracy-schedules">Accuracy Schedules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#schedule-comparison">Schedule Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#training">Training</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-training-loop">Basic Training Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#residual-loss-wrapper">Residual Loss Wrapper</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#entropy-encoding">Entropy Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generation-with-solvers">Generation with Solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#euler-solver-simple">Euler Solver (Simple)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heun-solver-higher-order">Heun Solver (Higher Order)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dpm-solver-fast">DPM-Solver (Fast)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exponential-integrator">Exponential Integrator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-solver-by-name">Get Solver by Name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#stochastic-sampling">Stochastic Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#guided-sampling">Guided Sampling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#score-guided-sampler">Score-Guided Sampler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-features">Advanced Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#variable-step-count">Variable Step Count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#temperature-scaling">Temperature Scaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#top-k-top-p-sampling">Top-k/Top-p Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#comparison-with-other-methods">Comparison with Other Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-tips">Training Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sampling-tips">Sampling Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-optimization">Memory Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Bayesian Flow Networks Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/guides/bayesian_flow.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bayesian-flow-networks-guide">
+<h1>Bayesian Flow Networks Guide<a class="headerlink" href="#bayesian-flow-networks-guide" title="Link to this heading"></a></h1>
+<p>This guide covers Bayesian Flow Networks (BFN) in medlatents, a principled
+framework for discrete generative modeling based on Bayesian inference.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Bayesian Flow Networks model generation as iterative Bayesian updating:</p>
+<ol class="arabic simple">
+<li><p><strong>Prior</strong>: Start with uniform distribution over all tokens</p></li>
+<li><p><strong>Bayesian Updates</strong>: Progressively receive noisy observations</p></li>
+<li><p><strong>Posterior</strong>: Final distribution is the generated sample</p></li>
+</ol>
+<p>Key advantages:</p>
+<ul class="simple">
+<li><p><strong>Principled uncertainty</strong>: Full posterior over tokens at each step</p></li>
+<li><p><strong>Flexible generation</strong>: Variable number of steps without retraining</p></li>
+<li><p><strong>Entropy control</strong>: Explicit control over information flow</p></li>
+</ul>
+<pre  class="mermaid">
+        flowchart LR
+    subgraph BFN[&quot;Bayesian Flow&quot;]
+        P0[&quot;Prior (Uniform)&quot;] --&gt;|&quot;Update 1&quot;| P1[&quot;Posterior 1&quot;]
+        P1 --&gt;|&quot;Update 2&quot;| P2[&quot;Posterior 2&quot;]
+        P2 --&gt;|&quot;...&quot;| PN[&quot;Final Posterior&quot;]
+    end
+
+    subgraph Info[&quot;Information Flow&quot;]
+        E0[&quot;High Entropy&quot;] --&gt; E1[&quot;...&quot;] --&gt; EN[&quot;Low Entropy&quot;]
+    end
+    </pre></section>
+<section id="bayesianflowtransformer">
+<h2>BayesianFlowTransformer<a class="headerlink" href="#bayesianflowtransformer" title="Link to this heading"></a></h2>
+<p>The core model architecture:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BayesianFlowTransformer</span><span class="p">,</span>
+    <span class="n">BFN_models</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Use a preset configuration</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BFN_models</span><span class="p">[</span><span class="s1">&#39;BFN-S&#39;</span><span class="p">](</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
+    <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Or custom configuration</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BayesianFlowTransformer</span><span class="p">(</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
+    <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">768</span><span class="p">,</span>
+    <span class="n">num_layers</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
+    <span class="n">dropout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="model-variants">
+<h3>Model Variants<a class="headerlink" href="#model-variants" title="Link to this heading"></a></h3>
+<p>Available preset configurations:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Hidden</p></th>
+<th class="head"><p>Layers</p></th>
+<th class="head"><p>Heads</p></th>
+<th class="head"><p>Params</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BFN-Ti</p></td>
+<td><p>384</p></td>
+<td><p>6</p></td>
+<td><p>6</p></td>
+<td><p>~15M</p></td>
+</tr>
+<tr class="row-odd"><td><p>BFN-S</p></td>
+<td><p>768</p></td>
+<td><p>12</p></td>
+<td><p>12</p></td>
+<td><p>~85M</p></td>
+</tr>
+<tr class="row-even"><td><p>BFN-B</p></td>
+<td><p>1024</p></td>
+<td><p>24</p></td>
+<td><p>16</p></td>
+<td><p>~300M</p></td>
+</tr>
+<tr class="row-odd"><td><p>BFN-L</p></td>
+<td><p>1536</p></td>
+<td><p>24</p></td>
+<td><p>24</p></td>
+<td><p>~700M</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="accuracy-schedules">
+<h2>Accuracy Schedules<a class="headerlink" href="#accuracy-schedules" title="Link to this heading"></a></h2>
+<p>Control how information flows during generation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">exponential_schedule</span><span class="p">,</span>
+    <span class="n">linear_entropy_schedule</span><span class="p">,</span>
+    <span class="n">cosine_schedule</span><span class="p">,</span>
+    <span class="n">get_bfn_schedule</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Exponential accuracy schedule (standard)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">exponential_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">beta_1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Accuracy at time t</span>
+
+<span class="c1"># Linear entropy schedule</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">linear_entropy_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">min_entropy</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Cosine schedule (smoother)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">cosine_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.008</span><span class="p">)</span>
+
+<span class="c1"># Get by name</span>
+<span class="n">schedule_fn</span> <span class="o">=</span> <span class="n">get_bfn_schedule</span><span class="p">(</span><span class="s1">&#39;exponential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="schedule-comparison">
+<h3>Schedule Comparison<a class="headerlink" href="#schedule-comparison" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">exponential_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exponential&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">cosine_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Cosine&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">linear_entropy_schedule</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Linear Entropy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time t&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Accuracy β(t)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;BFN Accuracy Schedules&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="training">
+<h2>Training<a class="headerlink" href="#training" title="Link to this heading"></a></h2>
+<section id="basic-training-loop">
+<h3>Basic Training Loop<a class="headerlink" href="#basic-training-loop" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">schedule_fn</span> <span class="o">=</span> <span class="n">get_bfn_schedule</span><span class="p">(</span><span class="s1">&#39;exponential&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span>  <span class="c1"># [B, L]</span>
+
+    <span class="c1"># Sample time</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># Compute accuracy</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">schedule_fn</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="c1"># Create noisy belief state</span>
+    <span class="c1"># (model learns to predict true tokens from noisy observations)</span>
+    <span class="n">belief</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">create_belief_state</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+    <span class="c1"># Forward pass</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">belief</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="c1"># Cross-entropy loss</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="residual-loss-wrapper">
+<h3>Residual Loss Wrapper<a class="headerlink" href="#residual-loss-wrapper" title="Link to this heading"></a></h3>
+<p>For improved training stability:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResidualLossWrapper</span>
+
+<span class="n">loss_wrapper</span> <span class="o">=</span> <span class="n">ResidualLossWrapper</span><span class="p">(</span>
+    <span class="n">base_loss</span><span class="o">=</span><span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">,</span>
+    <span class="n">residual_weight</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="n">loss_wrapper</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">belief</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="entropy-encoding">
+<h2>Entropy Encoding<a class="headerlink" href="#entropy-encoding" title="Link to this heading"></a></h2>
+<p>Entropy-aware training and generation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">compute_entropy</span><span class="p">,</span>
+    <span class="n">encode_with_entropy</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Compute entropy of current belief</span>
+<span class="n">entropy</span> <span class="o">=</span> <span class="n">compute_entropy</span><span class="p">(</span><span class="n">belief</span><span class="p">)</span>  <span class="c1"># [B, L]</span>
+
+<span class="c1"># Encode with entropy information</span>
+<span class="n">encoded</span> <span class="o">=</span> <span class="n">encode_with_entropy</span><span class="p">(</span>
+    <span class="n">tokens</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">entropy</span><span class="o">=</span><span class="n">entropy</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generation-with-solvers">
+<h2>Generation with Solvers<a class="headerlink" href="#generation-with-solvers" title="Link to this heading"></a></h2>
+<p>BFN supports multiple ODE/SDE solvers for generation:</p>
+<section id="euler-solver-simple">
+<h3>Euler Solver (Simple)<a class="headerlink" href="#euler-solver-simple" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">EulerSolver</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">EulerSolver</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="heun-solver-higher-order">
+<h3>Heun Solver (Higher Order)<a class="headerlink" href="#heun-solver-higher-order" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeunSolver</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">HeunSolver</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Needs fewer steps than Euler</span>
+<span class="p">)</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="dpm-solver-fast">
+<h3>DPM-Solver (Fast)<a class="headerlink" href="#dpm-solver-fast" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DPMSolver2</span><span class="p">,</span> <span class="n">DPMSolver3</span>
+
+<span class="c1"># Second-order DPM-Solver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">DPMSolver2</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Third-order for even faster sampling</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">DPMSolver3</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="exponential-integrator">
+<h3>Exponential Integrator<a class="headerlink" href="#exponential-integrator" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExponentialIntegrator</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">ExponentialIntegrator</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="get-solver-by-name">
+<h3>Get Solver by Name<a class="headerlink" href="#get-solver-by-name" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_bfn_solver</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">get_bfn_solver</span><span class="p">(</span>
+    <span class="s1">&#39;dpm2&#39;</span><span class="p">,</span>  <span class="c1"># Options: euler, heun, dpm2, dpm3, exponential</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="stochastic-sampling">
+<h2>Stochastic Sampling<a class="headerlink" href="#stochastic-sampling" title="Link to this heading"></a></h2>
+<p>Add stochasticity for diversity:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">StochasticHeun</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">StochasticHeun</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">num_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="n">noise_scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Controls stochasticity</span>
+<span class="p">)</span>
+
+<span class="c1"># Multiple samples from same initial state</span>
+<span class="n">samples_1</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="n">samples_2</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<span class="c1"># samples_1 != samples_2 due to stochasticity</span>
+</pre></div>
+</div>
+</section>
+<section id="guided-sampling">
+<h2>Guided Sampling<a class="headerlink" href="#guided-sampling" title="Link to this heading"></a></h2>
+<p>Conditional generation with guidance.</p>
+<section id="score-guided-sampler">
+<h3>Score-Guided Sampler<a class="headerlink" href="#score-guided-sampler" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.bayesian_flow</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScoreGuidedSampler</span>
+
+<span class="c1"># Define a guidance function (e.g., classifier)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">guidance_fn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="c1"># Returns gradient of log p(condition | x)</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">logits</span><span class="p">[:,</span> <span class="n">target_class</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">ScoreGuidedSampler</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">schedule_fn</span><span class="o">=</span><span class="n">schedule_fn</span><span class="p">,</span>
+    <span class="n">guidance_fn</span><span class="o">=</span><span class="n">guidance_fn</span><span class="p">,</span>
+    <span class="n">guidance_scale</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">guided_samples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-features">
+<h2>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h2>
+<section id="variable-step-count">
+<h3>Variable Step Count<a class="headerlink" href="#variable-step-count" title="Link to this heading"></a></h3>
+<p>BFN can generate with any number of steps without retraining:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same model, different step counts</span>
+<span class="k">for</span> <span class="n">num_steps</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]:</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">EulerSolver</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">schedule_fn</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="n">num_steps</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Steps: </span><span class="si">{</span><span class="n">num_steps</span><span class="si">}</span><span class="s2">, Quality: </span><span class="si">{</span><span class="n">evaluate</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="temperature-scaling">
+<h3>Temperature Scaling<a class="headerlink" href="#temperature-scaling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>  <span class="c1"># Lower = more deterministic</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="top-k-top-p-sampling">
+<h3>Top-k/Top-p Sampling<a class="headerlink" href="#top-k-top-p-sampling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>  <span class="c1"># Only consider top 50 tokens</span>
+    <span class="n">top_p</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>  <span class="c1"># Or nucleus sampling</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="comparison-with-other-methods">
+<h2>Comparison with Other Methods<a class="headerlink" href="#comparison-with-other-methods" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>BFN</p></th>
+<th class="head"><p>Diffusion</p></th>
+<th class="head"><p>Flow Matching</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Uncertainty</p></td>
+<td><p>Full posterior</p></td>
+<td><p>Point estimate</p></td>
+<td><p>Point estimate</p></td>
+</tr>
+<tr class="row-odd"><td><p>Step flexibility</p></td>
+<td><p>Any steps</p></td>
+<td><p>Fixed schedule</p></td>
+<td><p>Flexible</p></td>
+</tr>
+<tr class="row-even"><td><p>Training</p></td>
+<td><p>Standard CE</p></td>
+<td><p>Schedule tuning</p></td>
+<td><p>Simple MSE/CE</p></td>
+</tr>
+<tr class="row-odd"><td><p>Theory</p></td>
+<td><p>Bayesian</p></td>
+<td><p>Score matching</p></td>
+<td><p>OT / ODE</p></td>
+</tr>
+<tr class="row-even"><td><p>Sampling</p></td>
+<td><p>Multiple solvers</p></td>
+<td><p>DDPM/DDIM/DPM</p></td>
+<td><p>Euler / ODE</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recommended settings</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;schedule&#39;</span><span class="p">:</span> <span class="s1">&#39;exponential&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;solver&#39;</span><span class="p">:</span> <span class="s1">&#39;dpm2&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;num_steps&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>  <span class="c1"># DPM2 is efficient</span>
+    <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
+    <span class="s1">&#39;warmup_steps&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+    <span class="s1">&#39;ema_decay&#39;</span><span class="p">:</span> <span class="mf">0.9999</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="training-tips">
+<h3>Training Tips<a class="headerlink" href="#training-tips" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Use EMA</strong>: Essential for stable generation</p></li>
+<li><p><strong>Warmup</strong>: Learning rate warmup helps stability</p></li>
+<li><p><strong>Schedule tuning</strong>: Try different schedules for your data</p></li>
+<li><p><strong>Residual loss</strong>: Helps with long sequences</p></li>
+</ol>
+</section>
+<section id="sampling-tips">
+<h3>Sampling Tips<a class="headerlink" href="#sampling-tips" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Start with Euler</strong>: Simple and reliable</p></li>
+<li><p><strong>Move to DPM</strong>: Once working, use DPM for speed</p></li>
+<li><p><strong>Add stochasticity</strong>: If samples lack diversity</p></li>
+<li><p><strong>Temperature</strong>: Tune for quality/diversity tradeoff</p></li>
+</ol>
+</section>
+<section id="memory-optimization">
+<h3>Memory Optimization<a class="headerlink" href="#memory-optimization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gradient checkpointing</span>
+<span class="n">model</span><span class="o">.</span><span class="n">gradient_checkpointing_enable</span><span class="p">()</span>
+
+<span class="c1"># Compile for speed (PyTorch 2.0+)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Mixed precision</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">autocast</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">):</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/bayesian_flow.html"><span class="doc">Bayesian Flow Networks API</span></a> - Full API documentation</p></li>
+<li><p><a class="reference internal" href="diffusion.html"><span class="doc">Diffusion Models Guide</span></a> - Alternative: Diffusion Models</p></li>
+<li><p><a class="reference internal" href="flow_matching.html"><span class="doc">Flow Matching Guide</span></a> - Alternative: Flow Matching</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flow_matching.html" class="btn btn-neutral float-left" title="Flow Matching Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rasterization.html" class="btn btn-neutral float-right" title="Rasterization Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

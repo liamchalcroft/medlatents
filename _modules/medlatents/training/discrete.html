@@ -1,0 +1,1160 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>medlatents.training.discrete &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">medlatents.training.discrete</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for medlatents.training.discrete</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Enhanced unified trainer for discrete latent generative models with EMA, logging, and diffusion support.</span>
+
+<span class="sd">Features:</span>
+<span class="sd">- Automatic mixed precision (AMP) with bf16/fp16 support</span>
+<span class="sd">- Fused AdamW optimizer for CUDA</span>
+<span class="sd">- EMA (Exponential Moving Average) for stable training</span>
+<span class="sd">- Gradient monitoring and logging</span>
+<span class="sd">- Curriculum learning</span>
+<span class="sd">- Periodic sample generation</span>
+<span class="sd">- Multi-GPU support with FSDP</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wandb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">accelerate</span><span class="w"> </span><span class="kn">import</span> <span class="n">Accelerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">accelerate.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_seed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_ema</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExponentialMovingAverage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..common.schedules</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cosine_schedule_with_warmup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data.tokenized_datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_discrete_tokens</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..diffusion</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3PM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..flow_matching.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_loss_function</span><span class="p">,</span>
+    <span class="n">get_path</span><span class="p">,</span>
+    <span class="n">get_source_distribution</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..flow_matching.evaluate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_entropy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.checkpointing</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_checkpoint</span><span class="p">,</span> <span class="n">resume_from_checkpoint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.profiling</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingProfiler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.schedulers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_mask_ratio</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NaNLossError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when training produces NaN or Inf loss.&quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_loss_finite</span><span class="p">(</span><span class="n">loss</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;training&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that loss is finite. Raises NaNLossError if not.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        loss: Loss tensor</span>
+<span class="sd">        step: Current training step</span>
+<span class="sd">        context: Context string for error message</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NaNLossError: If loss is NaN or Inf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">loss_val</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">loss</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">NaNLossError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Non-finite loss detected during </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2"> at step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">loss_val</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="s2">&quot;This typically indicates numerical instability. Check:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  1. Learning rate may be too high</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  2. Gradient clipping value may be too high</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  3. Input data may contain NaN/Inf values</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;  4. Model weights may have exploded&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_gradients_finite</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check gradients for NaN/Inf and return statistics.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: Model to check</span>
+<span class="sd">        step: Current training step</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict with gradient statistics</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NaNLossError: If any gradients are NaN or Inf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">grads</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">grad_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grad_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;grad_norm/total&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;grad_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+    <span class="n">stacked_norms</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">])</span>
+    <span class="n">has_nan</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+    <span class="n">has_inf</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">has_nan</span> <span class="ow">or</span> <span class="n">has_inf</span><span class="p">:</span>
+        <span class="n">nan_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">)</span>
+        <span class="n">inf_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NaNLossError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Non-finite gradients at step </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">nan_count</span><span class="si">}</span><span class="s2"> NaN, </span><span class="si">{</span><span class="n">inf_count</span><span class="si">}</span><span class="s2"> Inf. &quot;</span>
+            <span class="s2">&quot;This indicates numerical instability in the backward pass.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">total_norm</span> <span class="o">=</span> <span class="n">stacked_norms</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;grad_norm/total&quot;</span><span class="p">:</span> <span class="n">total_norm</span><span class="p">,</span>
+        <span class="s2">&quot;grad_count&quot;</span><span class="p">:</span> <span class="n">grad_count</span><span class="p">,</span>
+    <span class="p">}</span>
+
+
+<div class="viewcode-block" id="DiscreteLatentTrainer">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteLatentTrainer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enhanced unified trainer for discrete latent generative models.</span>
+
+<span class="sd">    Supports:</span>
+<span class="sd">    - autoreg: Autoregressive transformer</span>
+<span class="sd">    - maskgit: Bidirectional transformer with masking (MaskGIT)</span>
+<span class="sd">    - flow: Discrete flow matching with DiscreteDiT</span>
+<span class="sd">    - d3pm: D3PM discrete diffusion (DiscreteDiT backbone)</span>
+<span class="sd">    - bayesian_flow: Bayesian Flow Networks (DiscreteDiT backbone)</span>
+
+<span class="sd">    Features:</span>
+<span class="sd">    - EMA (Exponential Moving Average) for stable training</span>
+<span class="sd">    - Gradient monitoring and logging</span>
+<span class="sd">    - Curriculum learning</span>
+<span class="sd">    - Periodic sample generation</span>
+<span class="sd">    - Multi-GPU support with FSDP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiscreteLatentTrainer.__init__">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">],</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+        <span class="n">train_loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+        <span class="n">val_loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+        <span class="n">args</span><span class="p">,</span>
+        <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_ema</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">ema_decay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9999</span><span class="p">,</span>
+        <span class="n">log_gradients</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">generate_samples_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">enable_profiling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">profile_log_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">check_gradients_finite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">compile_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span> <span class="o">=</span> <span class="n">train_loader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_loader</span> <span class="o">=</span> <span class="n">val_loader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_gradients</span> <span class="o">=</span> <span class="n">log_gradients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_samples_every</span> <span class="o">=</span> <span class="n">generate_samples_every</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profiler</span> <span class="o">=</span> <span class="n">TrainingProfiler</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="n">enable_profiling</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile_log_interval</span> <span class="o">=</span> <span class="n">profile_log_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_gradients_finite</span> <span class="o">=</span> <span class="n">check_gradients_finite</span>
+
+        <span class="k">if</span> <span class="n">use_compile</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">&quot;compile&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">compile_mode</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="c1"># Setup accelerator with FSDP support if specified</span>
+        <span class="k">if</span> <span class="n">accelerator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fsdp_plugin</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;use_fsdp&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">use_fsdp</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">accelerate</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullyShardedDataParallelPlugin</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.fsdp.fully_sharded_data_parallel</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+                    <span class="n">FullOptimStateDictConfig</span><span class="p">,</span>
+                    <span class="n">FullStateDictConfig</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">fsdp_plugin</span> <span class="o">=</span> <span class="n">FullyShardedDataParallelPlugin</span><span class="p">(</span>
+                    <span class="n">state_dict_config</span><span class="o">=</span><span class="n">FullStateDictConfig</span><span class="p">(</span><span class="n">offload_to_cpu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rank0_only</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                    <span class="n">optim_state_dict_config</span><span class="o">=</span><span class="n">FullOptimStateDictConfig</span><span class="p">(</span>
+                        <span class="n">offload_to_cpu</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rank0_only</span><span class="o">=</span><span class="kc">False</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">Accelerator</span><span class="p">(</span>
+                <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span>
+                <span class="n">log_with</span><span class="o">=</span><span class="s2">&quot;wandb&quot;</span><span class="p">,</span>
+                <span class="n">mixed_precision</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;mixed_precision&quot;</span><span class="p">,</span> <span class="s2">&quot;fp16&quot;</span><span class="p">),</span>
+                <span class="n">fsdp_plugin</span><span class="o">=</span><span class="n">fsdp_plugin</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">accelerator</span>
+
+        <span class="c1"># Set seed if specified</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;seed&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">set_seed</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># Setup optimizer with fused kernels when available (10-30% faster on CUDA)</span>
+        <span class="c1"># Fused AdamW requires PyTorch 2.0+ and CUDA</span>
+        <span class="n">optimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span>
+            <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;weight_decay&quot;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="c1"># Only add fused if PyTorch supports it (2.0+)</span>
+        <span class="n">use_fused</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;fused_optimizer&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_fused</span><span class="p">:</span>
+            <span class="c1"># Check PyTorch version for fused support</span>
+            <span class="n">torch_version</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">torch_version</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">torch_version</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">optimizer_kwargs</span><span class="p">[</span><span class="s2">&quot;fused&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="o">**</span><span class="n">optimizer_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Setup EMA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span> <span class="o">=</span> <span class="n">use_ema</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span> <span class="o">=</span> <span class="n">ExponentialMovingAverage</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">decay</span><span class="o">=</span><span class="n">ema_decay</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1"># Model-specific setup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_model_specifics</span><span class="p">()</span>
+
+        <span class="c1"># Prepare with accelerator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_loader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_loader</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Tracking metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_model_specifics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup model-specific components.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">get_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">scheduler_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">scheduler_power</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">get_loss_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">loss_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">special_tokens</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;special_tokens&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">mask_token</span> <span class="o">=</span> <span class="n">special_tokens</span><span class="o">.</span><span class="n">mask</span> <span class="k">if</span> <span class="n">special_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">source_dist</span> <span class="o">=</span> <span class="n">get_source_distribution</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">source_dist</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
+                <span class="n">mask_token</span><span class="o">=</span><span class="n">mask_token</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
+                <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
+                <span class="n">num_timesteps</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;diffusion_steps&quot;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+                <span class="n">schedule_type</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;diffusion_schedule&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">),</span>
+                <span class="n">transition_type</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;diffusion_transition&quot;</span><span class="p">,</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">),</span>
+                <span class="n">hybrid_loss_coeff</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;diffusion_hybrid_coeff&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">),</span>
+                <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;compute_loss&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Bayesian flow models must implement a compute_loss(tokens) method. &quot;</span>
+                    <span class="s2">&quot;Your model class should define: def compute_loss(self, tokens: Tensor) -&gt; Tensor&quot;</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="DiscreteLatentTrainer.compute_loss">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer.compute_loss">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute loss based on model type.</span>
+
+<span class="sd">        Validates token contracts before computing loss. All discrete models</span>
+<span class="sd">        expect tokens in [0, vocab_size) with dtype torch.long.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Validate discrete token contract at training boundary</span>
+        <span class="c1"># For D3PM/flow with absorbing, allow special mask token at vocab_size</span>
+        <span class="n">allow_special</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">)</span>
+        <span class="n">validate_discrete_tokens</span><span class="p">(</span>
+            <span class="n">batch</span><span class="p">,</span>
+            <span class="n">vocab_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
+            <span class="n">allow_special</span><span class="o">=</span><span class="n">allow_special</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;DiscreteLatentTrainer.compute_loss (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_autoreg_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_maskgit_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_flow_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_d3pm_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_bayesian_flow_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_autoreg_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Autoregressive cross-entropy loss.&quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_maskgit_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;MaskGIT loss with curriculum learning for mask ratio.&quot;&quot;&quot;</span>
+        <span class="c1"># Curriculum learning: start with low mask ratio, increase over time</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;use_curriculum&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">use_curriculum</span><span class="p">:</span>
+            <span class="n">max_steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">)</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="n">max_steps</span>
+            <span class="c1"># Start at 0.15, end at 0.60</span>
+            <span class="n">curr_mask_ratio</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="o">+</span> <span class="mf">0.45</span> <span class="o">*</span> <span class="n">progress</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">))</span>
+            <span class="n">curr_mask_ratio</span> <span class="o">=</span> <span class="n">get_mask_ratio</span><span class="p">(</span><span class="n">progress</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">mask_schedule</span><span class="p">)</span>
+
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">mask_ratio</span><span class="o">=</span><span class="n">curr_mask_ratio</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">batch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;mask_ratio&quot;</span><span class="p">:</span> <span class="n">curr_mask_ratio</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_flow_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Discrete flow matching loss.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">x_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_dist</span><span class="o">.</span><span class="n">sample_like</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">time_eps</span><span class="p">)</span>
+            <span class="n">path_sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">x_0</span><span class="o">=</span><span class="n">x_0</span><span class="p">,</span> <span class="n">x_1</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
+
+        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">path_sample</span><span class="o">.</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">):</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">batch</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># MixturePathGeneralizedKL</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span> <span class="n">x_1</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="n">x_t</span><span class="o">=</span><span class="n">path_sample</span><span class="o">.</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_d3pm_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;D3PM diffusion loss.&quot;&quot;&quot;</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">batch</span><span class="p">,</span>
+            <span class="n">loss_type</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;diffusion_loss_type&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_bayesian_flow_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Bayesian Flow Networks loss.&quot;&quot;&quot;</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;input_ids&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tokens</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Batch dict must contain &#39;input_ids&#39; key for bayesian_flow model. &quot;</span>
+                    <span class="s2">&quot;Got keys: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">+</span> <span class="s2">&quot;. &quot;</span>
+                    <span class="s2">&quot;Ensure your dataset returns {&#39;input_ids&#39;: tensor, ...}&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_log_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log gradient norms for monitoring using vectorized computation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_gradients</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="c1"># Collect all gradients efficiently</span>
+        <span class="n">grads</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">grads</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;grad_norm/total&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span>
+
+        <span class="c1"># Vectorized total norm computation (same as torch.nn.utils.clip_grad_norm_)</span>
+        <span class="n">total_norm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grads</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;grad_norm/total&quot;</span><span class="p">:</span> <span class="n">total_norm</span><span class="p">}</span>
+
+<div class="viewcode-block" id="DiscreteLatentTrainer.train_epoch">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer.train_epoch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Train for one epoch.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+        <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">))</span>
+        <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="n">epoch</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">)</span> <span class="o">+</span> <span class="n">step</span>
+
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">):</span>
+                <span class="c1"># Compute loss (with optional profiling)</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;forward&quot;</span><span class="p">):</span>
+                    <span class="n">loss_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_output</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">loss</span><span class="p">,</span> <span class="n">extra_metrics</span> <span class="o">=</span> <span class="n">loss_output</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">loss</span><span class="p">,</span> <span class="n">extra_metrics</span> <span class="o">=</span> <span class="n">loss_output</span><span class="p">,</span> <span class="p">{}</span>
+
+                <span class="c1"># Check for NaN/Inf loss (fail-fast)</span>
+                <span class="n">_check_loss_finite</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s2">&quot;forward pass&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Optimization (with optional profiling)</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;backward&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+                <span class="c1"># Check gradients for NaN/Inf and log (optional, can be expensive)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_gradients_finite</span><span class="p">:</span>
+                    <span class="n">grad_metrics</span> <span class="o">=</span> <span class="n">_check_gradients_finite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">grad_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_gradients</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">sync_gradients</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">grad_clip</span><span class="p">)</span>
+
+                <span class="c1"># Update learning rate with temperature annealing support</span>
+                <span class="n">lr</span> <span class="o">=</span> <span class="n">get_cosine_schedule_with_warmup</span><span class="p">(</span>
+                    <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
+                    <span class="n">warmup_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">lr_warmup_epochs</span>
+                    <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">)</span>
+                    <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span>
+                    <span class="n">total_steps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span>
+                    <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_loader</span><span class="p">)</span>
+                    <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span>
+                    <span class="n">max_lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span>
+                    <span class="n">min_lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">min_lr</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">param_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
+                    <span class="n">param_group</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Faster than zeroing</span>
+
+                <span class="c1"># Update EMA</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="c1"># Logging</span>
+            <span class="n">log_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;train/loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="s2">&quot;train/lr&quot;</span><span class="p">:</span> <span class="n">lr</span><span class="p">}</span>
+            <span class="n">log_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;train/</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">extra_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+            <span class="n">log_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">grad_metrics</span><span class="p">)</span>
+
+            <span class="c1"># Log profiling metrics periodically</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="p">(</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_log_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">log_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">get_wandb_metrics</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_dict</span><span class="p">)</span>
+
+            <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lr</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
+
+        <span class="c1"># Generate samples periodically</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_samples_every</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_samples_every</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generate_and_log_samples</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_and_log_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate and log samples for visualization.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="c1"># Generate a few samples</span>
+            <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">seq_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">seq_length</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+                <span class="c1"># Temporarily use EMA weights</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">copy_to</span><span class="p">()</span>
+
+            <span class="c1"># Generate based on model type</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+                <span class="n">prompt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
+                <span class="p">)</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mask_token</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span>
+                    <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">:</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">:</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">samples</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+            <span class="c1"># Log samples (as histogram or other visualization)</span>
+            <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Log token distribution</span>
+                <span class="n">token_dist</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span>
+                    <span class="n">samples</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">minlength</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+                <span class="n">token_dist</span> <span class="o">=</span> <span class="n">token_dist</span> <span class="o">/</span> <span class="n">token_dist</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="sa">f</span><span class="s2">&quot;samples/epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">_token_dist&quot;</span><span class="p">:</span> <span class="n">wandb</span><span class="o">.</span><span class="n">Histogram</span><span class="p">(</span>
+                            <span class="n">samples</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+                        <span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DiscreteLatentTrainer.validate">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run validation.&quot;&quot;&quot;</span>
+        <span class="c1"># Use EMA weights for validation if available</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">copy_to</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+        <span class="n">val_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">val_entropy</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">num_batches</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_loader</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+                    <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+                    <span class="n">mask_ratio</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;mask_ratio&quot;</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+                    <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">mask_ratio</span><span class="o">=</span><span class="n">mask_ratio</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
+                        <span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">batch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+                    <span class="n">x_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_dist</span><span class="o">.</span><span class="n">sample_like</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">time_eps</span><span class="p">)</span>
+                    <span class="n">path_sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">x_0</span><span class="o">=</span><span class="n">x_0</span><span class="p">,</span> <span class="n">x_1</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
+
+                    <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">path_sample</span><span class="o">.</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">):</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">batch</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">,</span> <span class="n">x_1</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="n">x_t</span><span class="o">=</span><span class="n">path_sample</span><span class="o">.</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+                    <span class="n">val_entropy</span> <span class="o">+=</span> <span class="n">compute_entropy</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">:</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">:</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+
+                <span class="n">val_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="n">num_batches</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">num_batches</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">({</span><span class="s2">&quot;val/loss&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+
+        <span class="n">val_loss</span> <span class="o">/=</span> <span class="n">num_batches</span>
+        <span class="n">log_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;val/loss&quot;</span><span class="p">:</span> <span class="n">val_loss</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">val_entropy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val_entropy</span> <span class="o">/=</span> <span class="n">num_batches</span>
+            <span class="n">log_dict</span><span class="p">[</span><span class="s2">&quot;val/entropy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_entropy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">log_dict</span><span class="p">)</span>
+
+        <span class="c1"># Restore training weights if using EMA</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">val_loss</span></div>
+
+
+<div class="viewcode-block" id="DiscreteLatentTrainer.train">
+<a class="viewcode-back" href="../../../api/training.html#medlatents.training.DiscreteLatentTrainer.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resume</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">resume_best</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reset_wandb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Main training loop.&quot;&quot;&quot;</span>
+        <span class="n">start_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">metric_best</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">wandb_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Load checkpoint if resuming</span>
+        <span class="k">if</span> <span class="n">resume</span> <span class="ow">or</span> <span class="n">resume_best</span><span class="p">:</span>
+            <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">load_checkpoint</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">best</span><span class="o">=</span><span class="n">resume_best</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">checkpoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">start_epoch</span><span class="p">,</span> <span class="n">metric_best</span><span class="p">,</span> <span class="n">wandb_id</span> <span class="o">=</span> <span class="n">resume_from_checkpoint</span><span class="p">(</span>
+                    <span class="n">checkpoint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span>
+                <span class="p">)</span>
+                <span class="c1"># Restore EMA if present</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span> <span class="ow">and</span> <span class="s2">&quot;ema&quot;</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;ema&quot;</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Resuming from epoch #</span><span class="si">{</span><span class="n">start_epoch</span><span class="si">}</span><span class="s2"> with WandB ID </span><span class="si">{</span><span class="n">wandb_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">No checkpoints found. Beginning from epoch #0&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialize wandb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">init_trackers</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">-discrete-latents&quot;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">),</span>
+            <span class="n">init_kwargs</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;wandb&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;wandb_entity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="n">wandb</span><span class="o">.</span><span class="n">Settings</span><span class="p">(</span><span class="n">start_method</span><span class="o">=</span><span class="s2">&quot;fork&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;resume&quot;</span><span class="p">:</span> <span class="s2">&quot;must&quot;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">resume</span> <span class="ow">or</span> <span class="n">resume_best</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">reset_wandb</span> <span class="ow">and</span> <span class="n">wandb_id</span>
+                    <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">wandb_id</span> <span class="k">if</span> <span class="p">(</span><span class="n">resume</span> <span class="ow">or</span> <span class="n">resume_best</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">reset_wandb</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Training loop</span>
+        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_epoch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_epoch</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+
+            <span class="c1"># Validation</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">val_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">val_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+                <span class="c1"># Save checkpoint</span>
+                <span class="n">checkpoint_dict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;net&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                    <span class="s2">&quot;opt&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+                    <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span>
+                    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="n">metric_best</span><span class="p">,</span>
+                    <span class="s2">&quot;wandb&quot;</span><span class="p">:</span> <span class="n">wandb</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s2">&quot;hparams&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;hparams&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_ema</span><span class="p">:</span>
+                    <span class="n">checkpoint_dict</span><span class="p">[</span><span class="s2">&quot;ema&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+
+                <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;checkpoint.pt&quot;</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint_dict</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">val_loss</span> <span class="o">&lt;</span> <span class="n">metric_best</span><span class="p">:</span>
+                    <span class="n">metric_best</span> <span class="o">=</span> <span class="n">val_loss</span>
+                    <span class="n">best_checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;checkpoint_best.pt&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint_dict</span><span class="p">,</span> <span class="n">best_checkpoint_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">end_training</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedLatents: Contributing Guide &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="References" href="research/references.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MedLatents: Contributing Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-setup">Development Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#formatting">Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#type-hints">Type Hints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docstrings">Docstrings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contribution-workflow">Contribution Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pull-request-guidelines">Pull Request Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#title-format">Title Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#checklist">Checklist</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-new-features">Adding New Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-model">Adding a New Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-sampling-strategy">Adding a New Sampling Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-scheduler">Adding a New Scheduler</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#research-integration">Research Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-research-features">New Research Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#issues">Issues</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bug-reports">Bug Reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-requests">Feature Requests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#questions">Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgments">Acknowledgments</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MedLatents: Contributing Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/contributing.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="medlatents-contributing-guide">
+<h1>MedLatents: Contributing Guide<a class="headerlink" href="#medlatents-contributing-guide" title="Link to this heading"></a></h1>
+<p>Thank you for your interest in contributing to MedLatents!</p>
+<blockquote>
+<div><p>The authoritative contributor policy lives in <code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code> at the
+repository root (with the <code class="docutils literal notranslate"><span class="pre">CODE_OF_CONDUCT.md</span></code>). This page mirrors the
+day-to-day developer workflow for convenience.</p>
+</div></blockquote>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<section id="development-setup">
+<h3>Development Setup<a class="headerlink" href="#development-setup" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Fork and clone the repository:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/medlatents.git
+<span class="nb">cd</span><span class="w"> </span>medlatents
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install development dependencies:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs]&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Create a virtual environment (recommended):</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
+</pre></div>
+</div>
+</section>
+<section id="running-tests">
+<h3>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h3>
+<p>Run all tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v
+</pre></div>
+</div>
+<p>Run specific test module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/test_autoregressive.py<span class="w"> </span>-v
+</pre></div>
+</div>
+<p>Run with coverage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/<span class="w"> </span>--cov<span class="o">=</span>src/medlatents<span class="w"> </span>--cov-report<span class="o">=</span>html
+</pre></div>
+</div>
+</section>
+<section id="building-documentation">
+<h3>Building Documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h3>
+<p>Build HTML documentation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>View documentation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>open<span class="w"> </span>_build/html/index.html
+</pre></div>
+</div>
+</section>
+</section>
+<section id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Link to this heading"></a></h2>
+<section id="formatting">
+<h3>Formatting<a class="headerlink" href="#formatting" title="Link to this heading"></a></h3>
+<p>We use <code class="docutils literal notranslate"><span class="pre">ruff</span></code> for linting and formatting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check formatting</span>
+ruff<span class="w"> </span>check<span class="w"> </span>src/<span class="w"> </span>tests/
+
+<span class="c1"># Format code</span>
+ruff<span class="w"> </span>format<span class="w"> </span>src/<span class="w"> </span>tests/
+</pre></div>
+</div>
+</section>
+<section id="type-hints">
+<h3>Type Hints<a class="headerlink" href="#type-hints" title="Link to this heading"></a></h3>
+<p>All public APIs must have type hints:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Use modern Python 3.10+ type hints (e.g., <code class="docutils literal notranslate"><span class="pre">|</span></code> for unions).</p>
+</section>
+<section id="docstrings">
+<h3>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading"></a></h3>
+<p>Use Google-style docstrings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sample_nucleus</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample from top-p (nucleus) distribution.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        logits: Logits of shape [batch, vocab_size].</span>
+<span class="sd">        p: Nucleus threshold (0-1).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Sampled token indices of shape [batch].</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If p is not in (0, 1].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>src/medlatents/
+├── autoregressive/   # Autoregressive transformers + speculative/Medusa decoding
+├── maskgit/          # MaskGIT bidirectional masked transformer
+├── diffusion/        # D3PM, continuous Gaussian diffusion, SEDD/MDLM
+├── flow_matching/    # Discrete and continuous flow matching
+├── bayesian_flow/    # Bayesian Flow Networks
+├── networks/         # Shared transformer/DiT building blocks
+├── sampling/         # Sampling strategies, schedulers, guidance
+├── training/         # Training loops, schedulers, curricula, distributed
+├── post_training/    # DPO/SPO, RL, distillation, reward models, self-play
+├── generation/       # High-level checkpoint-driven generation API
+├── inference/        # Inpainting, super-resolution, quantization, KV-cache
+├── conditioning/     # ConditioningBundle and frozen encoders
+├── evaluation/       # FID, precision/recall, memorization probes
+├── rasterization/    # Space-filling curves (Hilbert, Z-order)
+├── data/             # Datasets, dataloaders, tokenizer wrappers
+├── config_models/    # Optional pydantic experiment configs
+├── configs.py        # Model-size presets (MODEL_CONFIGS, MODEL_SIZES)
+├── common/           # Shared low-level utilities
+└── utils/            # Special tokens and helpers
+</pre></div>
+</div>
+</section>
+<section id="contribution-workflow">
+<h2>Contribution Workflow<a class="headerlink" href="#contribution-workflow" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Create a feature branch:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/my-feature
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Make your changes and commit:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add my new feature&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run tests and lint:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v
+ruff<span class="w"> </span>check<span class="w"> </span>src/<span class="w"> </span>tests/
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Push to your fork:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/my-feature
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Open a pull request on GitHub</p></li>
+</ol>
+</section>
+<section id="pull-request-guidelines">
+<h2>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading"></a></h2>
+<section id="title-format">
+<h3>Title Format<a class="headerlink" href="#title-format" title="Link to this heading"></a></h3>
+<p>Use conventional commits:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">feat:</span> <span class="pre">Add</span> <span class="pre">new</span> <span class="pre">feature</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fix:</span> <span class="pre">Fix</span> <span class="pre">bug</span> <span class="pre">in</span> <span class="pre">training</span> <span class="pre">loop</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs:</span> <span class="pre">Update</span> <span class="pre">API</span> <span class="pre">documentation</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refactor:</span> <span class="pre">Improve</span> <span class="pre">performance</span></code></p></li>
+</ul>
+</section>
+<section id="description">
+<h3>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h3>
+<p>Include:</p>
+<ul class="simple">
+<li><p><strong>What</strong>: What does this PR do?</p></li>
+<li><p><strong>Why</strong>: Why is this change needed?</p></li>
+<li><p><strong>How</strong>: How does it work?</p></li>
+<li><p><strong>Testing</strong>: What tests were added/modified?</p></li>
+<li><p><strong>Breaking changes</strong>: Are there any breaking changes?</p></li>
+</ul>
+</section>
+<section id="checklist">
+<h3>Checklist<a class="headerlink" href="#checklist" title="Link to this heading"></a></h3>
+<ul class="contains-task-list simple">
+<li class="task-list-item enabled"><p><input class="task-list-item-checkbox" type="checkbox">Code follows style guidelines</p></li>
+<li class="task-list-item enabled"><p><input class="task-list-item-checkbox" type="checkbox">Tests added/updated</p></li>
+<li class="task-list-item enabled"><p><input class="task-list-item-checkbox" type="checkbox">Documentation updated</p></li>
+<li class="task-list-item enabled"><p><input class="task-list-item-checkbox" type="checkbox">All tests pass</p></li>
+<li class="task-list-item enabled"><p><input class="task-list-item-checkbox" type="checkbox">No linting errors</p></li>
+</ul>
+</section>
+</section>
+<section id="adding-new-features">
+<h2>Adding New Features<a class="headerlink" href="#adding-new-features" title="Link to this heading"></a></h2>
+<section id="adding-a-new-model">
+<h3>Adding a New Model<a class="headerlink" href="#adding-a-new-model" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Create model file in appropriate directory</p></li>
+<li><p>Inherit from base class (e.g., <code class="docutils literal notranslate"><span class="pre">DiscreteTransformer</span></code>)</p></li>
+<li><p>Implement required methods (<code class="docutils literal notranslate"><span class="pre">forward</span></code>, <code class="docutils literal notranslate"><span class="pre">generate</span></code>)</p></li>
+<li><p>Add tests in <code class="docutils literal notranslate"><span class="pre">tests/test_&lt;model_type&gt;.py</span></code></p></li>
+<li><p>Update API documentation</p></li>
+<li><p>Add to <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> exports</p></li>
+</ol>
+</section>
+<section id="adding-a-new-sampling-strategy">
+<h3>Adding a New Sampling Strategy<a class="headerlink" href="#adding-a-new-sampling-strategy" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Implement in <code class="docutils literal notranslate"><span class="pre">src/medlatents/sampling/</span></code></p></li>
+<li><p>Add tests in <code class="docutils literal notranslate"><span class="pre">tests/test_sampling.py</span></code></p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">sampling/README.md</span></code></p></li>
+<li><p>Add API docs</p></li>
+</ol>
+</section>
+<section id="adding-a-new-scheduler">
+<h3>Adding a New Scheduler<a class="headerlink" href="#adding-a-new-scheduler" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Implement in <code class="docutils literal notranslate"><span class="pre">src/medlatents/training/schedulers.py</span></code> or appropriate module</p></li>
+<li><p>Add tests in <code class="docutils literal notranslate"><span class="pre">tests/test_training.py</span></code></p></li>
+<li><p>Add CLI flags if applicable</p></li>
+<li><p>Update documentation</p></li>
+</ol>
+</section>
+</section>
+<section id="research-integration">
+<h2>Research Integration<a class="headerlink" href="#research-integration" title="Link to this heading"></a></h2>
+<p>We welcome research paper implementations. Open an issue to propose one
+before starting, so the scope can be agreed up front.</p>
+<section id="new-research-features">
+<h3>New Research Features<a class="headerlink" href="#new-research-features" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Open an issue describing the method and the evidence for it</p></li>
+<li><p>Implement with comprehensive tests</p></li>
+<li><p>Benchmark against baselines</p></li>
+<li><p>Add documentation and examples</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">docs/research/implemented_methods.rst</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="issues">
+<h2>Issues<a class="headerlink" href="#issues" title="Link to this heading"></a></h2>
+<section id="bug-reports">
+<h3>Bug Reports<a class="headerlink" href="#bug-reports" title="Link to this heading"></a></h3>
+<p>When reporting bugs, include:</p>
+<ul class="simple">
+<li><p><strong>OS and version</strong>: e.g., Ubuntu 22.04</p></li>
+<li><p><strong>Python version</strong>: e.g., Python 3.11</p></li>
+<li><p><strong>PyTorch version</strong>: e.g., PyTorch 2.1.0</p></li>
+<li><p><strong>Code snippet</strong>: Minimal reproduction</p></li>
+<li><p><strong>Error message</strong>: Full traceback</p></li>
+<li><p><strong>Expected behavior</strong>: What should happen</p></li>
+<li><p><strong>Actual behavior</strong>: What actually happens</p></li>
+</ul>
+</section>
+<section id="feature-requests">
+<h3>Feature Requests<a class="headerlink" href="#feature-requests" title="Link to this heading"></a></h3>
+<p>For feature requests, include:</p>
+<ul class="simple">
+<li><p><strong>Use case</strong>: What problem are you trying to solve?</p></li>
+<li><p><strong>Proposed solution</strong>: How should it work?</p></li>
+<li><p><strong>Alternatives</strong>: What alternatives have you considered?</p></li>
+<li><p><strong>Additional context</strong>: Any other relevant information</p></li>
+</ul>
+</section>
+</section>
+<section id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>GitHub Discussions</strong>: Use for questions and ideas</p></li>
+<li><p><strong>GitHub Issues</strong>: Use for bugs and feature requests</p></li>
+<li><p><strong>Discord/Slack</strong>: Check if community chat exists</p></li>
+</ul>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p>By contributing, you agree that your contributions will be licensed under the project’s license.</p>
+</section>
+<section id="acknowledgments">
+<h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading"></a></h2>
+<p>Thank you for contributing to MedLatents!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="research/references.html" class="btn btn-neutral float-left" title="References" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

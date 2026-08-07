@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 4: Evaluating Models &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Implemented Methods" href="../research/implemented_methods.html" />
+    <link rel="prev" title="Tutorial 3: Inpainting" href="03_inpainting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial 4: Evaluating Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reconstruction-metrics">Reconstruction metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generative-quality">Generative quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#confidence-intervals">Confidence intervals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#memorization-probe">Memorization probe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reproducible-baselines">Reproducible baselines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to go next</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorial 4: Evaluating Models</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/tutorials/04_evaluation.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-4-evaluating-models">
+<h1>Tutorial 4: Evaluating Models<a class="headerlink" href="#tutorial-4-evaluating-models" title="Link to this heading"></a></h1>
+<p>This tutorial covers measuring the quality of a trained model: reconstruction
+fidelity, generative quality (FID, precision/recall, likelihood), and a
+memorization probe to check that the model is not copying training data. The
+relevant API is in <a class="reference internal" href="../api/evaluation.html"><span class="doc">Evaluation API</span></a>.</p>
+<section id="reconstruction-metrics">
+<h2>Reconstruction metrics<a class="headerlink" href="#reconstruction-metrics" title="Link to this heading"></a></h2>
+<p>For tasks where you have a ground-truth target (reconstruction, inpainting,
+super-resolution), use PSNR and SSIM:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_psnr</span><span class="p">,</span> <span class="n">calculate_ssim</span>
+
+<span class="n">psnr</span> <span class="o">=</span> <span class="n">calculate_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="n">ssim</span> <span class="o">=</span> <span class="n">calculate_ssim</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PSNR: </span><span class="si">{</span><span class="n">psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB  SSIM: </span><span class="si">{</span><span class="n">ssim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generative-quality">
+<h2>Generative quality<a class="headerlink" href="#generative-quality" title="Link to this heading"></a></h2>
+<p>For unconditional or class-conditional generation, compare the distribution of
+generated images to real ones. The one-call helpers cover the common cases:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">calculate_fid</span><span class="p">,</span>
+    <span class="n">calculate_precision_recall</span><span class="p">,</span>
+    <span class="n">calculate_nll</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Frechet distance between real and generated feature sets</span>
+<span class="n">fid</span> <span class="o">=</span> <span class="n">calculate_fid</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">gen_features</span><span class="p">)</span>
+
+<span class="c1"># Improved precision / recall (fidelity vs. coverage)</span>
+<span class="n">precision</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="n">calculate_precision_recall</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">gen_features</span><span class="p">)</span>
+
+<span class="c1"># Negative log-likelihood for likelihood-based models</span>
+<span class="n">nll</span> <span class="o">=</span> <span class="n">calculate_nll</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When you need to stream features over many batches, use the stateful
+calculators instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FIDCalculator</span><span class="p">,</span> <span class="n">PrecisionRecallCalculator</span>
+
+<span class="n">fid_calc</span> <span class="o">=</span> <span class="n">FIDCalculator</span><span class="p">(</span><span class="n">extractor_type</span><span class="o">=</span><span class="s2">&quot;radimagenet&quot;</span><span class="p">)</span>
+<span class="n">pr_calc</span> <span class="o">=</span> <span class="n">PrecisionRecallCalculator</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For medical imagery, prefer a domain-appropriate feature extractor (for
+example RadImageNet) over natural-image Inception features. The
+<code class="docutils literal notranslate"><span class="pre">extractor_type</span></code> argument selects the backbone.</p>
+</div>
+</section>
+<section id="confidence-intervals">
+<h2>Confidence intervals<a class="headerlink" href="#confidence-intervals" title="Link to this heading"></a></h2>
+<p>FID is sensitive to sample size. Bootstrap a confidence interval and a
+noise floor so improvements can be judged against measurement noise:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">bootstrap_fid_real_vs_gen</span><span class="p">,</span>
+    <span class="n">bootstrap_fid_noise_floor</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">mean</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">bootstrap_fid_real_vs_gen</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">gen_features</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="n">bootstrap_fid_noise_floor</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FID </span><span class="si">{</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (95% CI [</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]), noise floor </span><span class="si">{</span><span class="n">floor</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="memorization-probe">
+<h2>Memorization probe<a class="headerlink" href="#memorization-probe" title="Link to this heading"></a></h2>
+<p>To verify the model generalizes rather than memorizes, compare generated samples
+against their nearest training neighbors in a perceptual feature space:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InceptionPool3FeatureExtractor</span><span class="p">,</span>
+    <span class="n">memorization_metrics</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># memorization_metrics works on precomputed features, so extract them first.</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">InceptionPool3FeatureExtractor</span><span class="p">()</span>
+<span class="n">gen_features</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">generated_images</span><span class="p">)</span>     <span class="c1"># (N_gen, 192)</span>
+<span class="n">train_features</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">training_images</span><span class="p">)</span>    <span class="c1"># (N_train, 192)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">memorization_metrics</span><span class="p">(</span><span class="n">gen_features</span><span class="p">,</span> <span class="n">train_features</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Low nearest-neighbor distances concentrated near zero indicate copying; a
+healthy model produces a distribution shifted away from the training set. Use
+<a class="reference internal" href="../api/evaluation.html#medlatents.evaluation.nearest_neighbor_gallery_pairs" title="medlatents.evaluation.nearest_neighbor_gallery_pairs"><code class="xref py py-func docutils literal notranslate"><span class="pre">nearest_neighbor_gallery_pairs()</span></code></a> to build a visual
+gallery of the closest matches for inspection.</p>
+</section>
+<section id="reproducible-baselines">
+<h2>Reproducible baselines<a class="headerlink" href="#reproducible-baselines" title="Link to this heading"></a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">PERF_SCOREBOARD.md</span></code> in the repository for measured speed baselines and
+the exact benchmarking methodology used in this project.</p>
+</section>
+<section id="where-to-go-next">
+<h2>Where to go next<a class="headerlink" href="#where-to-go-next" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../guides/post_training.html"><span class="doc">Post-Training Guide</span></a> – improve a model after evaluating it.</p></li>
+<li><p><a class="reference internal" href="../research/implemented_methods.html"><span class="doc">Implemented Methods</span></a> – the methods behind the metrics.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="03_inpainting.html" class="btn btn-neutral float-left" title="Tutorial 3: Inpainting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../research/implemented_methods.html" class="btn btn-neutral float-right" title="Implemented Methods" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

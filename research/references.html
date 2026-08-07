@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>References &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MedLatents: Contributing Guide" href="../contributing.html" />
+    <link rel="prev" title="Implemented Methods" href="implemented_methods.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generative-model-families">Generative model families</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-and-inference">Sampling and inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#training-and-representation-alignment">Training and representation alignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preference-optimization">Preference optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reinforcement-learning">Reinforcement learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#distillation">Distillation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#self-play">Self-play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citing-medlatents">Citing MedLatents</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">References</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/research/references.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading"></a></h1>
+<p>This page collects the primary literature behind the methods implemented in
+MedLatents. For where each method lives in the codebase, see
+<a class="reference internal" href="implemented_methods.html"><span class="doc">Implemented Methods</span></a>.</p>
+<section id="generative-model-families">
+<h2>Generative model families<a class="headerlink" href="#generative-model-families" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>D3PM</strong> – Austin, J., Johnson, D. D., Ho, J., Tarlow, D., &amp; van den Berg, R.
+(2021). <em>Structured Denoising Diffusion Models in Discrete State-Spaces.</em>
+NeurIPS.</p></li>
+<li><p><strong>MaskGIT</strong> – Chang, H., Zhang, H., Jiang, L., Liu, C., &amp; Freeman, W. T.
+(2022). <em>MaskGIT: Masked Generative Image Transformer.</em> CVPR.</p></li>
+<li><p><strong>SEDD</strong> – Lou, A., Meng, C., &amp; Ermon, S. (2024). <em>Discrete Diffusion
+Modeling by Estimating the Ratios of the Data Distribution.</em> ICML.</p></li>
+<li><p><strong>MDLM</strong> – Sahoo, S. S., et al. (2024). <em>Simple and Effective Masked Diffusion
+Language Models.</em> NeurIPS.</p></li>
+<li><p><strong>Flow Matching</strong> – Lipman, Y., Chen, R. T. Q., Ben-Hamu, H., Nickel, M., &amp;
+Le, M. (2023). <em>Flow Matching for Generative Modeling.</em> ICLR.</p></li>
+<li><p><strong>Discrete Flow Matching</strong> – Gat, I., et al. (2024). <em>Discrete Flow
+Matching.</em> NeurIPS.</p></li>
+<li><p><strong>Rectified Flow</strong> – Liu, X., Gong, C., &amp; Liu, Q. (2023). <em>Flow Straight and
+Fast: Learning to Generate and Transfer Data with Rectified Flow.</em> ICLR.</p></li>
+<li><p><strong>Bayesian Flow Networks</strong> – Graves, A., Srivastava, R. K., Atkinson, T., &amp;
+Gomez, F. (2023). <em>Bayesian Flow Networks.</em> arXiv:2308.07037.</p></li>
+<li><p><strong>Diffusion Transformer (DiT)</strong> – Peebles, W., &amp; Xie, S. (2023). <em>Scalable
+Diffusion Models with Transformers.</em> ICCV.</p></li>
+</ul>
+</section>
+<section id="sampling-and-inference">
+<h2>Sampling and inference<a class="headerlink" href="#sampling-and-inference" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Zero-Terminal-SNR</strong> – Lin, S., Liu, B., Li, J., &amp; Yang, X. (2024). <em>Common
+Diffusion Noise Schedules and Sample Steps are Flawed.</em> WACV.</p></li>
+<li><p><strong>DPM-Solver</strong> – Lu, C., Zhou, Y., Bao, F., Chen, J., Li, C., &amp; Zhu, J.
+(2022). <em>DPM-Solver: A Fast ODE Solver for Diffusion Probabilistic Model
+Sampling in Around 10 Steps.</em> NeurIPS.</p></li>
+<li><p><strong>DDIM</strong> – Song, J., Meng, C., &amp; Ermon, S. (2021). <em>Denoising Diffusion
+Implicit Models.</em> ICLR.</p></li>
+<li><p><strong>Classifier-Free Guidance</strong> – Ho, J., &amp; Salimans, T. (2022).
+<em>Classifier-Free Diffusion Guidance.</em> arXiv:2207.12598.</p></li>
+<li><p><strong>CFG-Zero*</strong> – Fan, W., et al. (2025). <em>CFG-Zero</em>: Improved Classifier-Free
+Guidance for Flow-Matching Models.* arXiv:2503.18886.</p></li>
+<li><p><strong>ReinMax</strong> – Liu, L., et al. (2023). <em>Bridging Discrete and Backpropagation:
+Straight-Through and Beyond.</em> NeurIPS.</p></li>
+<li><p><strong>RePaint</strong> – Lugmayr, A., et al. (2022). <em>RePaint: Inpainting using
+Denoising Diffusion Probabilistic Models.</em> CVPR.</p></li>
+<li><p><strong>Speculative Decoding</strong> – Leviathan, Y., Kalman, M., &amp; Matias, Y. (2023).
+<em>Fast Inference from Transformers via Speculative Decoding.</em> ICML.</p></li>
+<li><p><strong>Medusa</strong> – Cai, T., et al. (2024). <em>Medusa: Simple LLM Inference
+Acceleration Framework with Multiple Decoding Heads.</em> ICML.</p></li>
+</ul>
+</section>
+<section id="training-and-representation-alignment">
+<h2>Training and representation alignment<a class="headerlink" href="#training-and-representation-alignment" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>REPA</strong> – Yu, S., et al. (2025). <em>Representation Alignment for Generation:
+Training Diffusion Transformers Is Easier Than You Think.</em> ICLR.</p></li>
+<li><p><strong>REPA-E</strong> – Leng, X., et al. (2025). <em>REPA-E: Unlocking VAE for End-to-End
+Tuning with Latent Diffusion Transformers.</em> arXiv:2504.10483.</p></li>
+</ul>
+</section>
+<section id="preference-optimization">
+<h2>Preference optimization<a class="headerlink" href="#preference-optimization" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>DPO</strong> – Rafailov, R., et al. (2023). <em>Direct Preference Optimization: Your
+Language Model is Secretly a Reward Model.</em> NeurIPS.</p></li>
+<li><p><strong>IPO</strong> – Azar, M. G., et al. (2023). <em>A General Theoretical Paradigm to
+Understand Learning from Human Preferences.</em> arXiv:2310.12036.</p></li>
+<li><p><strong>KTO</strong> – Ethayarajh, K., et al. (2024). <em>KTO: Model Alignment as Prospect
+Theoretic Optimization.</em> ICML.</p></li>
+<li><p><strong>Diffusion-DPO</strong> – Wallace, B., et al. (2023). <em>Diffusion Model Alignment
+Using Direct Preference Optimization.</em> arXiv:2311.12908.</p></li>
+<li><p><strong>SPO</strong> – Liang, Z., et al. (2024). <em>Step-by-Step Preference Optimization.</em>
+(CVPR 2025).</p></li>
+</ul>
+</section>
+<section id="reinforcement-learning">
+<h2>Reinforcement learning<a class="headerlink" href="#reinforcement-learning" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>DDPO</strong> – Black, K., Janner, M., Du, Y., Kostrikov, I., &amp; Levine, S. (2023).
+<em>Training Diffusion Models with Reinforcement Learning.</em> arXiv:2305.13301.</p></li>
+<li><p><strong>GRPO</strong> – Shao, Z., et al. (2024). <em>DeepSeekMath: Pushing the Limits of
+Mathematical Reasoning in Open Language Models.</em> arXiv:2402.03300.</p></li>
+</ul>
+</section>
+<section id="distillation">
+<h2>Distillation<a class="headerlink" href="#distillation" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Consistency Models</strong> – Song, Y., Dhariwal, P., Chen, M., &amp; Sutskever, I.
+(2023). <em>Consistency Models.</em> ICML.</p></li>
+<li><p><strong>Reflow</strong> – Liu, X., Gong, C., &amp; Liu, Q. (2022). <em>Flow Straight and Fast:
+Learning to Generate and Transfer Data with Rectified Flow.</em> arXiv:2209.03003.</p></li>
+</ul>
+</section>
+<section id="self-play">
+<h2>Self-play<a class="headerlink" href="#self-play" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>SPIN</strong> – Chen, Z., et al. (2024). <em>Self-Play Fine-Tuning Converts Weak
+Language Models to Strong Language Models.</em> ICML.</p></li>
+<li><p><strong>RFT</strong> – Yuan, Z., et al. (2023). <em>Scaling Relationship on Learning
+Mathematical Reasoning with Large Language Models.</em> arXiv:2308.01825.</p></li>
+</ul>
+</section>
+<section id="citing-medlatents">
+<h2>Citing MedLatents<a class="headerlink" href="#citing-medlatents" title="Link to this heading"></a></h2>
+<p>If you use MedLatents in your research, please cite the project. See the
+<a class="reference internal" href="../getting_started.html"><span class="doc">Getting Started</span></a> page and the <code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code> file at the repository
+root for the current citation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="implemented_methods.html" class="btn btn-neutral float-left" title="Implemented Methods" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../contributing.html" class="btn btn-neutral float-right" title="MedLatents: Contributing Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1522 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>medlatents.networks.diffusion_transformer &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">medlatents.networks.diffusion_transformer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for medlatents.networks.diffusion_transformer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Diffusion Transformer backbones for discrete and continuous latents.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.checkpoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">checkpoint</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..configs</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_model_variants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transformer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ContinuousTransformer</span><span class="p">,</span>
+    <span class="n">DiscreteTransformer</span><span class="p">,</span>
+    <span class="n">apply_rotary_emb</span><span class="p">,</span>
+    <span class="n">init_weights</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply adaptive layer norm modulation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">scale</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">shift</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DiscreteSequenceEmbedder">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteSequenceEmbedder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteSequenceEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projects discrete token indices to embeddings.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiscreteSequenceEmbedder.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteSequenceEmbedder.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span> <span class="o">=</span> <span class="n">seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="o">=</span> <span class="n">allow_dynamic_seq_length</span></div>
+
+
+<div class="viewcode-block" id="DiscreteSequenceEmbedder.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteSequenceEmbedder.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Validate token values are within vocab range (fail-fast on invalid inputs)</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Token values must be in [0, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2">), &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;got range [</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ContinuousSequenceEmbedder">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousSequenceEmbedder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContinuousSequenceEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projects continuous latent codes to the transformer hidden size.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContinuousSequenceEmbedder.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousSequenceEmbedder.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span> <span class="o">=</span> <span class="n">seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="o">=</span> <span class="n">allow_dynamic_seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContinuousSequenceEmbedder.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousSequenceEmbedder.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected input with shape [batch, seq_len, channels], got </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected feature dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TimestepEmbedder">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimestepEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embeds scalar timesteps into vector representations.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TimestepEmbedder.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">frequency_embedding_size</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">frequency_embedding_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frequency_embedding_size</span> <span class="o">=</span> <span class="n">frequency_embedding_size</span></div>
+
+
+<div class="viewcode-block" id="TimestepEmbedder.timestep_embedding">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder.timestep_embedding">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">timestep_embedding</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">max_period</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sinusoidal timestep embeddings.&quot;&quot;&quot;</span>
+        <span class="n">half</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">freqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_period</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">half</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">half</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">t</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">*</span> <span class="n">freqs</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">args</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">embedding</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">embedding</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">])],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">embedding</span></div>
+
+
+<div class="viewcode-block" id="TimestepEmbedder.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">t_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_embedding</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequency_embedding_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">t_freq</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LabelEmbedder">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LabelEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embeds class labels with support for classifier-free guidance.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LabelEmbedder.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">dropout_prob</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">use_cfg_embedding</span> <span class="o">=</span> <span class="n">dropout_prob</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_table</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">num_classes</span> <span class="o">+</span> <span class="n">use_cfg_embedding</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">num_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_prob</span> <span class="o">=</span> <span class="n">dropout_prob</span></div>
+
+
+<div class="viewcode-block" id="LabelEmbedder.token_drop">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder.token_drop">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">token_drop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Drop labels to enable classifier-free guidance.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">force_drop_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">drop_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">labels</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_prob</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">drop_ids</span> <span class="o">=</span> <span class="n">force_drop_ids</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">drop_ids</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LabelEmbedder.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">use_dropout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_prob</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">train</span> <span class="ow">and</span> <span class="n">use_dropout</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">force_drop_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_drop</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_table</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DiTAttention">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTAttention">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiTAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Attention block with RoPE for DiT.</span>
+
+<span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiTAttention.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTAttention.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">qkv_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+
+        <span class="c1"># QK LayerNorm for stability</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DiTAttention.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTAttention.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">):</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">qkv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">qkv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">qkv</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="c1"># Apply QK LayerNorm for stability</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DiTBlock">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlock">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiTBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DiT block with adaptive layer norm zero (adaLN-Zero) conditioning.</span>
+
+<span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiTBlock.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlock.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">block_kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">DiTAttention</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="n">mlp_hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">mlp_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiTBlock.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlock.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">):</span>
+        <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">,</span> <span class="n">gate_msa</span><span class="p">,</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">,</span> <span class="n">gate_mlp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">(</span>
+            <span class="n">c</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_msa</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span>
+            <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">),</span> <span class="n">freqs_cis</span>
+        <span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DiTCrossAttention">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiTCrossAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cross-attention module for DiT with optional QK-norm.</span>
+
+<span class="sd">    Attends to conditioning context (e.g., text embeddings) from the main sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiTCrossAttention.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">context_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">qkv_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="o">**-</span><span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_dim</span> <span class="o">=</span> <span class="n">context_dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_q</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_k</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">context_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_v</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">context_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">qkv_bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+
+        <span class="c1"># QK LayerNorm for stability</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span> <span class="k">if</span> <span class="n">qk_norm</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DiTCrossAttention.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: Query tensor [batch, seq_len, hidden_size]</span>
+<span class="sd">            context: Key/value context [batch, context_len, context_dim]</span>
+<span class="sd">            context_mask: Optional mask [batch, context_len], True = attend, False = ignore</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Attended tensor [batch, seq_len, hidden_size]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">context_len</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_q</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_k</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">context_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_v</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">context_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Apply QK LayerNorm if enabled</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_norm</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Prepare attention mask for scaled_dot_product_attention</span>
+        <span class="c1"># PyTorch expects: True = mask out (don&#39;t attend), so we invert</span>
+        <span class="n">attn_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">context_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># context_mask: [B, context_len], True = attend</span>
+            <span class="c1"># Need: [B, 1, 1, context_len] for broadcasting</span>
+            <span class="n">attn_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">context_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># True = don&#39;t attend</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="n">attn_mask</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DiTBlockWithCrossAttention">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiTBlockWithCrossAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DiT block with self-attention, cross-attention, and adaLN-Zero conditioning.</span>
+
+<span class="sd">    This extends the standard DiTBlock with an optional cross-attention sublayer</span>
+<span class="sd">    between self-attention and MLP, enabling conditioning on sequences like text</span>
+<span class="sd">    embeddings, other image tokens, or multi-modal contexts.</span>
+
+<span class="sd">    Architecture (per block):</span>
+<span class="sd">        x -&gt; adaLN -&gt; self-attn -&gt; + -&gt; adaLN -&gt; cross-attn -&gt; + -&gt; adaLN -&gt; MLP -&gt; +</span>
+<span class="sd">             ↑                    |      ↑                    |      ↑            |</span>
+<span class="sd">             c                    x      c                    x      c            x</span>
+
+<span class="sd">    Based on architectures from:</span>
+<span class="sd">    - PixArt-alpha (arXiv:2310.00426)</span>
+<span class="sd">    - Stable Diffusion 3 (arXiv:2403.03206)</span>
+<span class="sd">    - FLUX (Black Forest Labs)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_size: Model hidden dimension</span>
+<span class="sd">        context_dim: Dimension of cross-attention context (e.g., text embeddings)</span>
+<span class="sd">        num_heads: Number of attention heads</span>
+<span class="sd">        mlp_ratio: MLP hidden dimension multiplier</span>
+<span class="sd">        qk_norm: Whether to apply QK LayerNorm for stability</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiTBlockWithCrossAttention.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">,</span>
+        <span class="n">context_dim</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">block_kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_dim</span> <span class="o">=</span> <span class="n">context_dim</span>
+
+        <span class="c1"># Self-attention with adaLN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">DiTAttention</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+
+        <span class="c1"># Cross-attention with adaLN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_cross</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_attn</span> <span class="o">=</span> <span class="n">DiTCrossAttention</span><span class="p">(</span>
+            <span class="n">hidden_size</span><span class="p">,</span> <span class="n">context_dim</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span>
+        <span class="p">)</span>
+
+        <span class="c1"># MLP with adaLN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="n">mlp_hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">mlp_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># adaLN modulation: 9 parameters (3 per sublayer: shift, scale, gate)</span>
+        <span class="c1"># self-attn: shift_msa, scale_msa, gate_msa</span>
+        <span class="c1"># cross-attn: shift_ca, scale_ca, gate_ca</span>
+        <span class="c1"># MLP: shift_mlp, scale_mlp, gate_mlp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiTBlockWithCrossAttention.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass with optional cross-attention.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor [batch, seq_len, hidden_size]</span>
+<span class="sd">            c: Conditioning vector [batch, hidden_size] (timestep + class embedding)</span>
+<span class="sd">            freqs_cis: RoPE frequencies</span>
+<span class="sd">            context: Optional cross-attention context [batch, context_len, context_dim]</span>
+<span class="sd">            context_mask: Optional mask for context [batch, context_len]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Output tensor [batch, seq_len, hidden_size]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get all modulation parameters</span>
+        <span class="n">modulation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="p">(</span>
+            <span class="n">shift_msa</span><span class="p">,</span>
+            <span class="n">scale_msa</span><span class="p">,</span>
+            <span class="n">gate_msa</span><span class="p">,</span>
+            <span class="n">shift_ca</span><span class="p">,</span>
+            <span class="n">scale_ca</span><span class="p">,</span>
+            <span class="n">gate_ca</span><span class="p">,</span>
+            <span class="n">shift_mlp</span><span class="p">,</span>
+            <span class="n">scale_mlp</span><span class="p">,</span>
+            <span class="n">gate_mlp</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">modulation</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Self-attention</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_msa</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span>
+            <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">),</span> <span class="n">freqs_cis</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Cross-attention (only if context provided)</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_ca</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_attn</span><span class="p">(</span>
+                <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm_cross</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_ca</span><span class="p">,</span> <span class="n">scale_ca</span><span class="p">),</span>
+                <span class="n">context</span><span class="p">,</span>
+                <span class="n">context_mask</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># MLP</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="p">(</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MMDiTBlock">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MMDiTBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-Modal DiT block with joint attention over image and text tokens.</span>
+
+<span class="sd">    Inspired by SD3/FLUX architecture where image and text tokens are concatenated</span>
+<span class="sd">    and processed jointly through self-attention, enabling bidirectional attention</span>
+<span class="sd">    between modalities.</span>
+
+<span class="sd">    This is more computationally efficient than separate cross-attention when</span>
+<span class="sd">    context lengths are similar to sequence lengths.</span>
+
+<span class="sd">    Architecture:</span>
+<span class="sd">        [image_tokens, text_tokens] -&gt; joint self-attn -&gt; split -&gt; MLPs</span>
+
+<span class="sd">    Based on:</span>
+<span class="sd">    - Stable Diffusion 3 (arXiv:2403.03206)</span>
+<span class="sd">    - FLUX (Black Forest Labs)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        hidden_size: Model hidden dimension</span>
+<span class="sd">        context_dim: Dimension of text/context tokens (projected to hidden_size)</span>
+<span class="sd">        num_heads: Number of attention heads</span>
+<span class="sd">        mlp_ratio: MLP hidden dimension multiplier</span>
+<span class="sd">        qk_norm: Whether to apply QK LayerNorm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MMDiTBlock.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">,</span>
+        <span class="n">context_dim</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">block_kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_dim</span> <span class="o">=</span> <span class="n">context_dim</span>
+
+        <span class="c1"># Project context to hidden_size if different</span>
+        <span class="k">if</span> <span class="n">context_dim</span> <span class="o">!=</span> <span class="n">hidden_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">context_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context_proj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
+
+        <span class="c1"># Joint attention (processes concatenated image + text tokens)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1_img</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm1_txt</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attn</span> <span class="o">=</span> <span class="n">DiTAttention</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+
+        <span class="c1"># Separate MLPs for image and text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2_img</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm2_txt</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+        <span class="n">mlp_hidden_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden_size</span> <span class="o">*</span> <span class="n">mlp_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_img</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp_txt</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">mlp_hidden_dim</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># adaLN modulation for image stream (6 params: attn + mlp)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation_img</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># adaLN modulation for text stream (6 params: attn + mlp)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation_txt</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MMDiTBlock.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass with joint multi-modal attention.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x: Image tokens [batch, img_seq_len, hidden_size]</span>
+<span class="sd">            c: Conditioning vector [batch, hidden_size]</span>
+<span class="sd">            freqs_cis: RoPE frequencies (for image tokens only, or extended)</span>
+<span class="sd">            context: Text tokens [batch, txt_seq_len, context_dim]</span>
+<span class="sd">            context_mask: Optional mask for text [batch, txt_seq_len] (not used in joint attn)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Output image tokens [batch, img_seq_len, hidden_size]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Fall back to standard DiT block behavior (self-attn only on image)</span>
+            <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">,</span> <span class="n">gate_msa</span><span class="p">,</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">,</span> <span class="n">gate_mlp</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation_img</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_msa</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span>
+                <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1_img</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">),</span> <span class="n">freqs_cis</span>
+            <span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp_img</span><span class="p">(</span>
+                <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2_img</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">x</span>
+
+        <span class="c1"># Project context to hidden_size</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_proj</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="n">img_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">txt_len</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Get modulation parameters</span>
+        <span class="n">shift_msa_img</span><span class="p">,</span> <span class="n">scale_msa_img</span><span class="p">,</span> <span class="n">gate_msa_img</span><span class="p">,</span> <span class="n">shift_mlp_img</span><span class="p">,</span> <span class="n">scale_mlp_img</span><span class="p">,</span> <span class="n">gate_mlp_img</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation_img</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">shift_msa_txt</span><span class="p">,</span> <span class="n">scale_msa_txt</span><span class="p">,</span> <span class="n">gate_msa_txt</span><span class="p">,</span> <span class="n">shift_mlp_txt</span><span class="p">,</span> <span class="n">scale_mlp_txt</span><span class="p">,</span> <span class="n">gate_mlp_txt</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation_txt</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Apply adaLN to both streams</span>
+        <span class="n">x_normed</span> <span class="o">=</span> <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1_img</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_msa_img</span><span class="p">,</span> <span class="n">scale_msa_img</span><span class="p">)</span>
+        <span class="n">ctx_normed</span> <span class="o">=</span> <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm1_txt</span><span class="p">(</span><span class="n">context</span><span class="p">),</span> <span class="n">shift_msa_txt</span><span class="p">,</span> <span class="n">scale_msa_txt</span><span class="p">)</span>
+
+        <span class="c1"># Concatenate for joint attention</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x_normed</span><span class="p">,</span> <span class="n">ctx_normed</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Extend freqs_cis for joint sequence if needed</span>
+        <span class="c1"># For simplicity, we use the same RoPE for text (could use separate or none)</span>
+        <span class="k">if</span> <span class="n">freqs_cis</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">img_len</span> <span class="o">+</span> <span class="n">txt_len</span><span class="p">:</span>
+            <span class="c1"># Pad with last frequency (or zeros) for text tokens</span>
+            <span class="n">padding</span> <span class="o">=</span> <span class="n">freqs_cis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">txt_len</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">freqs_cis_joint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">freqs_cis</span><span class="p">[:</span><span class="n">img_len</span><span class="p">],</span> <span class="n">padding</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">freqs_cis_joint</span> <span class="o">=</span> <span class="n">freqs_cis</span><span class="p">[:</span> <span class="n">img_len</span> <span class="o">+</span> <span class="n">txt_len</span><span class="p">]</span>
+
+        <span class="c1"># Joint self-attention</span>
+        <span class="n">joint_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">freqs_cis_joint</span><span class="p">)</span>
+
+        <span class="c1"># Split back</span>
+        <span class="n">x_attn</span><span class="p">,</span> <span class="n">ctx_attn</span> <span class="o">=</span> <span class="n">joint_out</span><span class="p">[:,</span> <span class="p">:</span><span class="n">img_len</span><span class="p">],</span> <span class="n">joint_out</span><span class="p">[:,</span> <span class="n">img_len</span><span class="p">:]</span>
+
+        <span class="c1"># Residual connections with gates</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_msa_img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_attn</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">context</span> <span class="o">+</span> <span class="n">gate_msa_txt</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">ctx_attn</span>
+
+        <span class="c1"># Separate MLPs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp_img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp_img</span><span class="p">(</span>
+            <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2_img</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp_img</span><span class="p">,</span> <span class="n">scale_mlp_img</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># Note: We don&#39;t return modified context, but it&#39;s updated for potential future use</span>
+        <span class="c1"># context = context + gate_mlp_txt.unsqueeze(1) * self.mlp_txt(</span>
+        <span class="c1">#     modulate(self.norm2_txt(context), shift_mlp_txt, scale_mlp_txt)</span>
+        <span class="c1"># )</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FinalLayer">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.FinalLayer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FinalLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The final layer of DiT.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FinalLayer.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.FinalLayer.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">patch_size</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_final</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">elementwise_affine</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">patch_size</span> <span class="o">*</span> <span class="n">patch_size</span> <span class="o">*</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">(),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FinalLayer.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.FinalLayer.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm_final</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DiscreteDiT">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteDiT</span><span class="p">(</span><span class="n">DiscreteTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Diffusion Transformer with adaptive conditioning for discrete flows.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DiscreteDiT.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seq_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+        <span class="n">vocab_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="o">=</span><span class="mi">384</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">class_dropout_prob</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">num_classes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">rope_theta</span><span class="o">=</span><span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">masked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span>
+            <span class="n">vocab_size</span><span class="o">=</span><span class="n">vocab_size</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">masked</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">rope_theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+            <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="n">gradient_checkpointing</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">vocab_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span> <span class="o">=</span> <span class="n">seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span> <span class="o">=</span> <span class="n">num_classes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">class_dropout_prob</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masked</span> <span class="o">=</span> <span class="n">masked</span>
+
+        <span class="c1"># Embedders</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span> <span class="o">=</span> <span class="n">DiscreteSequenceEmbedder</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span> <span class="o">=</span> <span class="n">TimestepEmbedder</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">LabelEmbedder</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">class_dropout_prob</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="c1"># DiT blocks (with optional QK LayerNorm)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">DiTBlock</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mlp_ratio</span><span class="o">=</span><span class="n">mlp_ratio</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DiscreteDiT.initialize_weights">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.initialize_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize weights following DiT paper with zero-init for adaLN and final layer.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
+
+        <span class="c1"># Zero-initialize adaLN modulation layers (ensures identity at initialization)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+
+        <span class="c1"># Zero-initialize final layer (ensures identity at initialization)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiscreteDiT.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through DiT.&quot;&quot;&quot;</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">freqs_cis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model requires class labels but none provided&quot;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">t</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_checkpointing</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ckpt_wrapper</span><span class="p">(</span><span class="n">block</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">use_reentrant</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiscreteDiT.forward_with_cfg">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.forward_with_cfg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cfg_scale</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with classifier-free guidance.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model was trained without classifier-free guidance&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x and t must have twice the batch size of y&quot;</span><span class="p">)</span>
+
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">freqs_cis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+
+        <span class="n">force_drop</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">y_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="o">=</span><span class="n">force_drop</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">t_emb</span> <span class="o">+</span> <span class="n">y_emb</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">half</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">uncond_out</span><span class="p">,</span> <span class="n">cond_out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="n">half</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">uncond_out</span> <span class="o">+</span> <span class="n">cfg_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">cond_out</span> <span class="o">-</span> <span class="n">uncond_out</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Factory helpers (continuous)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_continuous_dit</span><span class="p">(</span>
+    <span class="n">defaults</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContinuousDiT</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">defaults</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">ContinuousDiT</span><span class="p">(</span>
+        <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_XL</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_L</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_B</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">768</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_S</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_Nano</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="n">ContinuousDiT_models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ContinuousDiT-XL&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_XL</span><span class="p">,</span>
+    <span class="s2">&quot;ContinuousDiT-L&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_L</span><span class="p">,</span>
+    <span class="s2">&quot;ContinuousDiT-B&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_B</span><span class="p">,</span>
+    <span class="s2">&quot;ContinuousDiT-S&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_S</span><span class="p">,</span>
+    <span class="s2">&quot;ContinuousDiT-Nano&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_Nano</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1"># Model size configurations (discrete)</span>
+<span class="n">DiscreteDiT_models</span> <span class="o">=</span> <span class="n">create_model_variants</span><span class="p">(</span><span class="n">DiscreteDiT</span><span class="p">,</span> <span class="s2">&quot;DiscreteDiT&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ContinuousDiT">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ContinuousDiT</span><span class="p">(</span><span class="n">ContinuousTransformer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Diffusion Transformer tailored for continuous latent vectors.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContinuousDiT.__init__">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">384</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">mlp_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">4.0</span><span class="p">,</span>
+        <span class="n">class_dropout_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">rope_theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">,</span>
+        <span class="n">allow_dynamic_seq_length</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gradient_checkpointing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">qk_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">num_heads</span><span class="o">=</span><span class="n">num_heads</span><span class="p">,</span>
+            <span class="n">rope_theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+            <span class="n">chunk_size</span><span class="o">=</span><span class="n">chunk_size</span><span class="p">,</span>
+            <span class="n">gradient_checkpointing</span><span class="o">=</span><span class="n">gradient_checkpointing</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">out_channels</span> <span class="ow">or</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span> <span class="o">=</span> <span class="n">seq_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span> <span class="o">=</span> <span class="n">num_classes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">class_dropout_prob</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span> <span class="o">=</span> <span class="n">ContinuousSequenceEmbedder</span><span class="p">(</span>
+            <span class="n">seq_length</span><span class="p">,</span>
+            <span class="n">in_channels</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="p">,</span>
+            <span class="n">allow_dynamic_seq_length</span><span class="o">=</span><span class="n">allow_dynamic_seq_length</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span> <span class="o">=</span> <span class="n">TimestepEmbedder</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">LabelEmbedder</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">class_dropout_prob</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">DiTBlock</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">mlp_ratio</span><span class="o">=</span><span class="n">mlp_ratio</span><span class="p">,</span> <span class="n">qk_norm</span><span class="o">=</span><span class="n">qk_norm</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_weights</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ContinuousDiT.initialize_weights">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.initialize_weights">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize weights following DiT paper with zero-init for adaLN and final layer.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
+
+        <span class="c1"># Zero-initialize adaLN modulation layers (ensures identity at initialization)</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+
+        <span class="c1"># Zero-initialize final layer (ensures identity at initialization)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">zeros_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_maybe_update_rope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContinuousDiT.forward">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_update_rope</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">freqs_cis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model requires class labels but none provided&quot;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">t</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_checkpointing</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ckpt_wrapper</span><span class="p">(</span><span class="n">block</span><span class="p">),</span>
+                    <span class="n">x</span><span class="p">,</span>
+                    <span class="n">c</span><span class="p">,</span>
+                    <span class="n">freqs_cis</span><span class="p">,</span>
+                    <span class="n">use_reentrant</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContinuousDiT.forward_with_cfg">
+<a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.forward_with_cfg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cfg_scale</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model was trained without classifier-free guidance&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x and t must have twice the batch size of y&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_update_rope</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_embedder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_embedder</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="n">freqs_cis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="p">[:</span><span class="n">seq_len</span><span class="p">]</span>
+
+        <span class="n">force_drop</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">y_emb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="o">=</span><span class="n">force_drop</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">t_emb</span> <span class="o">+</span> <span class="n">y_emb</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">half</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">uncond_out</span><span class="p">,</span> <span class="n">cond_out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:</span><span class="n">half</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">half</span><span class="p">:]</span>
+
+        <span class="k">return</span> <span class="n">uncond_out</span> <span class="o">+</span> <span class="n">cfg_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">cond_out</span> <span class="o">-</span> <span class="n">uncond_out</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,988 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rasterization Guide &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Post-Training Guide" href="post_training.html" />
+    <link rel="prev" title="Bayesian Flow Networks Guide" href="bayesian_flow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rasterization Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-locality-matters">Why Locality Matters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#available-methods">Available Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rasterscan">RasterScan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scurve-serpentine">SCurve (Serpentine)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hilbertcurve">HilbertCurve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zordercurve-morton">ZOrderCurve (Morton)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#comparison">Comparison</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#visual-comparison">Visual Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#locality-metrics">Locality Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#practical-usage">Practical Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#with-autoregressive-models">With Autoregressive Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#with-tokenizers">With Tokenizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d-medical-volumes">3D Medical Volumes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-processing">Batch Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-a-method">Choosing a Method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#decision-guide">Decision Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recommendations-by-use-case">Recommendations by Use Case</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#handling-non-power-of-2-dimensions">Handling Non-Power-of-2 Dimensions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#padding-strategy">Padding Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tile-based-approach">Tile-Based Approach</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-tips">Performance Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#caching-indices">Caching Indices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gpu-acceleration">GPU Acceleration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compiled-operations">Compiled Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/rasterization.html">Rasterization API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Rasterization Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/guides/rasterization.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rasterization-guide">
+<h1>Rasterization Guide<a class="headerlink" href="#rasterization-guide" title="Link to this heading"></a></h1>
+<p>This guide covers spatial-to-sequence rasterization in medlatents, enabling
+autoregressive modeling of 2D/3D spatial data like medical images and volumes.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Autoregressive models process sequences, but medical data is spatial (2D/3D).
+Rasterization converts spatial data to sequences while preserving locality:</p>
+<pre  class="mermaid">
+        flowchart LR
+    subgraph Spatial[&quot;Spatial Data&quot;]
+        I[2D Image / 3D Volume]
+    end
+
+    subgraph Rasterize[&quot;Rasterization&quot;]
+        I --&gt; R[Space-Filling Curve]
+    end
+
+    subgraph Sequence[&quot;Sequence&quot;]
+        R --&gt; S[1D Token Sequence]
+    end
+
+    subgraph Generate[&quot;Generation&quot;]
+        S --&gt; AR[Autoregressive Model]
+        AR --&gt; S2[Generated Sequence]
+    end
+
+    subgraph Unraster[&quot;Unrasterization&quot;]
+        S2 --&gt; I2[Reconstructed Spatial]
+    end
+    </pre><section id="why-locality-matters">
+<h3>Why Locality Matters<a class="headerlink" href="#why-locality-matters" title="Link to this heading"></a></h3>
+<p>Adjacent tokens should represent nearby spatial locations:</p>
+<ul class="simple">
+<li><p><strong>Better context</strong>: Autoregressive models use previous tokens as context</p></li>
+<li><p><strong>Faster learning</strong>: Local patterns are easier to learn</p></li>
+<li><p><strong>Inpainting</strong>: Masked regions should have nearby context</p></li>
+</ul>
+</section>
+</section>
+<section id="available-methods">
+<h2>Available Methods<a class="headerlink" href="#available-methods" title="Link to this heading"></a></h2>
+<section id="rasterscan">
+<h3>RasterScan<a class="headerlink" href="#rasterscan" title="Link to this heading"></a></h3>
+<p>Simple row-by-row (or slice-by-slice) scanning.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">RasterScan</span>
+
+<span class="c1"># For 2D images</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">RasterScan</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>  <span class="c1"># Options: row, column</span>
+<span class="p">)</span>
+
+<span class="c1"># For 3D volumes</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">RasterScan</span><span class="p">(</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="s1">&#39;slice&#39;</span><span class="p">,</span>  <span class="c1"># Options: slice, row, column</span>
+<span class="p">)</span>
+
+<span class="c1"># Convert image to sequence</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>  <span class="c1"># [C, H, W]</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># [1, H*W]</span>
+
+<span class="c1"># Convert back</span>
+<span class="n">reconstructed</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">unrasterize</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>  <span class="c1"># [C, H, W]</span>
+</pre></div>
+</div>
+<p><strong>Properties</strong>:</p>
+<ul class="simple">
+<li><p>[+] Simple and fast</p></li>
+<li><p>[+] No computation overhead</p></li>
+<li><p>[-] Poor locality at row/column boundaries</p></li>
+</ul>
+</section>
+<section id="scurve-serpentine">
+<h3>SCurve (Serpentine)<a class="headerlink" href="#scurve-serpentine" title="Link to this heading"></a></h3>
+<p>Boustrophedon pattern - alternating left-right, right-left rows.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">SCurve</span>
+
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">SCurve</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Properties</strong>:</p>
+<ul class="simple">
+<li><p>[+] Simple</p></li>
+<li><p>[+] Better than raster at row boundaries</p></li>
+<li><p>[-] Still has locality issues at row ends</p></li>
+</ul>
+</section>
+<section id="hilbertcurve">
+<h3>HilbertCurve<a class="headerlink" href="#hilbertcurve" title="Link to this heading"></a></h3>
+<p>Space-filling curve with optimal locality preservation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">HilbertCurve</span>
+
+<span class="c1"># Dimensions should be powers of 2</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>  <span class="c1"># Must be power of 2</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>   <span class="c1"># Must be power of 2</span>
+<span class="p">)</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="c1"># 3D Hilbert curve</span>
+<span class="n">rasterizer_3d</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Properties</strong>:</p>
+<ul class="simple">
+<li><p>[+] Best locality (adjacent sequence = adjacent spatial)</p></li>
+<li><p>[+] Self-similar structure</p></li>
+<li><p>[!] Requires power-of-2 dimensions</p></li>
+<li><p>[!] More computation to generate curve</p></li>
+</ul>
+</section>
+<section id="zordercurve-morton">
+<h3>ZOrderCurve (Morton)<a class="headerlink" href="#zordercurve-morton" title="Link to this heading"></a></h3>
+<p>Z-order (Morton) curve using bit interleaving.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZOrderCurve</span><span class="p">,</span> <span class="n">rasterize_2d</span><span class="p">,</span> <span class="n">unrasterize_2d</span>
+
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">ZOrderCurve</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="c1"># Quick functions for common cases</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterize_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;zorder&#39;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">unrasterize_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;zorder&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Properties</strong>:</p>
+<ul class="simple">
+<li><p>[+] Good locality (better than raster/S-curve)</p></li>
+<li><p>[+] Fast (bit operations)</p></li>
+<li><p>[+] Works with non-power-of-2 (with padding)</p></li>
+<li><p>[!] Slightly worse locality than Hilbert</p></li>
+</ul>
+</section>
+</section>
+<section id="comparison">
+<h2>Comparison<a class="headerlink" href="#comparison" title="Link to this heading"></a></h2>
+<section id="visual-comparison">
+<h3>Visual Comparison<a class="headerlink" href="#visual-comparison" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Raster Scan:          S-Curve:             Hilbert:             Z-Order:
+→ → → → ↓            → → → → ↓            ┌─┐ ┌─┐              ↘ ↓ ↘ ↓
+→ → → → ↓            ← ← ← ← ↓            │ └─┘ │              → ↘ → ↘
+→ → → → ↓            → → → → ↓            └─┐ ┌─┘              ↘ ↓ ↘ ↓
+→ → → → ↓            ← ← ← ← ↓              └─┘                → ↘ → ↘
+</pre></div>
+</div>
+</section>
+<section id="locality-metrics">
+<h3>Locality Metrics<a class="headerlink" href="#locality-metrics" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Avg Distance</p></th>
+<th class="head"><p>Max Distance</p></th>
+<th class="head"><p>Computation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Raster</p></td>
+<td><p>O(W)</p></td>
+<td><p>O(W)</p></td>
+<td><p>O(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>S-Curve</p></td>
+<td><p>O(1) / O(W)</p></td>
+<td><p>O(W)</p></td>
+<td><p>O(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>Hilbert</p></td>
+<td><p>O(1)</p></td>
+<td><p>O(√N)</p></td>
+<td><p>O(N)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Z-Order</p></td>
+<td><p>O(1) / O(log N)</p></td>
+<td><p>O(√N)</p></td>
+<td><p>O(N)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="practical-usage">
+<h2>Practical Usage<a class="headerlink" href="#practical-usage" title="Link to this heading"></a></h2>
+<section id="with-autoregressive-models">
+<h3>With Autoregressive Models<a class="headerlink" href="#with-autoregressive-models" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">HilbertCurve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.autoregressive</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoregressiveTransformer</span>
+
+<span class="c1"># Setup</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoregressiveTransformer</span><span class="p">(</span>
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
+    <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span>  <span class="c1"># H * W</span>
+<span class="p">)</span>
+
+<span class="c1"># Training</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span>  <span class="c1"># [B, C, H, W] image tokens</span>
+
+    <span class="c1"># Rasterize each channel</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">seq</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">tokens</span><span class="p">[:,</span> <span class="n">c</span><span class="p">])</span>  <span class="c1"># [B, H*W]</span>
+        <span class="n">sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [B, C*H*W]</span>
+
+    <span class="c1"># Train autoregressive model</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+<span class="c1"># Generation</span>
+<span class="n">generated_seq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">generated_image</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">unrasterize</span><span class="p">(</span><span class="n">generated_seq</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="with-tokenizers">
+<h3>With Tokenizers<a class="headerlink" href="#with-tokenizers" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">VQTokenizer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZOrderCurve</span>
+
+<span class="c1"># Tokenize image to discrete codes</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">VQTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;path/to/vq&#39;</span><span class="p">)</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># [1, H//p, W//p] where p is patch size</span>
+
+<span class="c1"># Rasterize</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">ZOrderCurve</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">width</span><span class="o">=</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="d-medical-volumes">
+<h3>3D Medical Volumes<a class="headerlink" href="#d-medical-volumes" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">HilbertCurve</span>
+
+<span class="c1"># 3D MRI volume</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>   <span class="c1"># Slices</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>  <span class="c1"># Rows</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>   <span class="c1"># Columns</span>
+<span class="p">)</span>
+
+<span class="n">volume</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>  <span class="c1"># [C, D, H, W]</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>  <span class="c1"># [1, D*H*W]</span>
+
+<span class="c1"># Very long sequences! Consider:</span>
+<span class="c1"># 1. Downsampling first</span>
+<span class="c1"># 2. Using sliding windows</span>
+<span class="c1"># 3. Hierarchical generation</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-processing">
+<h3>Batch Processing<a class="headerlink" href="#batch-processing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># All methods support batched operations</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>  <span class="c1"># [B, C, H, W]</span>
+
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="c1"># Rasterize batch</span>
+<span class="n">sequences</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>  <span class="c1"># [B, 1, H*W]</span>
+
+<span class="c1"># Unrasterize batch</span>
+<span class="n">images</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">unrasterize</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>  <span class="c1"># [B, 1, H, W]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="choosing-a-method">
+<h2>Choosing a Method<a class="headerlink" href="#choosing-a-method" title="Link to this heading"></a></h2>
+<section id="decision-guide">
+<h3>Decision Guide<a class="headerlink" href="#decision-guide" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Is dimension power of 2?
+├── Yes
+│   └── Need best locality?
+│       ├── Yes → HilbertCurve
+│       └── No  → ZOrderCurve (faster)
+└── No
+    └── Can pad to power of 2?
+        ├── Yes → Hilbert/ZOrder with padding
+        └── No  → SCurve (if 2D) or RasterScan
+</pre></div>
+</div>
+</section>
+<section id="recommendations-by-use-case">
+<h3>Recommendations by Use Case<a class="headerlink" href="#recommendations-by-use-case" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Use Case</p></th>
+<th class="head"><p>Recommended</p></th>
+<th class="head"><p>Reason</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Medical images (2D)</p></td>
+<td><p>HilbertCurve</p></td>
+<td><p>Best locality for pathology</p></td>
+</tr>
+<tr class="row-odd"><td><p>Medical volumes (3D)</p></td>
+<td><p>HilbertCurve</p></td>
+<td><p>Preserves 3D structure</p></td>
+</tr>
+<tr class="row-even"><td><p>Fast prototyping</p></td>
+<td><p>RasterScan</p></td>
+<td><p>Simple, no overhead</p></td>
+</tr>
+<tr class="row-odd"><td><p>Non-power-of-2</p></td>
+<td><p>ZOrderCurve</p></td>
+<td><p>Handles any size with padding</p></td>
+</tr>
+<tr class="row-even"><td><p>Sliding windows</p></td>
+<td><p>RasterScan</p></td>
+<td><p>Predictable boundaries</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="handling-non-power-of-2-dimensions">
+<h2>Handling Non-Power-of-2 Dimensions<a class="headerlink" href="#handling-non-power-of-2-dimensions" title="Link to this heading"></a></h2>
+<section id="padding-strategy">
+<h3>Padding Strategy<a class="headerlink" href="#padding-strategy" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">next_power_of_2</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+<span class="c1"># Original size</span>
+<span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span>
+
+<span class="c1"># Pad to power of 2</span>
+<span class="n">H_padded</span> <span class="o">=</span> <span class="n">next_power_of_2</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>  <span class="c1"># 128</span>
+<span class="n">W_padded</span> <span class="o">=</span> <span class="n">next_power_of_2</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>  <span class="c1"># 256</span>
+
+<span class="c1"># Pad image</span>
+<span class="n">image_padded</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W_padded</span> <span class="o">-</span> <span class="n">W</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">H_padded</span> <span class="o">-</span> <span class="n">H</span><span class="p">))</span>
+
+<span class="c1"># Rasterize</span>
+<span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="n">H_padded</span><span class="p">,</span> <span class="n">W_padded</span><span class="p">)</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image_padded</span><span class="p">)</span>
+
+<span class="c1"># After generation, crop back</span>
+<span class="n">generated</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">unrasterize</span><span class="p">(</span><span class="n">generated_seq</span><span class="p">)</span>
+<span class="n">generated</span> <span class="o">=</span> <span class="n">generated</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">H</span><span class="p">,</span> <span class="p">:</span><span class="n">W</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="tile-based-approach">
+<h3>Tile-Based Approach<a class="headerlink" href="#tile-based-approach" title="Link to this heading"></a></h3>
+<p>For very large images, process in tiles:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">process_tiles</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process image in tiles with overlap.&quot;&quot;&quot;</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">tile_size</span><span class="p">)</span>
+
+    <span class="n">tiles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">tile_size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">tile_size</span><span class="p">):</span>
+            <span class="n">tile</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">tile_size</span><span class="p">]</span>
+            <span class="n">tile_seq</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">tile</span><span class="p">)</span>
+            <span class="n">tiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tile_seq</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-tips">
+<h2>Performance Tips<a class="headerlink" href="#performance-tips" title="Link to this heading"></a></h2>
+<section id="caching-indices">
+<h3>Caching Indices<a class="headerlink" href="#caching-indices" title="Link to this heading"></a></h3>
+<p>For repeated use, cache the rasterization indices:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="c1"># Pre-compute indices (done automatically on first call)</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">get_indices</span><span class="p">()</span>
+
+<span class="c1"># Now rasterization is just indexing (fast)</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="gpu-acceleration">
+<h3>GPU Acceleration<a class="headerlink" href="#gpu-acceleration" title="Link to this heading"></a></h3>
+<p>All operations are GPU-compatible:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># Stays on GPU</span>
+</pre></div>
+</div>
+</section>
+<section id="compiled-operations">
+<h3>Compiled Operations<a class="headerlink" href="#compiled-operations" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Compile for speed (PyTorch 2.0+)</span>
+<span class="n">rasterize_fn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">)</span>
+
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterize_fn</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../api/rasterization.html"><span class="doc">Rasterization API</span></a> - Full API documentation</p></li>
+<li><p><a class="reference internal" href="autoregressive.html"><span class="doc">Autoregressive Models</span></a> - Autoregressive models</p></li>
+<li><p><a class="reference internal" href="maskgit.html"><span class="doc">MaskGIT</span></a> - MaskGIT (alternative to AR)</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bayesian_flow.html" class="btn btn-neutral float-left" title="Bayesian Flow Networks Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="post_training.html" class="btn btn-neutral float-right" title="Post-Training Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

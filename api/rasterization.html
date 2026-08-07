@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rasterization API &mdash; MedLatents 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data API" href="data.html" />
+    <link rel="prev" title="Conditioning API" href="conditioning.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MedLatents
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/autoregressive.html">Autoregressive Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/diffusion.html">Diffusion Models Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/flow_matching.html">Flow Matching Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/bayesian_flow.html">Bayesian Flow Networks Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/rasterization.html">Rasterization Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/post_training.html">Post-Training Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_interface.html">Token Interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="autoregressive.html">Autoregressive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maskgit.html">MaskGIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diffusion.html">Diffusion API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flow_matching.html">Flow Matching API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bayesian_flow.html">Bayesian Flow Networks API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="networks.html">Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generation.html">Generation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inference.html">Inference API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="post_training.html">Post-Training API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conditioning.html">Conditioning API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Rasterization API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rasterization-methods">Rasterization Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rasterscan">RasterScan</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.rasterization.RasterScan"><code class="docutils literal notranslate"><span class="pre">RasterScan</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#scurve">SCurve</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.rasterization.SCurve"><code class="docutils literal notranslate"><span class="pre">SCurve</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hilbertcurve">HilbertCurve</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.rasterization.HilbertCurve"><code class="docutils literal notranslate"><span class="pre">HilbertCurve</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#zordercurve">ZOrderCurve</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#medlatents.rasterization.ZOrderCurve"><code class="docutils literal notranslate"><span class="pre">ZOrderCurve</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#convenience-functions">Convenience Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.rasterization.rasterize_2d"><code class="docutils literal notranslate"><span class="pre">rasterize_2d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#medlatents.rasterization.unrasterize_2d"><code class="docutils literal notranslate"><span class="pre">unrasterize_2d()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configs.html">Configs API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/01_training.html">Tutorial 1: Training Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/02_generation.html">Tutorial 2: Generating Samples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/03_inpainting.html">Tutorial 3: Inpainting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/04_evaluation.html">Tutorial 4: Evaluating Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Research</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../research/implemented_methods.html">Implemented Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../research/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">MedLatents: Contributing Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MedLatents</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Rasterization API</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/liamchalcroft/medlatents/blob/main/docs/api/rasterization.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rasterization-api">
+<h1>Rasterization API<a class="headerlink" href="#rasterization-api" title="Link to this heading"></a></h1>
+<p>This module provides spatial-to-sequence rasterization for autoregressive modeling
+of 2D/3D spatial data.</p>
+<section id="rasterization-methods">
+<h2>Rasterization Methods<a class="headerlink" href="#rasterization-methods" title="Link to this heading"></a></h2>
+<section id="rasterscan">
+<h3>RasterScan<a class="headerlink" href="#rasterscan" title="Link to this heading"></a></h3>
+<p>Simple row-by-row or slice-by-slice scanning.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.rasterization.RasterScan">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">RasterScan</span></span><a class="reference internal" href="../_modules/medlatents/rasterization/raster_scan.html#RasterScan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/raster_scan.py#L8-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.RasterScan" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Standard raster scan ordering: row-by-row (or slice-by-slice for 3D).</p>
+<p>Simple and fast. Consecutive tokens in the sequence may be spatially
+distant (e.g., end of row N and start of row N+1).</p>
+<dl class="simple">
+<dt>Example 2x2 image:</dt><dd><dl class="simple">
+<dt>[[0, 1],</dt><dd><p>[2, 3]]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Sequence: [0, 1, 2, 3]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.RasterScan.spatial_to_sequence_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'row'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/raster_scan.html#RasterScan.spatial_to_sequence_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/raster_scan.py#L22-L41"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.RasterScan.spatial_to_sequence_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 2D spatial data to 1D sequence using raster scan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, height, width] or [batch, height, width]</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'row'</span></code>, <code class="docutils literal notranslate"><span class="pre">'col'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'row'</span></code>) – ‘row’ (row-major) or ‘col’ (column-major)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, height*width] or [batch, height*width]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.RasterScan.sequence_to_spatial_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'row'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/raster_scan.html#RasterScan.sequence_to_spatial_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/raster_scan.py#L43-L78"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.RasterScan.sequence_to_spatial_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 1D sequence back to 2D spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, height*width] or [batch, height*width]</p></li>
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial height</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial width</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'row'</span></code>, <code class="docutils literal notranslate"><span class="pre">'col'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'row'</span></code>) – ‘row’ or ‘col’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, height, width] or [batch, height, width]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.RasterScan.spatial_to_sequence_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DHW'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/raster_scan.html#RasterScan.spatial_to_sequence_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/raster_scan.py#L80-L109"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.RasterScan.spatial_to_sequence_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 3D spatial data to 1D sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, depth, height, width] or [batch, D, H, W]</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'DHW'</span></code>, <code class="docutils literal notranslate"><span class="pre">'WHD'</span></code>, <code class="docutils literal notranslate"><span class="pre">'HWD'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'DHW'</span></code>) – dimension ordering (‘DHW’ = slice-by-slice, etc.)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D*H*W] or [batch, D*H*W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.RasterScan.sequence_to_spatial_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DHW'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/raster_scan.html#RasterScan.sequence_to_spatial_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/raster_scan.py#L111-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.RasterScan.sequence_to_spatial_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 1D sequence back to 3D spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, D*H*W] or [batch, D*H*W]</p></li>
+<li><p><strong>depth</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'DHW'</span></code>, <code class="docutils literal notranslate"><span class="pre">'WHD'</span></code>, <code class="docutils literal notranslate"><span class="pre">'HWD'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'DHW'</span></code>) – dimension ordering</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D, H, W] or [batch, D, H, W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="scurve">
+<h3>SCurve<a class="headerlink" href="#scurve" title="Link to this heading"></a></h3>
+<p>Serpentine/boustrophedon scan pattern with alternating row directions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.rasterization.SCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">SCurve</span></span><a class="reference internal" href="../_modules/medlatents/rasterization/s_curve.html#SCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/s_curve.py#L8-L199"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.SCurve" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>S-curve (serpentine/boustrophedon) scan: alternating row direction.</p>
+<p>Traverses rows left-to-right then right-to-left alternately, creating
+a continuous snake-like path.</p>
+<p>Properties:
+- Simple to implement
+- All horizontal neighbors remain adjacent in sequence
+- Vertical neighbors have same distance as standard raster scan</p>
+<dl class="simple">
+<dt>Example 4x4 image:</dt><dd><p>Row 0: [0,  1,  2,  3 ] →
+Row 1: [7,  6,  5,  4 ] ←
+Row 2: [8,  9,  10, 11] →
+Row 3: [15, 14, 13, 12] ←</p>
+</dd>
+</dl>
+<p>Sequence: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.SCurve.spatial_to_sequence_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'row'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/s_curve.html#SCurve.spatial_to_sequence_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/s_curve.py#L29-L64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.SCurve.spatial_to_sequence_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 2D spatial data to 1D sequence using S-curve scan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, height, width] or [batch, height, width]</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'row'</span></code>, <code class="docutils literal notranslate"><span class="pre">'col'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'row'</span></code>) – ‘row’ (horizontal serpentine) or ‘col’ (vertical serpentine)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, height*width] or [batch, height*width]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.SCurve.sequence_to_spatial_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'row'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/s_curve.html#SCurve.sequence_to_spatial_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/s_curve.py#L66-L112"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.SCurve.sequence_to_spatial_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 1D sequence back to 2D spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, height*width] or [batch, height*width]</p></li>
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial height</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial width</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'row'</span></code>, <code class="docutils literal notranslate"><span class="pre">'col'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'row'</span></code>) – ‘row’ or ‘col’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, height, width] or [batch, height, width]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.SCurve.spatial_to_sequence_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/s_curve.html#SCurve.spatial_to_sequence_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/s_curve.py#L114-L153"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.SCurve.spatial_to_sequence_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 3D spatial data to 1D sequence using S-curve scan.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, depth, height, width] or [batch, D, H, W]</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'D'</span></code>, <code class="docutils literal notranslate"><span class="pre">'H'</span></code>, <code class="docutils literal notranslate"><span class="pre">'W'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'D'</span></code>) – which dimension to serpentine (‘D’, ‘H’, or ‘W’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D*H*W] or [batch, D*H*W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.SCurve.sequence_to_spatial_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'D'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/s_curve.html#SCurve.sequence_to_spatial_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/s_curve.py#L155-L199"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.SCurve.sequence_to_spatial_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 1D sequence back to 3D spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, D*H*W] or [batch, D*H*W]</p></li>
+<li><p><strong>depth</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>order</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'D'</span></code>, <code class="docutils literal notranslate"><span class="pre">'H'</span></code>, <code class="docutils literal notranslate"><span class="pre">'W'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'D'</span></code>) – which dimension was serpentined</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D, H, W] or [batch, D, H, W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="hilbertcurve">
+<h3>HilbertCurve<a class="headerlink" href="#hilbertcurve" title="Link to this heading"></a></h3>
+<p>Space-filling curve with optimal locality preservation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.rasterization.HilbertCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">HilbertCurve</span></span><a class="reference internal" href="../_modules/medlatents/rasterization/hilbert_curve.html#HilbertCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/hilbert_curve.py#L10-L437"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.HilbertCurve" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Hilbert space-filling curve for locality-preserving rasterization.</p>
+<p>The Hilbert curve traverses a 2D grid such that nearby points in the
+sequence are also nearby in 2D space, maintaining strong spatial correlations
+between consecutive positions.</p>
+<p>Properties:
+- Strong locality preservation (nearby points remain nearby)
+- Smooth, continuous traversal
+- Requires power-of-2 dimensions (pads if needed)</p>
+<dl class="simple">
+<dt>Example 2x2:</dt><dd><dl class="simple">
+<dt>[[0, 1],</dt><dd><p>[3, 2]]  (U-shape)</p>
+</dd>
+</dl>
+</dd>
+<dt>Example 4x4:</dt><dd><dl class="simple">
+<dt>[[0,  1,  14, 15],</dt><dd><p>[3,  2,  13, 12],
+[4,  7,  8,  11],
+[5,  6,  9,  10]]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.HilbertCurve.spatial_to_sequence_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/hilbert_curve.html#HilbertCurve.spatial_to_sequence_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/hilbert_curve.py#L101-L163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.HilbertCurve.spatial_to_sequence_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 2D spatial data to sequence using Hilbert curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, height, width] or [batch, height, width]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, height*width] or [batch, height*width]
+metadata: dict with ‘curve’, ‘original_shape’, ‘padding’ for reconstruction</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.HilbertCurve.sequence_to_spatial_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/hilbert_curve.html#HilbertCurve.sequence_to_spatial_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/hilbert_curve.py#L165-L226"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.HilbertCurve.sequence_to_spatial_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert sequence back to 2D spatial data using Hilbert curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, seq_len] or [batch, seq_len]</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – returned from spatial_to_sequence_2d</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>original shape</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.HilbertCurve.spatial_to_sequence_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/hilbert_curve.html#HilbertCurve.spatial_to_sequence_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/hilbert_curve.py#L308-L374"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.HilbertCurve.spatial_to_sequence_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 3D spatial data to sequence using Hilbert curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, depth, height, width] or [batch, D, H, W]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D*H*W] or [batch, D*H*W]
+metadata: dict with ‘curve’, ‘original_shape’, ‘padding’ for reconstruction</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.HilbertCurve.sequence_to_spatial_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/hilbert_curve.html#HilbertCurve.sequence_to_spatial_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/hilbert_curve.py#L376-L437"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.HilbertCurve.sequence_to_spatial_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert sequence back to 3D spatial data using Hilbert curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, seq_len] or [batch, seq_len]</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – returned from spatial_to_sequence_3d</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>original shape</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="zordercurve">
+<h3>ZOrderCurve<a class="headerlink" href="#zordercurve" title="Link to this heading"></a></h3>
+<p>Morton/Z-order curve using bit interleaving.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="medlatents.rasterization.ZOrderCurve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">ZOrderCurve</span></span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#ZOrderCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L15-L337"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.ZOrderCurve" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Z-order (Morton) curve for hierarchical locality-preserving rasterization.</p>
+<p>The Z-order curve interleaves the bits of x and y coordinates, creating
+a hierarchical quad-tree traversal with fast computation via bit operations.</p>
+<p>Properties:
+- Hierarchical locality preservation
+- Fast computation via bit interleaving
+- Natural quad-tree structure
+- Requires power-of-2 dimensions</p>
+<dl class="simple">
+<dt>Example 4x4:</dt><dd><dl class="simple">
+<dt>[[0,  1,  4,  5],</dt><dd><p>[2,  3,  6,  7],
+[8,  9,  12, 13],
+[10, 11, 14, 15]]</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.ZOrderCurve.spatial_to_sequence_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#ZOrderCurve.spatial_to_sequence_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L66-L117"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.ZOrderCurve.spatial_to_sequence_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 2D spatial to sequence using Z-order curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.ZOrderCurve.sequence_to_spatial_2d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#ZOrderCurve.sequence_to_spatial_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L119-L170"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.ZOrderCurve.sequence_to_spatial_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert sequence back to spatial using Z-order curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>)</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.ZOrderCurve.spatial_to_sequence_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spatial_to_sequence_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#ZOrderCurve.spatial_to_sequence_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L205-L271"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.ZOrderCurve.spatial_to_sequence_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert 3D spatial data to sequence using Z-order curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, D, H, W] or [batch, D, H, W]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D*H*W] or [batch, D*H*W]
+metadata: dict with curve, padding, original_shape, order</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="medlatents.rasterization.ZOrderCurve.sequence_to_spatial_3d">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sequence_to_spatial_3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#ZOrderCurve.sequence_to_spatial_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L273-L337"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.ZOrderCurve.sequence_to_spatial_3d" title="Link to this definition"></a></dt>
+<dd><p>Convert sequence back to 3D spatial using Z-order curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, seq_len] or [batch, seq_len]</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – dict from spatial_to_sequence_3d</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, D, H, W] or [batch, D, H, W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="convenience-functions">
+<h2>Convenience Functions<a class="headerlink" href="#convenience-functions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.rasterization.rasterize_2d">
+<span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">rasterize_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spatial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'raster'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#rasterize_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L341-L368"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.rasterize_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 2D spatial data to 1D sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spatial</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, H, W] or [batch, H, W]</p></li>
+<li><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'raster'</span></code>, <code class="docutils literal notranslate"><span class="pre">'scurve'</span></code>, <code class="docutils literal notranslate"><span class="pre">'hilbert'</span></code>, <code class="docutils literal notranslate"><span class="pre">'zorder'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'raster'</span></code>) – ‘raster’ (row-by-row), ‘scurve’ (serpentine),
+‘hilbert’ (space-filling curve), ‘zorder’ (Morton/quad-tree)</p></li>
+<li><p><strong>**kwargs</strong> – method-specific arguments (e.g., order=’row’/’col’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, H*W] or [batch, H*W]
+metadata: None for raster/scurve, dict for hilbert/zorder (needed for reconstruction)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="medlatents.rasterization.unrasterize_2d">
+<span class="sig-prename descclassname"><span class="pre">medlatents.rasterization.</span></span><span class="sig-name descname"><span class="pre">unrasterize_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'raster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/medlatents/rasterization/zorder_curve.html#unrasterize_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="reference external" href="https://github.com/liamchalcroft/medlatents/blob/main/src/medlatents/rasterization/zorder_curve.py#L371-L405"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#medlatents.rasterization.unrasterize_2d" title="Link to this definition"></a></dt>
+<dd><p>Convert 1D sequence back to 2D spatial data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code></a></span>) – [batch, channels, H*W] or [batch, H*W]</p></li>
+<li><p><strong>height</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>width</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – spatial dimensions</p></li>
+<li><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code></a>[<code class="docutils literal notranslate"><span class="pre">'raster'</span></code>, <code class="docutils literal notranslate"><span class="pre">'scurve'</span></code>, <code class="docutils literal notranslate"><span class="pre">'hilbert'</span></code>, <code class="docutils literal notranslate"><span class="pre">'zorder'</span></code>]</span>, default: <code class="docutils literal notranslate"><span class="pre">'raster'</span></code>) – must match the rasterization method used</p></li>
+<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span>, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>) – required for hilbert/zorder, None for raster/scurve</p></li>
+<li><p><strong>**kwargs</strong> – method-specific arguments (e.g., order=’row’/’col’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>[batch, channels, H, W] or [batch, H, W]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>spatial</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="conditioning.html" class="btn btn-neutral float-left" title="Conditioning API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data.html" class="btn btn-neutral float-right" title="Data API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Liam Chalcroft.
+      <span class="lastupdated">Last updated on Aug 07, 2026.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
