@@ -484,9 +484,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">  * Bootstrap CI estimation for FID --- both the "real-vs-real noise floor"</span>
 <span class="sd">    (split a held-out set in two, repeat) and "real-vs-gen estimator CI"</span>
-<span class="sd">    (resample (real_idx, gen_idx) pairs, repeat) --- is a defensible answer</span>
-<span class="sd">    to the standard reviewer concern that single-seed FID numbers are</span>
-<span class="sd">    indistinguishable from noise. Exposing it as a library function lets</span>
+<span class="sd">    (resample (real_idx, gen_idx) pairs, repeat) --- shows whether a gap</span>
+<span class="sd">    between two FID numbers is larger than the estimator's sampling noise.</span>
+<span class="sd">    Exposing it as a library function lets</span>
 <span class="sd">    users of medlatents reproduce the same uncertainty bound on their own</span>
 <span class="sd">    generators with three lines of code.</span>
 
