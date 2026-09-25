@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.flow_matching.evaluate &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.flow_matching.evaluate &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.flow_matching.evaluate</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Evaluation utilities for discrete flow matching models.</span>
+<span></span><span class="sd">"""Evaluation utilities for discrete flow matching models.</span>
 
 <span class="sd">Includes entropy computation and likelihood estimation for assessing</span>
 <span class="sd">model quality and sample diversity.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
@@ -530,11 +532,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
     <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate the likelihood (ELBO) of the model on a dataset.</span>
+<span class="w">    </span><span class="sd">"""Estimate the likelihood (ELBO) of the model on a dataset.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: The flow matching model.</span>
-<span class="sd">        dataloader: DataLoader yielding batches with &#39;input_ids&#39; key.</span>
+<span class="sd">        dataloader: DataLoader yielding batches with 'input_ids' key.</span>
 <span class="sd">        source_distribution: Source distribution for sampling x_0.</span>
 <span class="sd">        path: Discrete probability path.</span>
 <span class="sd">        n_discretization: Number of discretization steps.</span>
@@ -546,12 +548,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Tuple of (elbo, n_elements) where:</span>
 <span class="sd">        - elbo: Sum of generalized KL losses (Tensor of shape (1,))</span>
 <span class="sd">        - n_elements: Total number of elements processed (Tensor of shape (1,))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">wrapped</span> <span class="o">=</span> <span class="n">ModelWrapper</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
     <span class="n">linear_scheduler</span> <span class="o">=</span> <span class="n">PolynomialConvexScheduler</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="n">linear_path</span> <span class="o">=</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">(</span><span class="n">scheduler</span><span class="o">=</span><span class="n">linear_scheduler</span><span class="p">)</span>
-    <span class="n">generalized_kl_fn</span> <span class="o">=</span> <span class="n">MixturePathGeneralizedKL</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">linear_path</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+    <span class="n">generalized_kl_fn</span> <span class="o">=</span> <span class="n">MixturePathGeneralizedKL</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">linear_path</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
 
     <span class="n">discretization</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_discretization</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -563,7 +565,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">n_elements</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">x_1</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)):</span>
-        <span class="n">x_1</span> <span class="o">=</span> <span class="n">x_1</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">x_1</span> <span class="o">=</span> <span class="n">x_1</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
         <span class="n">discretization</span> <span class="o">=</span> <span class="p">(</span><span class="n">discretization</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">))</span> <span class="o">%</span> <span class="mi">1</span>
         <span class="n">discretization</span> <span class="o">=</span> <span class="n">discretization</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">)</span>
@@ -593,7 +595,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

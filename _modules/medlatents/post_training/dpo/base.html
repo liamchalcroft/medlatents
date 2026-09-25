@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.dpo.base &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.dpo.base &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,18 +474,18 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.dpo.base</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Base DPO trainer and loss functions.</span>
+<span></span><span class="sd">"""Base DPO trainer and loss functions.</span>
 
 <span class="sd">This module provides the foundation for Direct Preference Optimization across</span>
 <span class="sd">all model types in medlatents. The key insight of DPO is that we can optimize</span>
 <span class="sd">directly for preferences without training a separate reward model, by treating</span>
-<span class="sd">the policy&#39;s log-probability ratio as an implicit reward.</span>
+<span class="sd">the policy's log-probability ratio as an implicit reward.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- DPO: &quot;Direct Preference Optimization&quot; (Rafailov et al., 2023)</span>
-<span class="sd">- IPO: &quot;A General Theoretical Paradigm&quot; (Azar et al., 2023)</span>
-<span class="sd">- KTO: &quot;Kahneman-Tversky Optimization&quot; (Ethayarajh et al., 2024)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- DPO: "Direct Preference Optimization" (Rafailov et al., 2023)</span>
+<span class="sd">- IPO: "A General Theoretical Paradigm" (Azar et al., 2023)</span>
+<span class="sd">- KTO: "Kahneman-Tversky Optimization" (Ethayarajh et al., 2024)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -510,7 +512,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DPOOutput">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DPOOutput</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Output from DPO loss computation.</span>
+<span class="w">    </span><span class="sd">"""Output from DPO loss computation.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        loss: The total DPO loss</span>
@@ -518,7 +520,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        rejected_rewards: Implicit rewards for rejected samples</span>
 <span class="sd">        accuracy: Fraction where chosen_reward &gt; rejected_reward</span>
 <span class="sd">        reward_margin: Mean (chosen_reward - rejected_reward)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">loss</span><span class="p">:</span> <span class="n">Tensor</span>
     <span class="n">chosen_rewards</span><span class="p">:</span> <span class="n">Tensor</span>
@@ -529,13 +531,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DPOOutput.to_dict">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DPOOutput.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to logging dictionary.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert to logging dictionary."""</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;reward_margin&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_margin</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;chosen_rewards&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">chosen_rewards</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;rejected_rewards&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejected_rewards</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"accuracy"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"reward_margin"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_margin</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"chosen_rewards"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">chosen_rewards</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"rejected_rewards"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejected_rewards</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
         <span class="p">}</span></div>
 </div>
 
@@ -544,7 +546,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DPOLoss">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DPOLoss">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DPOLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Flexible DPO loss with multiple variants.</span>
+<span class="w">    </span><span class="sd">"""Flexible DPO loss with multiple variants.</span>
 
 <span class="sd">    Supports:</span>
 <span class="sd">    - sigmoid: Standard DPO with sigmoid loss (Rafailov et al.)</span>
@@ -560,7 +562,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        r(x) = β * log(π_θ(x) / π_ref(x))</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; loss_fn = DPOLoss(beta=0.1, loss_type=&quot;sigmoid&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; loss_fn = DPOLoss(beta=0.1, loss_type="sigmoid")</span>
 <span class="sd">        &gt;&gt;&gt; output = loss_fn(</span>
 <span class="sd">        ...     chosen_logprobs=chosen_lp,</span>
 <span class="sd">        ...     rejected_logprobs=rejected_lp,</span>
@@ -568,29 +570,29 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     ref_rejected_logprobs=ref_rejected_lp,</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; loss = output.loss</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DPOLoss.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DPOLoss.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="s2">&quot;hinge&quot;</span><span class="p">,</span> <span class="s2">&quot;ipo&quot;</span><span class="p">,</span> <span class="s2">&quot;kto&quot;</span><span class="p">,</span> <span class="s2">&quot;disco&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span>
+        <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="s2">"hinge"</span><span class="p">,</span> <span class="s2">"ipo"</span><span class="p">,</span> <span class="s2">"kto"</span><span class="p">,</span> <span class="s2">"disco"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"sigmoid"</span><span class="p">,</span>
         <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">reference_free</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">kto_desirable_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">kto_undesirable_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize DPO loss.</span>
+<span class="w">        </span><span class="sd">"""Initialize DPO loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            beta: KL penalty coefficient (controls deviation from reference)</span>
 <span class="sd">            loss_type: Type of preference loss to use</span>
 <span class="sd">            label_smoothing: Soft labels for robustness</span>
-<span class="sd">            reference_free: If True, don&#39;t use reference model</span>
+<span class="sd">            reference_free: If True, don't use reference model</span>
 <span class="sd">            kto_desirable_weight: Weight for KTO desirable term</span>
 <span class="sd">            kto_undesirable_weight: Weight for KTO undesirable term</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">=</span> <span class="n">loss_type</span>
@@ -610,7 +612,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">ref_rejected_logprobs</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">margin</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DPOOutput</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute DPO loss.</span>
+<span class="w">        </span><span class="sd">"""Compute DPO loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            chosen_logprobs: Log probs of policy on chosen [batch]</span>
@@ -621,14 +623,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            DPOOutput with loss and metrics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Compute log-probability ratios (implicit rewards)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_free</span><span class="p">:</span>
             <span class="n">chosen_rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="n">chosen_logprobs</span>
             <span class="n">rejected_rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="n">rejected_logprobs</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ref_chosen_logprobs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ref_rejected_logprobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Reference log probs required when reference_free=False&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Reference log probs required when reference_free=False"</span><span class="p">)</span>
             <span class="n">chosen_rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">chosen_logprobs</span> <span class="o">-</span> <span class="n">ref_chosen_logprobs</span><span class="p">)</span>
             <span class="n">rejected_rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">rejected_logprobs</span> <span class="o">-</span> <span class="n">ref_rejected_logprobs</span><span class="p">)</span>
 
@@ -640,26 +642,26 @@ window.runMermaid = runMermaid;</script>
             <span class="n">reward_diff</span> <span class="o">=</span> <span class="n">margin</span> <span class="o">*</span> <span class="n">reward_diff</span>
 
         <span class="c1"># Compute loss based on type</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"sigmoid"</span><span class="p">:</span>
             <span class="c1"># Standard DPO: -log(sigmoid(r_w - r_l))</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_smoothing</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># Soft labels: (1 - ε) * target + ε * (1 - target)</span>
                 <span class="n">targets</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_smoothing</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">reward_diff</span><span class="p">)</span>
-                <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy_with_logits</span><span class="p">(</span><span class="n">reward_diff</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">binary_cross_entropy_with_logits</span><span class="p">(</span><span class="n">reward_diff</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">F</span><span class="o">.</span><span class="n">logsigmoid</span><span class="p">(</span><span class="n">reward_diff</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;hinge&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"hinge"</span><span class="p">:</span>
             <span class="c1"># Hinge loss: max(0, 1 - (r_w - r_l))</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">reward_diff</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;ipo&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"ipo"</span><span class="p">:</span>
             <span class="c1"># IPO: (r_w - r_l - 1/(2β))^2</span>
             <span class="c1"># Avoids sigmoid saturation</span>
             <span class="n">target</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">reward_diff</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;kto&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"kto"</span><span class="p">:</span>
             <span class="c1"># KTO: Asymmetric loss based on prospect theory</span>
             <span class="c1"># Losses loom larger than gains</span>
             <span class="c1"># Reference point: use batch average as baseline</span>
@@ -682,14 +684,14 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">chosen_value</span>
             <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kto_undesirable_weight</span> <span class="o">*</span> <span class="o">-</span><span class="n">F</span><span class="o">.</span><span class="n">logsigmoid</span><span class="p">(</span><span class="o">-</span><span class="n">rejected_value</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;disco&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"disco"</span><span class="p">:</span>
             <span class="c1"># Distributionally robust DPO</span>
             <span class="c1"># Uses a worst-case bound over noise distributions</span>
             <span class="c1"># L = log(1 + exp(-β * (r_w - r_l)))</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">reward_diff</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown loss type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown loss type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Compute metrics</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -710,7 +712,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="BaseDPOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseDPOTrainer</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for DPO trainers.</span>
+<span class="w">    </span><span class="sd">"""Abstract base class for DPO trainers.</span>
 
 <span class="sd">    Provides common infrastructure for all model types:</span>
 <span class="sd">    - Accelerator setup with FSDP support</span>
@@ -730,7 +732,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...</span>
 <span class="sd">        &gt;&gt;&gt; trainer = MyDPOTrainer(model, ref_model, config)</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(dataset)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="BaseDPOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.__init__">[docs]</a>
@@ -741,14 +743,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">config</span><span class="p">:</span> <span class="n">PostTrainingConfig</span><span class="p">,</span>
         <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize DPO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize DPO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model to train</span>
 <span class="sd">            ref_model: Reference model (frozen). If None, uses reference_free mode.</span>
 <span class="sd">            config: Training configuration</span>
 <span class="sd">            accelerator: Optional pre-configured accelerator</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_model</span> <span class="o">=</span> <span class="n">ref_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -775,7 +777,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">Accelerator</span><span class="p">(</span>
                 <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span>
-                <span class="n">log_with</span><span class="o">=</span><span class="s2">&quot;wandb&quot;</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">log_with</span><span class="o">=</span><span class="s2">"wandb"</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">mixed_precision</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">mixed_precision</span><span class="p">,</span>
                 <span class="n">fsdp_plugin</span><span class="o">=</span><span class="n">fsdp_plugin</span><span class="p">,</span>
             <span class="p">)</span>
@@ -835,7 +837,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute log-probabilities for samples.</span>
+<span class="w">        </span><span class="sd">"""Compute log-probabilities for samples.</span>
 
 <span class="sd">        This is model-type specific:</span>
 <span class="sd">        - Autoregressive: Sum of log P(x_i | x_{&lt;i})</span>
@@ -850,38 +852,38 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Log-probabilities [batch]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseDPOTrainer.prepare_batch">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.prepare_batch">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">prepare_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare batch for DPO training.</span>
+<span class="w">        </span><span class="sd">"""Prepare batch for DPO training.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            batch: Collated batch from DataLoader</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple of (chosen, rejected, margin, extra_kwargs)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">chosen</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;chosen&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">rejected</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;rejected&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">margin</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;margin&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">chosen</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"chosen"</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">rejected</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"rejected"</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">margin</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"margin"</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">chosen</span><span class="p">,</span> <span class="n">rejected</span><span class="p">,</span> <span class="n">margin</span><span class="p">,</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="BaseDPOTrainer.train_step">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.train_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute a single training step.</span>
+<span class="w">        </span><span class="sd">"""Execute a single training step.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            batch: Collated preference batch</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dictionary of metrics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">chosen</span><span class="p">,</span> <span class="n">rejected</span><span class="p">,</span> <span class="n">margin</span><span class="p">,</span> <span class="n">extra_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
 
         <span class="c1"># Compute policy log-probs</span>
@@ -931,7 +933,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dataset</span><span class="p">:</span> <span class="n">PreferenceDataset</span><span class="p">,</span>
         <span class="n">val_dataset</span><span class="p">:</span> <span class="n">PreferenceDataset</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run full training loop.</span>
+<span class="w">        </span><span class="sd">"""Run full training loop.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dataset: Training preference dataset</span>
@@ -939,7 +941,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dictionary of training history</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Create dataloaders</span>
         <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
             <span class="n">dataset</span><span class="p">,</span>
@@ -966,9 +968,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">project_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span><span class="p">,</span>
                 <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
                 <span class="n">init_kwargs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;wandb&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_entity</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">run_name</span><span class="p">,</span>
+                    <span class="s2">"wandb"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"entity"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_entity</span><span class="p">,</span>
+                        <span class="s2">"name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">run_name</span><span class="p">,</span>
                     <span class="p">}</span>
                 <span class="p">},</span>
             <span class="p">)</span>
@@ -978,9 +980,9 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Training history</span>
         <span class="n">history</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;train_accuracy&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;val_accuracy&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"train_loss"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"train_accuracy"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"val_accuracy"</span><span class="p">:</span> <span class="p">[],</span>
         <span class="p">}</span>
 
         <span class="c1"># Learning rate schedule</span>
@@ -989,7 +991,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Training loop</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_steps</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;DPO Training&quot;</span><span class="p">)</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_steps</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">"DPO Training"</span><span class="p">)</span>
 
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">&lt;</span> <span class="n">total_steps</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
@@ -1007,7 +1009,7 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="n">lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">lr</span> <span class="o">*</span> <span class="n">lr_scale</span>
                 <span class="k">for</span> <span class="n">pg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
-                    <span class="n">pg</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+                    <span class="n">pg</span><span class="p">[</span><span class="s2">"lr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
 
                 <span class="c1"># Training step</span>
                 <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">):</span>
@@ -1017,28 +1019,28 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="c1"># Logging</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">log_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="s2">"lr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_main_process</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">)</span>
                     <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span>
-                        <span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">acc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'loss'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                        <span class="n">acc</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'accuracy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="p">)</span>
-                    <span class="n">history</span><span class="p">[</span><span class="s2">&quot;train_loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">])</span>
-                    <span class="n">history</span><span class="p">[</span><span class="s2">&quot;train_accuracy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+                    <span class="n">history</span><span class="p">[</span><span class="s2">"train_loss"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">])</span>
+                    <span class="n">history</span><span class="p">[</span><span class="s2">"train_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">"accuracy"</span><span class="p">])</span>
 
                 <span class="c1"># Validation</span>
                 <span class="k">if</span> <span class="n">val_loader</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">eval_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">val_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val_loader</span><span class="p">)</span>
-                    <span class="n">history</span><span class="p">[</span><span class="s2">&quot;val_accuracy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">])</span>
+                    <span class="n">history</span><span class="p">[</span><span class="s2">"val_accuracy"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_metrics</span><span class="p">[</span><span class="s2">"accuracy"</span><span class="p">])</span>
 
-                    <span class="k">if</span> <span class="n">val_metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span> <span class="o">=</span> <span class="n">val_metrics</span><span class="p">[</span><span class="s2">&quot;accuracy&quot;</span><span class="p">]</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">val_metrics</span><span class="p">[</span><span class="s2">"accuracy"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span> <span class="o">=</span> <span class="n">val_metrics</span><span class="p">[</span><span class="s2">"accuracy"</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">"best"</span><span class="p">)</span>
 
                 <span class="c1"># Checkpointing</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">"latest"</span><span class="p">)</span>
 
                 <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -1054,14 +1056,14 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.validate">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run validation.</span>
+<span class="w">        </span><span class="sd">"""Run validation.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            val_loader: Validation dataloader</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Validation metrics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
         <span class="c1"># Use EMA weights if available</span>
@@ -1103,13 +1105,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">total_accuracy</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_batches</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="s2">&quot;reward_margin&quot;</span><span class="p">:</span> <span class="n">total_margin</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_batches</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">"accuracy"</span><span class="p">:</span> <span class="n">total_accuracy</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_batches</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">"reward_margin"</span><span class="p">:</span> <span class="n">total_margin</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">num_batches</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_main_process</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-                <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;val/</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+                <span class="p">{</span><span class="sa">f</span><span class="s2">"val/</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
                 <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -1118,27 +1120,27 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="BaseDPOTrainer.save_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.save_checkpoint">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save training checkpoint.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"latest"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save training checkpoint.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name: Checkpoint name (e.g., &quot;latest&quot;, &quot;best&quot;, &quot;step_1000&quot;)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;checkpoint_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
+<span class="sd">            name: Checkpoint name (e.g., "latest", "best", "step_1000")</span>
+<span class="sd">        """</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"checkpoint_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pt"</span><span class="p">)</span>
 
         <span class="c1"># Unwrap model for saving</span>
         <span class="n">unwrapped_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">unwrap_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
 
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">unwrapped_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;optimizer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
-            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;best_accuracy&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span><span class="p">,</span>
+            <span class="s2">"model"</span><span class="p">:</span> <span class="n">unwrapped_model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"optimizer"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"step"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
+            <span class="s2">"config"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+            <span class="s2">"best_accuracy"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;ema&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+            <span class="n">checkpoint</span><span class="p">[</span><span class="s2">"ema"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span></div>
 
@@ -1146,30 +1148,30 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="BaseDPOTrainer.load_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.BaseDPOTrainer.load_checkpoint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load training checkpoint.</span>
+<span class="w">        </span><span class="sd">"""Load training checkpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            path: Path to checkpoint file</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># save_checkpoint stores only state_dicts/ints/floats and config.to_dict()</span>
         <span class="c1"># (a primitives dict), so the checkpoint contains no arbitrary Python objects.</span>
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;optimizer&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;best_accuracy&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"model"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"optimizer"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"best_accuracy"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;ema&quot;</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;ema&quot;</span><span class="p">])</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">"ema"</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"ema"</span><span class="p">])</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DPOLoss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPOOutput&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BaseDPOTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"DPOLoss"</span><span class="p">,</span>
+    <span class="s2">"DPOOutput"</span><span class="p">,</span>
+    <span class="s2">"BaseDPOTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1181,7 +1183,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

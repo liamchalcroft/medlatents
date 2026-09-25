@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flow Matching Guide &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Flow Matching Guide &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,10 +14,12 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -552,7 +554,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.networks</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteDiT_models</span>
 
 <span class="c1"># Create model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">&#39;DiscreteDiT-S&#39;</span><span class="p">](</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">'DiscreteDiT-S'</span><span class="p">](</span>
     <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
 <span class="p">)</span>
@@ -566,11 +568,11 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <span class="c1"># Probability path interpolation</span>
 <span class="n">path</span> <span class="o">=</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">(</span>
     <span class="n">source_distribution</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
-    <span class="n">scheduler</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>  <span class="c1"># Options: linear, cosine, polynomial</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="s1">'linear'</span><span class="p">,</span>  <span class="c1"># Options: linear, cosine, polynomial</span>
 <span class="p">)</span>
 
 <span class="c1"># Loss function</span>
-<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">get_loss_function</span><span class="p">(</span><span class="s1">&#39;cross_entropy&#39;</span><span class="p">)</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">get_loss_function</span><span class="p">(</span><span class="s1">'cross_entropy'</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -597,7 +599,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.flow_matching</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceDistribution</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FrequencyWeightedSource</span><span class="p">(</span><span class="n">SourceDistribution</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample from token frequency distribution.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Sample from token frequency distribution."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frequencies</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">probs</span> <span class="o">=</span> <span class="n">frequencies</span> <span class="o">/</span> <span class="n">frequencies</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -620,7 +622,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="n">x1</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span>  <span class="c1"># Target data</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">'tokens'</span><span class="p">]</span>  <span class="c1"># Target data</span>
 
     <span class="c1"># Sample source (noise)</span>
     <span class="n">x0</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">x1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -676,7 +678,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <span class="n">t</span> <span class="o">=</span> <span class="n">sample_timesteps_logit_normal</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 
 <span class="c1"># Get sampler by name</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">get_timestep_sampler</span><span class="p">(</span><span class="s1">&#39;logit_normal&#39;</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">get_timestep_sampler</span><span class="p">(</span><span class="s1">'logit_normal'</span><span class="p">)</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -702,7 +704,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
     <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
     <span class="n">time_grid</span><span class="o">=</span><span class="n">time_grid</span><span class="p">,</span>
     <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
-    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">'cuda'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -714,7 +716,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.flow_matching</span><span class="w"> </span><span class="kn">import</span> <span class="n">RectifiedFlow</span>
 
 <span class="n">flow</span> <span class="o">=</span> <span class="n">RectifiedFlow</span><span class="p">(</span>
-    <span class="n">prediction_type</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span>  <span class="c1"># Options: velocity, x1, noise</span>
+    <span class="n">prediction_type</span><span class="o">=</span><span class="s1">'velocity'</span><span class="p">,</span>  <span class="c1"># Options: velocity, x1, noise</span>
 <span class="p">)</span>
 
 <span class="c1"># Training</span>
@@ -808,7 +810,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 
 <span class="n">samples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
     <span class="n">source_samples</span><span class="o">=</span><span class="n">x0</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">'cuda'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -983,7 +985,7 @@ a simulation-free alternative to diffusion models with straighter generation pat
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

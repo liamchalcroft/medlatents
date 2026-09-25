@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.guidance &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.guidance &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.guidance</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Classifier-free guidance with time-dependent schedules.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Classifier-free guidance with time-dependent schedules."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
@@ -483,19 +485,19 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="GuidedSampler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.GuidedSampler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GuidedSampler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Applies classifier-free guidance with time-dependent schedules.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">    - &quot;Theory-Informed Improvements to Classifier-Free Guidance&quot; (arXiv:2507.08965)</span>
-<span class="sd">    - &quot;What Does Guidance Do in Masked Discrete Diffusion?&quot; (arXiv:2506.10971)</span>
+<span class="sd">    - "Theory-Informed Improvements to Classifier-Free Guidance" (arXiv:2507.08965)</span>
+<span class="sd">    - "What Does Guidance Do in Masked Discrete Diffusion?" (arXiv:2506.10971)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model that takes (x, t, conditioning) and returns logits</span>
 <span class="sd">        uncond_model: Optional unconditioned model (if None, uses empty conditioning)</span>
 <span class="sd">        guidance_schedule: Schedule function or name</span>
 <span class="sd">        base_scale: Base guidance scale</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="GuidedSampler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.GuidedSampler.__init__">[docs]</a>
@@ -503,7 +505,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">uncond_model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">guidance_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">GuidanceSchedule</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+        <span class="n">guidance_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">GuidanceSchedule</span> <span class="o">=</span> <span class="s2">"constant"</span><span class="p">,</span>
         <span class="n">base_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">conditioning</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">progress</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get guided predictions.</span>
 
 <span class="sd">        Args:</span>
@@ -537,7 +539,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Guided logits</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Conditional prediction</span>
         <span class="n">cond_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">conditioning</span> <span class="ow">or</span> <span class="p">{}))</span>
 
@@ -559,9 +561,9 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;GuidedSampler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GuidanceSchedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_guidance_schedule&quot;</span><span class="p">,</span>
+    <span class="s2">"GuidedSampler"</span><span class="p">,</span>
+    <span class="s2">"GuidanceSchedule"</span><span class="p">,</span>
+    <span class="s2">"get_guidance_schedule"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -573,7 +575,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

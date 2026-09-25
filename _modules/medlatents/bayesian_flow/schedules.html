@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.schedules &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.schedules &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.schedules</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Noise/accuracy schedules for Bayesian Flow Networks.</span>
+<span></span><span class="sd">"""Noise/accuracy schedules for Bayesian Flow Networks.</span>
 
 <span class="sd">BFN uses accuracy schedules (alpha, beta) that control how information</span>
 <span class="sd">flows from data to the prior distribution. These schedules determine</span>
@@ -480,8 +482,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">how quickly samples converge during generation.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- Graves et al. &quot;Bayesian Flow Networks&quot; (2023)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Graves et al. "Bayesian Flow Networks" (2023)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -495,10 +497,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="exponential_schedule">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.exponential_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">exponential_schedule</span><span class="p">(</span>
-    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
     <span class="n">beta_final</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Exponential accuracy schedule for discrete BFN.</span>
 
 <span class="sd">    alpha(t) = 2^t * beta_final</span>
@@ -514,7 +516,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Returns:</span>
 <span class="sd">        alpha: Instantaneous accuracy rate</span>
 <span class="sd">        beta: Cumulative accuracy</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_clamped</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">t_clamped</span><span class="p">)</span> <span class="o">*</span> <span class="n">beta_final</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_clamped</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">beta_final</span>
@@ -525,10 +527,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="linear_entropy_schedule">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.linear_entropy_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">linear_entropy_schedule</span><span class="p">(</span>
-    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
     <span class="n">sigma_final</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0141</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Continuous schedule where entropy decreases linearly with time.</span>
 
 <span class="sd">    Designed such that the entropy of the posterior decreases</span>
@@ -542,7 +544,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Returns:</span>
 <span class="sd">        alpha: Instantaneous accuracy rate</span>
 <span class="sd">        beta: Cumulative accuracy</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_clamped</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
     <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma_final</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma_final</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">t_clamped</span>
@@ -555,11 +557,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="cosine_schedule">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.cosine_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cosine_schedule</span><span class="p">(</span>
-    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+    <span class="n">t</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
     <span class="n">beta_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.008</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Cosine accuracy schedule (adapted from diffusion models).</span>
 
 <span class="sd">    Provides smoother transitions at the boundaries compared to</span>
@@ -573,7 +575,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Returns:</span>
 <span class="sd">        alpha: Instantaneous accuracy rate</span>
 <span class="sd">        beta: Cumulative accuracy</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_clamped</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
     <span class="c1"># Cosine schedule</span>
@@ -597,36 +599,36 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_bfn_schedule</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a BFN accuracy schedule by name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        name: Schedule name (&#39;exponential&#39;, &#39;linear_entropy&#39;, &#39;cosine&#39;)</span>
+<span class="sd">        name: Schedule name ('exponential', 'linear_entropy', 'cosine')</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Schedule function that takes ``(t, **kwargs)`` and returns ``(alpha, beta)``</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If schedule name is unknown</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">schedules</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;exponential&quot;</span><span class="p">:</span> <span class="n">exponential_schedule</span><span class="p">,</span>
-        <span class="s2">&quot;linear_entropy&quot;</span><span class="p">:</span> <span class="n">linear_entropy_schedule</span><span class="p">,</span>
-        <span class="s2">&quot;cosine&quot;</span><span class="p">:</span> <span class="n">cosine_schedule</span><span class="p">,</span>
+        <span class="s2">"exponential"</span><span class="p">:</span> <span class="n">exponential_schedule</span><span class="p">,</span>
+        <span class="s2">"linear_entropy"</span><span class="p">:</span> <span class="n">linear_entropy_schedule</span><span class="p">,</span>
+        <span class="s2">"cosine"</span><span class="p">:</span> <span class="n">cosine_schedule</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">schedules</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown BFN schedule: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">schedules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown BFN schedule: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">schedules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">schedules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;exponential_schedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;linear_entropy_schedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cosine_schedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_bfn_schedule&quot;</span><span class="p">,</span>
+    <span class="s2">"exponential_schedule"</span><span class="p">,</span>
+    <span class="s2">"linear_entropy_schedule"</span><span class="p">,</span>
+    <span class="s2">"cosine_schedule"</span><span class="p">,</span>
+    <span class="s2">"get_bfn_schedule"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -638,7 +640,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

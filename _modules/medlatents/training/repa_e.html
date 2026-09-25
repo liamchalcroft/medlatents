@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.repa_e &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.repa_e &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.repa_e</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;REPA-E: End-to-end VAE + DiT training with representation alignment.</span>
+<span></span><span class="sd">"""REPA-E: End-to-end VAE + DiT training with representation alignment.</span>
 
 <span class="sd">Implements end-to-end training of VAE tokenizers alongside diffusion transformers</span>
 <span class="sd">using REPA loss instead of standard diffusion loss for VAE gradient updates.</span>
@@ -481,7 +483,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">REPA alignment loss enables joint optimization, achieving 45x training speedup.</span>
 
 <span class="sd">Reference:</span>
-<span class="sd">    Leng et al., &quot;REPA-E: Unlocking VAE for End-to-End Tuning with Latent Diffusion Transformers&quot;</span>
+<span class="sd">    Leng et al., "REPA-E: Unlocking VAE for End-to-End Tuning with Latent Diffusion Transformers"</span>
 <span class="sd">    arXiv:2504.10483</span>
 
 <span class="sd">Usage:</span>
@@ -492,7 +494,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    ...     repa_projection=projection_head,</span>
 <span class="sd">    ... )</span>
 <span class="sd">    &gt;&gt;&gt; loss = trainer.compute_loss(images)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -510,7 +512,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAEConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">REPAEConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for REPA-E end-to-end training.</span>
+<span class="w">    </span><span class="sd">"""Configuration for REPA-E end-to-end training.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        repa_weight: Weight for REPA alignment loss</span>
@@ -523,7 +525,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        freeze_vae_decoder: Whether to freeze VAE decoder (only train encoder)</span>
 <span class="sd">        vae_warmup_steps: Steps to warmup VAE learning rate</span>
 <span class="sd">        alignment_layers: Which DiT layers to use for alignment (list of indices)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">repa_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">diffusion_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -542,32 +544,32 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">VAEWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for VAE models to provide a consistent interface.</span>
+<span class="w">    </span><span class="sd">"""Wrapper for VAE models to provide a consistent interface.</span>
 
 <span class="sd">    Handles both continuous VAEs (standard) and discrete tokenizers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">vae</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vae</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-        <span class="n">vae_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;continuous&quot;</span><span class="p">,</span> <span class="s2">&quot;discrete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;continuous&quot;</span><span class="p">,</span>
+        <span class="n">vae_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"continuous"</span><span class="p">,</span> <span class="s2">"discrete"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"continuous"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vae</span> <span class="o">=</span> <span class="n">vae</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span> <span class="o">=</span> <span class="n">vae_type</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode input to latent space.</span>
+<span class="w">        </span><span class="sd">"""Encode input to latent space.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict with &#39;latent&#39; and optionally &#39;mu&#39;, &#39;logvar&#39; for continuous VAE</span>
-<span class="sd">            or &#39;indices&#39; for discrete tokenizer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span> <span class="o">==</span> <span class="s2">&quot;continuous&quot;</span><span class="p">:</span>
+<span class="sd">            Dict with 'latent' and optionally 'mu', 'logvar' for continuous VAE</span>
+<span class="sd">            or 'indices' for discrete tokenizer.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span> <span class="o">==</span> <span class="s2">"continuous"</span><span class="p">:</span>
             <span class="c1"># Standard VAE encoding</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;encode&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"encode"</span><span class="p">):</span>
                 <span class="n">enc_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enc_output</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                     <span class="n">mu</span><span class="p">,</span> <span class="n">logvar</span> <span class="o">=</span> <span class="n">enc_output</span>
@@ -575,52 +577,52 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">logvar</span><span class="p">)</span>
                     <span class="n">eps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">std</span><span class="p">)</span>
                     <span class="n">latent</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">std</span>
-                    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span> <span class="s2">&quot;mu&quot;</span><span class="p">:</span> <span class="n">mu</span><span class="p">,</span> <span class="s2">&quot;logvar&quot;</span><span class="p">:</span> <span class="n">logvar</span><span class="p">}</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s2">"latent"</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span> <span class="s2">"mu"</span><span class="p">:</span> <span class="n">mu</span><span class="p">,</span> <span class="s2">"logvar"</span><span class="p">:</span> <span class="n">logvar</span><span class="p">}</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Direct latent output</span>
-                    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">enc_output</span><span class="p">}</span>
+                    <span class="k">return</span> <span class="p">{</span><span class="s2">"latent"</span><span class="p">:</span> <span class="n">enc_output</span><span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;VAE must have encode method&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"VAE must have encode method"</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span> <span class="o">==</span> <span class="s2">&quot;discrete&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span> <span class="o">==</span> <span class="s2">"discrete"</span><span class="p">:</span>
             <span class="c1"># Discrete tokenizer</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;encode&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"encode"</span><span class="p">):</span>
                 <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
-                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">}</span>
-            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;tokenize&quot;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">"latent"</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">"indices"</span><span class="p">:</span> <span class="n">indices</span><span class="p">}</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"tokenize"</span><span class="p">):</span>
                 <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
-                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">&quot;indices&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">}</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">"latent"</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span> <span class="s2">"indices"</span><span class="p">:</span> <span class="n">indices</span><span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Discrete VAE must have encode or tokenize method&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Discrete VAE must have encode or tokenize method"</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown VAE type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown VAE type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vae_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latent</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode latent to image space.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;decode&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Decode latent to image space."""</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"decode"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;detokenize&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"detokenize"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">detokenize</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;VAE must have decode or detokenize method&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"VAE must have decode or detokenize method"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Full VAE forward pass.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Full VAE forward pass."""</span>
         <span class="n">enc_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">recon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">enc_output</span><span class="p">[</span><span class="s2">&quot;latent&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">enc_output</span><span class="p">,</span> <span class="s2">&quot;reconstruction&quot;</span><span class="p">:</span> <span class="n">recon</span><span class="p">}</span>
+        <span class="n">recon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">enc_output</span><span class="p">[</span><span class="s2">"latent"</span><span class="p">])</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">enc_output</span><span class="p">,</span> <span class="s2">"reconstruction"</span><span class="p">:</span> <span class="n">recon</span><span class="p">}</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">REPAELoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combined loss for REPA-E end-to-end training.</span>
+<span class="w">    </span><span class="sd">"""Combined loss for REPA-E end-to-end training.</span>
 
 <span class="sd">    Combines:</span>
 <span class="sd">    1. REPA alignment loss (for both DiT and VAE gradients)</span>
 <span class="sd">    2. Diffusion denoising loss (for DiT gradients only)</span>
 <span class="sd">    3. Optional VAE reconstruction loss</span>
 <span class="sd">    4. Optional VAE KL divergence loss</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -657,7 +659,7 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Timesteps</span>
         <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute combined REPA-E loss.</span>
+<span class="w">        </span><span class="sd">"""Compute combined REPA-E loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dit_hidden: DiT hidden states for alignment [batch, seq, hidden]</span>
@@ -672,7 +674,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with individual losses and total</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">losses</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># 1. REPA alignment loss (main loss for E2E training)</span>
@@ -682,12 +684,12 @@ window.runMermaid = runMermaid;</script>
             <span class="n">encoder_features</span><span class="p">,</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;repa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">repa_loss</span>
+        <span class="n">losses</span><span class="p">[</span><span class="s2">"repa"</span><span class="p">]</span> <span class="o">=</span> <span class="n">repa_loss</span>
 
         <span class="c1"># 2. Diffusion denoising loss (DiT only, stop grad to VAE)</span>
         <span class="c1"># We detach the target to prevent diffusion loss from updating VAE</span>
         <span class="n">diffusion_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">dit_pred</span><span class="p">,</span> <span class="n">diffusion_target</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
-        <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;diffusion&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">diffusion_loss</span>
+        <span class="n">losses</span><span class="p">[</span><span class="s2">"diffusion"</span><span class="p">]</span> <span class="o">=</span> <span class="n">diffusion_loss</span>
 
         <span class="c1"># 3. Optional VAE reconstruction loss</span>
         <span class="k">if</span> <span class="p">(</span>
@@ -696,25 +698,25 @@ window.runMermaid = runMermaid;</script>
             <span class="ow">and</span> <span class="n">original_images</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">):</span>
             <span class="n">recon_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">vae_recon</span><span class="p">,</span> <span class="n">original_images</span><span class="p">)</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_recon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recon_loss</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_recon"</span><span class="p">]</span> <span class="o">=</span> <span class="n">recon_loss</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_recon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">dit_hidden</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_recon"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">dit_hidden</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="c1"># 4. Optional VAE KL loss</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">kl_weight</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vae_mu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">vae_logvar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">kl_loss</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">vae_logvar</span> <span class="o">-</span> <span class="n">vae_mu</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">vae_logvar</span><span class="o">.</span><span class="n">exp</span><span class="p">())</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_kl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kl_loss</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_kl"</span><span class="p">]</span> <span class="o">=</span> <span class="n">kl_loss</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_kl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">dit_hidden</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_kl"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">dit_hidden</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="c1"># Total loss</span>
         <span class="n">total</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">repa_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;repa&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">diffusion_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;diffusion&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vae_recon_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_recon&quot;</span><span class="p">]</span>
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">kl_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vae_kl&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">repa_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">"repa"</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">diffusion_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">"diffusion"</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vae_recon_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_recon"</span><span class="p">]</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">kl_weight</span> <span class="o">*</span> <span class="n">losses</span><span class="p">[</span><span class="s2">"vae_kl"</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span>
+        <span class="n">losses</span><span class="p">[</span><span class="s2">"total"</span><span class="p">]</span> <span class="o">=</span> <span class="n">total</span>
 
         <span class="k">return</span> <span class="n">losses</span>
 
@@ -722,7 +724,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="REPAETrainer">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAETrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">REPAETrainer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;End-to-end trainer for VAE + DiT using REPA alignment.</span>
+<span class="w">    </span><span class="sd">"""End-to-end trainer for VAE + DiT using REPA alignment.</span>
 
 <span class="sd">    This trainer enables joint optimization of VAE tokenizer and DiT by using</span>
 <span class="sd">    REPA alignment loss instead of standard diffusion loss for VAE gradients.</span>
@@ -740,9 +742,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; for images in dataloader:</span>
 <span class="sd">        ...     loss_dict = trainer.compute_loss(images, timesteps)</span>
-<span class="sd">        ...     loss_dict[&quot;total&quot;].backward()</span>
+<span class="sd">        ...     loss_dict["total"].backward()</span>
 <span class="sd">        ...     optimizer.step()</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="REPAETrainer.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAETrainer.__init__">[docs]</a>
@@ -753,19 +755,19 @@ window.runMermaid = runMermaid;</script>
         <span class="n">frozen_encoder</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">repa_projection</span><span class="p">:</span> <span class="n">REPAProjection</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">REPAEConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">vae_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;continuous&quot;</span><span class="p">,</span> <span class="s2">&quot;discrete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;continuous&quot;</span><span class="p">,</span>
+        <span class="n">vae_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"continuous"</span><span class="p">,</span> <span class="s2">"discrete"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"continuous"</span><span class="p">,</span>
         <span class="n">noise_scheduler</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            dit: Diffusion transformer model</span>
 <span class="sd">            vae: VAE or discrete tokenizer</span>
 <span class="sd">            frozen_encoder: Pretrained encoder (DINOv2, SigLIP, etc.)</span>
 <span class="sd">            repa_projection: Projection head for alignment</span>
 <span class="sd">            config: Training configuration</span>
-<span class="sd">            vae_type: Type of VAE (&#39;continuous&#39; or &#39;discrete&#39;)</span>
+<span class="sd">            vae_type: Type of VAE ('continuous' or 'discrete')</span>
 <span class="sd">            noise_scheduler: Diffusion noise scheduler (for adding noise)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dit</span> <span class="o">=</span> <span class="n">dit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vae</span> <span class="o">=</span> <span class="n">VAEWrapper</span><span class="p">(</span><span class="n">vae</span><span class="p">,</span> <span class="n">vae_type</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frozen_encoder</span> <span class="o">=</span> <span class="n">frozen_encoder</span>
@@ -780,12 +782,12 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Optionally freeze parts of VAE</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">freeze_vae_encoder</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;encoder&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"encoder"</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore[union-attr]</span>
                     <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">freeze_vae_decoder</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">&quot;decoder&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="p">,</span> <span class="s2">"decoder"</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>  <span class="c1"># type: ignore[union-attr]</span>
                     <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -805,11 +807,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">latents</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add noise to latents for diffusion training.</span>
+<span class="w">        </span><span class="sd">"""Add noise to latents for diffusion training.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple of (noisy_latents, noise/target)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_scheduler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Use provided scheduler</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span>
@@ -831,7 +833,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_intermediates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute REPA-E loss for a batch of images.</span>
+<span class="w">        </span><span class="sd">"""Compute REPA-E loss for a batch of images.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            images: Input images [batch, channels, H, W]</span>
@@ -840,7 +842,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with loss components and optionally intermediates</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">images</span><span class="o">.</span><span class="n">device</span>
 
@@ -850,7 +852,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># 1. Encode images with VAE (with gradients for E2E training)</span>
         <span class="n">vae_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
-        <span class="n">latents</span> <span class="o">=</span> <span class="n">vae_output</span><span class="p">[</span><span class="s2">&quot;latent&quot;</span><span class="p">]</span>
+        <span class="n">latents</span> <span class="o">=</span> <span class="n">vae_output</span><span class="p">[</span><span class="s2">"latent"</span><span class="p">]</span>
 
         <span class="c1"># Flatten spatial dims to sequence if needed</span>
         <span class="k">if</span> <span class="n">latents</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -869,14 +871,14 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># Handle different encoder output formats</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encoder_features</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="n">encoder_features</span> <span class="o">=</span> <span class="n">encoder_features</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="s2">&quot;last_hidden_state&quot;</span><span class="p">,</span> <span class="n">encoder_features</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
+                    <span class="s2">"last_hidden_state"</span><span class="p">,</span> <span class="n">encoder_features</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"features"</span><span class="p">)</span>
                 <span class="p">)</span>
 
         <span class="c1"># 4. DiT forward pass with hidden state extraction</span>
         <span class="c1"># We need hidden states from intermediate layers for REPA</span>
         <span class="n">dit_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_dit_with_hidden</span><span class="p">(</span><span class="n">noisy_latents</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span>
-        <span class="n">dit_pred</span> <span class="o">=</span> <span class="n">dit_output</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">]</span>
-        <span class="n">dit_hidden</span> <span class="o">=</span> <span class="n">dit_output</span><span class="p">[</span><span class="s2">&quot;hidden_states&quot;</span><span class="p">]</span>
+        <span class="n">dit_pred</span> <span class="o">=</span> <span class="n">dit_output</span><span class="p">[</span><span class="s2">"prediction"</span><span class="p">]</span>
+        <span class="n">dit_hidden</span> <span class="o">=</span> <span class="n">dit_output</span><span class="p">[</span><span class="s2">"hidden_states"</span><span class="p">]</span>
 
         <span class="c1"># 5. Project hidden states for alignment</span>
         <span class="n">proj_hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repa_projection</span><span class="p">(</span><span class="n">dit_hidden</span><span class="p">)</span>
@@ -888,8 +890,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">dit_pred</span><span class="o">=</span><span class="n">dit_pred</span><span class="p">,</span>
             <span class="n">encoder_features</span><span class="o">=</span><span class="n">proj_target</span><span class="p">,</span>
             <span class="n">diffusion_target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
-            <span class="n">vae_mu</span><span class="o">=</span><span class="n">vae_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mu&quot;</span><span class="p">),</span>
-            <span class="n">vae_logvar</span><span class="o">=</span><span class="n">vae_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logvar&quot;</span><span class="p">),</span>
+            <span class="n">vae_mu</span><span class="o">=</span><span class="n">vae_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mu"</span><span class="p">),</span>
+            <span class="n">vae_logvar</span><span class="o">=</span><span class="n">vae_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"logvar"</span><span class="p">),</span>
             <span class="n">vae_recon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Skip reconstruction during main training</span>
             <span class="n">original_images</span><span class="o">=</span><span class="n">images</span><span class="p">,</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
@@ -898,11 +900,11 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">return_intermediates</span><span class="p">:</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;intermediates&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;latents&quot;</span><span class="p">:</span> <span class="n">latents_seq</span><span class="p">,</span>
-                <span class="s2">&quot;noisy_latents&quot;</span><span class="p">:</span> <span class="n">noisy_latents</span><span class="p">,</span>
-                <span class="s2">&quot;dit_hidden&quot;</span><span class="p">:</span> <span class="n">dit_hidden</span><span class="p">,</span>
-                <span class="s2">&quot;encoder_features&quot;</span><span class="p">:</span> <span class="n">encoder_features</span><span class="p">,</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"intermediates"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"latents"</span><span class="p">:</span> <span class="n">latents_seq</span><span class="p">,</span>
+                <span class="s2">"noisy_latents"</span><span class="p">:</span> <span class="n">noisy_latents</span><span class="p">,</span>
+                <span class="s2">"dit_hidden"</span><span class="p">:</span> <span class="n">dit_hidden</span><span class="p">,</span>
+                <span class="s2">"encoder_features"</span><span class="p">:</span> <span class="n">encoder_features</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">losses</span></div>
@@ -913,26 +915,26 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the DiT, extracting intermediate hidden states.</span>
+<span class="w">        </span><span class="sd">"""Forward pass through the DiT, extracting intermediate hidden states.</span>
 
 <span class="sd">        The DiT must expose ``forward_with_hidden(x, t)`` returning a dict with</span>
-<span class="sd">        ``&quot;prediction&quot;`` and ``&quot;hidden_states&quot;``. REPA-E aligns *internal* features</span>
+<span class="sd">        ``"prediction"`` and ``"hidden_states"``. REPA-E aligns *internal* features</span>
 <span class="sd">        to the encoder, so substituting the network output as a stand-in would</span>
 <span class="sd">        train a meaningless alignment; we fail loudly instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dit</span><span class="p">,</span> <span class="s2">&quot;forward_with_hidden&quot;</span><span class="p">):</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dit</span><span class="p">,</span> <span class="s2">"forward_with_hidden"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">forward_with_hidden</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="s2">&quot;REPA-E requires the DiT to expose intermediate features via &quot;</span>
-            <span class="s2">&quot;`forward_with_hidden(x, t) -&gt; {&#39;prediction&#39;, &#39;hidden_states&#39;}`. &quot;</span>
-            <span class="s2">&quot;The configured DiT does not implement it.&quot;</span>
+            <span class="s2">"REPA-E requires the DiT to expose intermediate features via "</span>
+            <span class="s2">"`forward_with_hidden(x, t) -&gt; {'prediction', 'hidden_states'}`. "</span>
+            <span class="s2">"The configured DiT does not implement it."</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="REPAETrainer.get_vae_parameters">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAETrainer.get_vae_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_vae_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get VAE parameters for separate optimizer group.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get VAE parameters for separate optimizer group."""</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vae</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
@@ -943,7 +945,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="REPAETrainer.get_dit_parameters">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.REPAETrainer.get_dit_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dit_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get DiT parameters for separate optimizer group.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get DiT parameters for separate optimizer group."""</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
         <span class="n">params</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repa_projection</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">params</span></div>
@@ -957,20 +959,20 @@ window.runMermaid = runMermaid;</script>
         <span class="n">vae_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">,</span>
         <span class="n">weight_decay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create optimizer parameter groups with different learning rates.</span>
+<span class="w">        </span><span class="sd">"""Create optimizer parameter groups with different learning rates.</span>
 
 <span class="sd">        VAE typically uses a lower learning rate to prevent catastrophic forgetting.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dit_parameters</span><span class="p">(),</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">dit_lr</span><span class="p">,</span>
-                <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dit_parameters</span><span class="p">(),</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="n">dit_lr</span><span class="p">,</span>
+                <span class="s2">"weight_decay"</span><span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="p">{</span>
-                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vae_parameters</span><span class="p">(),</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="n">vae_lr</span><span class="p">,</span>
-                <span class="s2">&quot;weight_decay&quot;</span><span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
+                <span class="s2">"params"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_vae_parameters</span><span class="p">(),</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="n">vae_lr</span><span class="p">,</span>
+                <span class="s2">"weight_decay"</span><span class="p">:</span> <span class="n">weight_decay</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">]</span></div>
 </div>
@@ -978,10 +980,10 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;REPAEConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;REPAELoss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;REPAETrainer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;VAEWrapper&quot;</span><span class="p">,</span>
+    <span class="s2">"REPAEConfig"</span><span class="p">,</span>
+    <span class="s2">"REPAELoss"</span><span class="p">,</span>
+    <span class="s2">"REPAETrainer"</span><span class="p">,</span>
+    <span class="s2">"VAEWrapper"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -993,7 +995,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

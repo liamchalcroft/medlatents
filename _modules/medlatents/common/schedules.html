@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.common.schedules &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.common.schedules &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,10 +474,10 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.common.schedules</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Learning-rate schedule utilities.</span>
+<span></span><span class="sd">"""Learning-rate schedule utilities.</span>
 
 <span class="sd">Provides the cosine-with-warmup learning-rate schedule used across training.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
@@ -489,7 +491,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">max_lr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">min_lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Cosine schedule with linear warmup for learning rates.</span>
 
 <span class="sd">    Standard learning rate schedule used in transformers and diffusion models.</span>
@@ -503,7 +505,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Learning rate at current step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Edge case: if warmup_steps equals total_steps, always return max_lr</span>
     <span class="k">if</span> <span class="n">warmup_steps</span> <span class="o">&gt;=</span> <span class="n">total_steps</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">max_lr</span>
@@ -517,7 +519,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;get_cosine_schedule_with_warmup&quot;</span><span class="p">,</span>
+    <span class="s2">"get_cosine_schedule_with_warmup"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -529,7 +531,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

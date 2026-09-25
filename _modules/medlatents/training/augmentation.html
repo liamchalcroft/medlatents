@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.augmentation &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.augmentation &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,10 +474,10 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.augmentation</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Training-time sampling and augmentation techniques.</span>
+<span></span><span class="sd">"""Training-time sampling and augmentation techniques.</span>
 
 <span class="sd">Shared utilities for improving training across all model types.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
@@ -484,29 +486,29 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CurriculumSampler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Curriculum learning: gradually increase task difficulty.</span>
 
 <span class="sd">    Start with easier examples (shorter sequences, common tokens)</span>
 <span class="sd">    and progressively include harder ones.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"length"</span><span class="p">,</span>
         <span class="n">start_difficulty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
         <span class="n">end_difficulty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
-        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
-<span class="sd">            mode: &#39;length&#39;, &#39;rarity&#39;, or &#39;custom&#39;</span>
+<span class="sd">            mode: 'length', 'rarity', or 'custom'</span>
 <span class="sd">            start_difficulty: initial difficulty (0-1)</span>
 <span class="sd">            end_difficulty: final difficulty (0-1)</span>
 <span class="sd">            num_steps: steps to reach end_difficulty</span>
-<span class="sd">            schedule: &#39;linear&#39;, &#39;exp&#39;, or &#39;cosine&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            schedule: 'linear', 'exp', or 'cosine'</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span> <span class="o">=</span> <span class="n">start_difficulty</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_difficulty</span> <span class="o">=</span> <span class="n">end_difficulty</span>
@@ -515,25 +517,25 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_difficulty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current difficulty level.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current difficulty level."""</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="n">difficulty</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_difficulty</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;exp&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"exp"</span><span class="p">:</span>
             <span class="c1"># Exponential increase</span>
             <span class="n">difficulty</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_difficulty</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span><span class="p">)</span> <span class="o">**</span> <span class="n">progress</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="c1"># Smooth increase</span>
             <span class="n">difficulty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_difficulty</span> <span class="o">-</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">end_difficulty</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_difficulty</span>
             <span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">progress</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">difficulty</span>
 
@@ -542,32 +544,32 @@ window.runMermaid = runMermaid;</script>
         <span class="n">batch</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
         <span class="n">difficulty_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Filter batch based on difficulty.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            batch: dictionary with &#39;input_ids&#39; and other keys</span>
+<span class="sd">            batch: dictionary with 'input_ids' and other keys</span>
 <span class="sd">            difficulty_fn: function that computes difficulty of each example</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            filtered_batch: subset of batch matching current difficulty</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">difficulty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_difficulty</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;length&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"length"</span><span class="p">:</span>
             <span class="c1"># Filter by sequence length</span>
-            <span class="n">lengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Assuming 0 is pad</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Assuming 0 is pad</span>
             <span class="n">max_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lengths</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">difficulty</span><span class="p">)</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">lengths</span> <span class="o">&lt;=</span> <span class="n">max_length</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;rarity&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"rarity"</span><span class="p">:</span>
             <span class="c1"># Filter by token rarity (need token frequencies)</span>
             <span class="k">if</span> <span class="n">difficulty_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need difficulty_fn for rarity mode&quot;</span><span class="p">)</span>
-            <span class="n">difficulties</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">difficulty_fn</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;input_ids&quot;</span><span class="p">]])</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Need difficulty_fn for rarity mode"</span><span class="p">)</span>
+            <span class="n">difficulties</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">difficulty_fn</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"input_ids"</span><span class="p">]])</span>
             <span class="n">threshold</span> <span class="o">=</span> <span class="n">difficulties</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">difficulty</span><span class="p">)</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">difficulties</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Filter batch</span>
         <span class="n">filtered_batch</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">batch</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -576,12 +578,12 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">filtered_batch</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment curriculum step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Increment curriculum step."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ScheduledSampling</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Scheduled sampling for autoregressive models.</span>
 
 <span class="sd">    During training, sometimes use predicted tokens instead of ground truth.</span>
@@ -589,26 +591,26 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    **WARNING**: This technique is designed for autoregressive TEXT generation.</span>
 <span class="sd">    For MRI imaging, most models use MaskGIT (bidirectional) or diffusion, NOT</span>
-<span class="sd">    sequential autoregressive generation. Only use if you&#39;re specifically training</span>
+<span class="sd">    sequential autoregressive generation. Only use if you're specifically training</span>
 <span class="sd">    an autoregressive model with raster-order generation.</span>
 
-<span class="sd">    Reference: &quot;Scheduled Sampling for Sequence Prediction with RNNs&quot; (Bengio et al., 2015)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Reference: "Scheduled Sampling for Sequence Prediction with RNNs" (Bengio et al., 2015)</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span><span class="p">,</span>
         <span class="n">start_sampling_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">end_sampling_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50000</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
-<span class="sd">            mode: &#39;linear&#39;, &#39;exp&#39;, &#39;inverse_sigmoid&#39;</span>
+<span class="sd">            mode: 'linear', 'exp', 'inverse_sigmoid'</span>
 <span class="sd">            start_sampling_prob: initial prob of using predictions</span>
 <span class="sd">            end_sampling_prob: final prob of using predictions</span>
 <span class="sd">            num_steps: steps to reach end_sampling_prob</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">=</span> <span class="n">start_sampling_prob</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">=</span> <span class="n">end_sampling_prob</span>
@@ -616,18 +618,18 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_sampling_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current sampling probability.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current sampling probability."""</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="n">prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;exp&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"exp"</span><span class="p">:</span>
             <span class="c1"># Handle edge case where start_prob is 0</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">*</span> <span class="n">progress</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span><span class="p">)</span> <span class="o">**</span> <span class="n">progress</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;inverse_sigmoid&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"inverse_sigmoid"</span><span class="p">:</span>
             <span class="c1"># Handle edge case where start_prob or end_prob is 0</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
@@ -637,7 +639,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_prob</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_prob</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
                 <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">prob</span>
 
@@ -646,7 +648,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">ground_truth</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">predictions</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Mix ground truth and predictions based on schedule.</span>
 
 <span class="sd">        Args:</span>
@@ -655,7 +657,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            mixed: [batch, seq_len] mixed tokens</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">sampling_prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sampling_prob</span><span class="p">()</span>
 
         <span class="c1"># Sample mask: True = use prediction, False = use ground truth</span>
@@ -670,31 +672,31 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="NoiseSchedule">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseSchedule">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NoiseSchedule</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Noise scheduling for training with noisy inputs.</span>
 
 <span class="sd">    Gradually reduce noise during training for better convergence.</span>
 <span class="sd">    For discrete tokens, applies random replacement or dropout.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="NoiseSchedule.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseSchedule.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">noise_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+        <span class="n">noise_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
         <span class="n">start_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">end_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
-        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
-<span class="sd">            noise_type: &#39;uniform&#39; (random replacement) or &#39;dropout&#39; (set to 0)</span>
+<span class="sd">            noise_type: 'uniform' (random replacement) or 'dropout' (set to 0)</span>
 <span class="sd">            start_noise: initial noise level (probability of noising each token)</span>
 <span class="sd">            end_noise: final noise level</span>
 <span class="sd">            num_steps: steps to reach end_noise</span>
-<span class="sd">            schedule: &#39;linear&#39;, &#39;exp&#39;, &#39;cosine&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            schedule: 'linear', 'exp', 'cosine'</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">=</span> <span class="n">noise_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span> <span class="o">=</span> <span class="n">start_noise</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_noise</span> <span class="o">=</span> <span class="n">end_noise</span>
@@ -706,19 +708,19 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="NoiseSchedule.get_noise_level">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseSchedule.get_noise_level">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_noise_level</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current noise level.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current noise level."""</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_noise</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;exp&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"exp"</span><span class="p">:</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_noise</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span><span class="p">)</span> <span class="o">**</span> <span class="n">progress</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_noise</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_noise</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_noise</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">noise</span></div>
 
@@ -730,7 +732,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">tokens</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add noise to tokens.</span>
 
 <span class="sd">        Args:</span>
@@ -739,21 +741,21 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            noisy_tokens: [batch, seq_len]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">noise_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_noise_level</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
             <span class="c1"># Replace tokens with uniform random</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">noise_level</span>
             <span class="n">random_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint_like</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">)</span>
             <span class="n">noisy_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">random_tokens</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s2">&quot;dropout&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span> <span class="o">==</span> <span class="s2">"dropout"</span><span class="p">:</span>
             <span class="c1"># Drop tokens (set to 0 or mask token)</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">noise_level</span>
             <span class="n">noisy_tokens</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="n">noisy_tokens</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown noise type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown noise type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">noisy_tokens</span></div>
@@ -764,11 +766,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingSchedule">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingSchedule">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MaskingSchedule</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Dynamic masking schedule for MaskGIT-style training.</span>
 
 <span class="sd">    Adaptively adjust mask ratio during training.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MaskingSchedule.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingSchedule.__init__">[docs]</a>
@@ -777,17 +779,17 @@ window.runMermaid = runMermaid;</script>
         <span class="n">start_mask_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
         <span class="n">end_mask_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100000</span><span class="p">,</span>
-        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cosine"</span><span class="p">,</span>
         <span class="n">min_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.10</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            start_mask_ratio: initial masking ratio</span>
 <span class="sd">            end_mask_ratio: final masking ratio</span>
 <span class="sd">            num_steps: steps to reach end_mask_ratio</span>
-<span class="sd">            schedule: &#39;linear&#39;, &#39;cosine&#39;, &#39;constant&#39;</span>
+<span class="sd">            schedule: 'linear', 'cosine', 'constant'</span>
 <span class="sd">            min_ratio: minimum mask ratio (safety)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_ratio</span> <span class="o">=</span> <span class="n">start_mask_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_ratio</span> <span class="o">=</span> <span class="n">end_mask_ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="o">=</span> <span class="n">num_steps</span>
@@ -799,20 +801,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingSchedule.get_mask_ratio">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingSchedule.get_mask_ratio">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mask_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current mask ratio.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;constant&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get current mask ratio."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"constant"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_ratio</span>
 
         <span class="n">progress</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_ratio</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_ratio</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_ratio</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_ratio</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_ratio</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_ratio</span><span class="p">)</span></div>
 
@@ -820,37 +822,37 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingSchedule.step">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingSchedule.step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Increment step."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">+=</span> <span class="mi">1</span></div>
 </div>
 
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GradientNoiseInjection</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add noise to gradients for better generalization.</span>
 
 <span class="sd">    Annealed Langevin dynamics - add noise that decreases over time.</span>
 
-<span class="sd">    Reference: &quot;Adding Gradient Noise Improves Learning for Very Deep Networks&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Reference: "Adding Gradient Noise Improves Learning for Very Deep Networks"</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
         <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.55</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            eta: noise scale</span>
 <span class="sd">            gamma: annealing rate (noise ~ 1/t^gamma)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add noise to gradients.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add noise to gradients."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -864,31 +866,31 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AdaptiveLossWeighting</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Automatically balance multiple loss terms.</span>
 
 <span class="sd">    Uses uncertainty weighting or gradient magnitude balancing.</span>
 
-<span class="sd">    Reference: &quot;Multi-Task Learning Using Uncertainty to Weigh Losses&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Reference: "Multi-Task Learning Using Uncertainty to Weigh Losses"</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">num_losses</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;uncertainty&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"uncertainty"</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            num_losses: number of loss terms to balance</span>
-<span class="sd">            mode: &#39;uncertainty&#39; or &#39;grad_norm&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            mode: 'uncertainty' or 'grad_norm'</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_losses</span> <span class="o">=</span> <span class="n">num_losses</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;uncertainty&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"uncertainty"</span><span class="p">:</span>
             <span class="c1"># Learnable log variance parameters</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log_vars</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_losses</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;grad_norm&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"grad_norm"</span><span class="p">:</span>
             <span class="c1"># Track gradient norms</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grad_norms</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_losses</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.9</span>
@@ -897,7 +899,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">losses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute weighted sum of losses.</span>
 
 <span class="sd">        Args:</span>
@@ -905,15 +907,15 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            weighted_loss: scalar</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;uncertainty&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"uncertainty"</span><span class="p">:</span>
             <span class="c1"># Uncertainty weighting</span>
             <span class="n">weighted</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
                 <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_var</span><span class="p">)</span> <span class="o">*</span> <span class="n">loss</span> <span class="o">+</span> <span class="n">log_var</span> <span class="k">for</span> <span class="n">loss</span><span class="p">,</span> <span class="n">log_var</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">losses</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_vars</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">weighted</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;grad_norm&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"grad_norm"</span><span class="p">:</span>
             <span class="c1"># Use inverse gradient norm as weight</span>
             <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">norm</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="k">for</span> <span class="n">norm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_norms</span><span class="p">]</span>
             <span class="c1"># Normalize weights</span>
@@ -923,8 +925,8 @@ window.runMermaid = runMermaid;</script>
             <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">loss</span> <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">loss</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">losses</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update_grad_norms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">losses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update gradient norm tracking.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;grad_norm&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update gradient norm tracking."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">"grad_norm"</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">loss</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">losses</span><span class="p">):</span>
@@ -948,7 +950,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

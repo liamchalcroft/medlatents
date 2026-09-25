@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.rl.gardo &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.rl.gardo &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.rl.gardo</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Gradient-Aware Reward Distance Optimization (GARDO).</span>
+<span></span><span class="sd">"""Gradient-Aware Reward Distance Optimization (GARDO).</span>
 
 <span class="sd">GARDO is a reward-guided fine-tuning method that explicitly balances</span>
 <span class="sd">reward improvement with distribution shift from the reference model.</span>
@@ -484,7 +486,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">3. Apply reward thresholding to focus on meaningful improvements</span>
 
 <span class="sd">This implementation adapts GARDO concepts for discrete generative models.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -504,7 +506,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="GARDOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.GARDOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GARDOTrainer</span><span class="p">(</span><span class="n">BaseRLTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient-Aware Reward Distance Optimization trainer.</span>
+<span class="w">    </span><span class="sd">"""Gradient-Aware Reward Distance Optimization trainer.</span>
 
 <span class="sd">    GARDO improves upon standard reward fine-tuning by:</span>
 <span class="sd">    1. Monitoring gradient alignment between reward and KL terms</span>
@@ -524,7 +526,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     reward_threshold=0.1,</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(seq_length=256)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="GARDOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.GARDOTrainer.__init__">[docs]</a>
@@ -539,12 +541,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">distance_penalty</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_inference_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"diffusion"</span><span class="p">,</span>
         <span class="n">diffusion</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">adaptive_kl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">kl_target</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize GARDO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize GARDO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model to train</span>
@@ -556,11 +558,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            distance_penalty: Base KL penalty coefficient</span>
 <span class="sd">            vocab_size: Vocabulary size</span>
 <span class="sd">            num_inference_steps: Generation steps</span>
-<span class="sd">            model_type: &quot;diffusion&quot;, &quot;flow&quot;, or &quot;maskgit&quot;</span>
+<span class="sd">            model_type: "diffusion", "flow", or "maskgit"</span>
 <span class="sd">            diffusion: D3PM for diffusion models</span>
 <span class="sd">            adaptive_kl: Whether to adapt KL coefficient</span>
 <span class="sd">            kl_target: Target KL divergence for adaptive scaling</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
             <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
@@ -582,12 +584,12 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_history</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span>
             <span class="k">elif</span> <span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">diffusion</span><span class="o">.</span><span class="n">effective_num_classes</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vocab_size must be provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"vocab_size must be provided"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -595,10 +597,10 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_move_diffusion_to_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move diffusion tensors to device with non_blocking transfers.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Move diffusion tensors to device with non_blocking transfers."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
-        <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;betas&quot;</span><span class="p">,</span> <span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="s2">&quot;alphas_cumprod&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_t&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_bar_t&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_bar_t_minus_1&quot;</span><span class="p">]</span>
+        <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"betas"</span><span class="p">,</span> <span class="s2">"alphas"</span><span class="p">,</span> <span class="s2">"alphas_cumprod"</span><span class="p">,</span> <span class="s2">"Q_t"</span><span class="p">,</span> <span class="s2">"Q_bar_t"</span><span class="p">,</span> <span class="s2">"Q_bar_t_minus_1"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
             <span class="n">tensor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -611,8 +613,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate trajectories.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Generate trajectories."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_diffusion_trajectories</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_generic_trajectories</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">)</span></div>
@@ -623,13 +625,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate diffusion trajectories.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate diffusion trajectories."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">num_timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">num_timesteps</span>
         <span class="n">step_size</span> <span class="o">=</span> <span class="n">num_timesteps</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span>
         <span class="n">timesteps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">step_size</span><span class="p">))[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
             <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">mask_token</span><span class="p">,</span>
@@ -707,9 +709,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate generic trajectories for non-diffusion models.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate generic trajectories for non-diffusion models."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
-        <span class="n">mask_token</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;mask_token&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">)</span>
+        <span class="n">mask_token</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"mask_token"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">)</span>
 
         <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
             <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">),</span>
@@ -731,7 +733,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">all_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_t</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
                 <span class="n">all_timesteps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
                     <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x_t</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
@@ -781,7 +783,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">reward_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">kl_grad</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute cosine similarity between reward and KL gradients.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute cosine similarity between reward and KL gradients."""</span>
         <span class="n">reward_flat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">reward_grad</span> <span class="k">if</span> <span class="n">g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
         <span class="n">kl_flat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">g</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">kl_grad</span> <span class="k">if</span> <span class="n">g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
 
@@ -796,7 +798,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">cos_sim</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_kl_coefficient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kl_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">grad_alignment</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adaptively update KL coefficient based on gradient alignment.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Adaptively update KL coefficient based on gradient alignment."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_kl</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -821,13 +823,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">trajectories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute GARDO loss with adaptive KL penalty.</span>
+<span class="w">        </span><span class="sd">"""Compute GARDO loss with adaptive KL penalty.</span>
 
 <span class="sd">        The GARDO loss combines:</span>
 <span class="sd">        1. Negative reward (to maximize reward)</span>
 <span class="sd">        2. KL penalty (to stay close to reference)</span>
 <span class="sd">        3. Reward thresholding (to focus on improvements)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
 
         <span class="n">total_reward_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -855,7 +857,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">t</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">timesteps</span><span class="p">[</span><span class="n">step_idx</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
                 <span class="c1"># Current policy log prob</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
                     <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
@@ -869,7 +871,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="c1"># Reference log prob</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
                             <span class="n">ref_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_model</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">ref_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
@@ -909,13 +911,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_kl_coefficient</span><span class="p">(</span><span class="n">avg_kl</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;reward_loss&quot;</span><span class="p">:</span> <span class="n">total_reward_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;kl_loss&quot;</span><span class="p">:</span> <span class="n">total_kl_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;kl_coeff&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kl_coeff</span><span class="p">,</span>
-            <span class="s2">&quot;avg_kl&quot;</span><span class="p">:</span> <span class="n">avg_kl</span><span class="p">,</span>
-            <span class="s2">&quot;num_valid&quot;</span><span class="p">:</span> <span class="n">num_valid</span><span class="p">,</span>
-            <span class="s2">&quot;num_filtered&quot;</span><span class="p">:</span> <span class="n">num_filtered</span><span class="p">,</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"reward_loss"</span><span class="p">:</span> <span class="n">total_reward_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"kl_loss"</span><span class="p">:</span> <span class="n">total_kl_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"kl_coeff"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kl_coeff</span><span class="p">,</span>
+            <span class="s2">"avg_kl"</span><span class="p">:</span> <span class="n">avg_kl</span><span class="p">,</span>
+            <span class="s2">"num_valid"</span><span class="p">:</span> <span class="n">num_valid</span><span class="p">,</span>
+            <span class="s2">"num_filtered"</span><span class="p">:</span> <span class="n">num_filtered</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="n">metrics</span></div>
@@ -924,7 +926,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;GARDOTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"GARDOTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -936,7 +938,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

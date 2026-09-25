@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.dpo.discrete &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.dpo.discrete &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.dpo.discrete</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;DPO for discrete token models (MaskGIT, Autoregressive).</span>
+<span></span><span class="sd">"""DPO for discrete token models (MaskGIT, Autoregressive).</span>
 
 <span class="sd">This module implements DPO trainers for discrete generative models that</span>
 <span class="sd">directly output token probabilities:</span>
@@ -480,9 +482,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">1. AutoregressiveDPOTrainer: Standard causal log-prob computation</span>
 <span class="sd">2. MaskGITDPOTrainer: Pseudo-likelihood via masked prediction</span>
 
-<span class="sd">The key difference from language model DPO is that we&#39;re working with</span>
+<span class="sd">The key difference from language model DPO is that we're working with</span>
 <span class="sd">image/volume latent tokens, which may have different sequence structure.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,7 +503,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AutoregressiveDPOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.AutoregressiveDPOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AutoregressiveDPOTrainer</span><span class="p">(</span><span class="n">BaseDPOTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DPO trainer for autoregressive discrete models.</span>
+<span class="w">    </span><span class="sd">"""DPO trainer for autoregressive discrete models.</span>
 
 <span class="sd">    For autoregressive models, the log-probability is computed as:</span>
 <span class="sd">        log p(x) = sum_{i=1}^L log p(x_i | x_{&lt;i})</span>
@@ -514,7 +516,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; ref_model = copy.deepcopy(model)</span>
 <span class="sd">        &gt;&gt;&gt; trainer = AutoregressiveDPOTrainer(model, ref_model, config)</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(preference_dataset)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AutoregressiveDPOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.AutoregressiveDPOTrainer.__init__">[docs]</a>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize autoregressive DPO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize autoregressive DPO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Autoregressive model to train</span>
@@ -534,18 +536,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            config: Training configuration</span>
 <span class="sd">            accelerator: Optional pre-configured accelerator</span>
 <span class="sd">            vocab_size: Vocabulary size (inferred from model if not provided)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ref_model</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">accelerator</span><span class="p">)</span>
 
         <span class="c1"># Get vocab size from model if not provided</span>
         <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span>
-            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;config&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"config"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;vocab_size must be provided or model must have vocab_size attribute&quot;</span>
+                    <span class="s2">"vocab_size must be provided or model must have vocab_size attribute"</span>
                 <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span></div>
@@ -559,7 +561,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute autoregressive log-probabilities.</span>
+<span class="w">        </span><span class="sd">"""Compute autoregressive log-probabilities.</span>
 
 <span class="sd">        For a sequence x = [x_1, x_2, ..., x_L], computes:</span>
 <span class="sd">            log p(x) = sum_{i=1}^{L-1} log p(x_{i+1} | x_1, ..., x_i)</span>
@@ -571,7 +573,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Log-probabilities [batch]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Get logits for all positions (teacher-forced)</span>
@@ -600,7 +602,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskGITDPOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.MaskGITDPOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MaskGITDPOTrainer</span><span class="p">(</span><span class="n">BaseDPOTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DPO trainer for MaskGIT bidirectional models.</span>
+<span class="w">    </span><span class="sd">"""DPO trainer for MaskGIT bidirectional models.</span>
 
 <span class="sd">    For bidirectional models, we use pseudo-likelihood:</span>
 <span class="sd">        log p(x) ≈ sum_{i=1}^L log p(x_i | x_{\\i})</span>
@@ -610,9 +612,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    This is computed efficiently by masking each position and predicting it</span>
 <span class="sd">    from the context. We can use different strategies:</span>
 
-<span class="sd">    1. &quot;full&quot;: Mask each position independently (L forward passes, expensive)</span>
-<span class="sd">    2. &quot;random&quot;: Random subset of positions (cheaper approximation)</span>
-<span class="sd">    3. &quot;parallel&quot;: Single forward with random masking (training-style)</span>
+<span class="sd">    1. "full": Mask each position independently (L forward passes, expensive)</span>
+<span class="sd">    2. "random": Random subset of positions (cheaper approximation)</span>
+<span class="sd">    3. "parallel": Single forward with random masking (training-style)</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; from medlatents.maskgit import MaskGIT</span>
@@ -620,7 +622,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; ref_model = copy.deepcopy(model)</span>
 <span class="sd">        &gt;&gt;&gt; trainer = MaskGITDPOTrainer(model, ref_model, config)</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(preference_dataset)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MaskGITDPOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.MaskGITDPOTrainer.__init__">[docs]</a>
@@ -631,10 +633,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">config</span><span class="p">:</span> <span class="n">PostTrainingConfig</span><span class="p">,</span>
         <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">likelihood_strategy</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;parallel&quot;</span><span class="p">,</span>
+        <span class="n">likelihood_strategy</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"full"</span><span class="p">,</span> <span class="s2">"random"</span><span class="p">,</span> <span class="s2">"parallel"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"parallel"</span><span class="p">,</span>
         <span class="n">num_mask_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize MaskGIT DPO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize MaskGIT DPO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: MaskGIT model to train</span>
@@ -643,25 +645,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            accelerator: Optional pre-configured accelerator</span>
 <span class="sd">            vocab_size: Vocabulary size (inferred from model if not provided)</span>
 <span class="sd">            likelihood_strategy: How to compute pseudo-likelihood</span>
-<span class="sd">            num_mask_samples: Number of positions to sample for &quot;random&quot; strategy</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            num_mask_samples: Number of positions to sample for "random" strategy</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ref_model</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">accelerator</span><span class="p">)</span>
 
         <span class="c1"># Get vocab size from model</span>
         <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vocab_size must be provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"vocab_size must be provided"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_strategy</span> <span class="o">=</span> <span class="n">likelihood_strategy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_mask_samples</span> <span class="o">=</span> <span class="n">num_mask_samples</span>
 
         <span class="c1"># Get mask token from model</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;mask_token&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"mask_token"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mask_token</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;special_tokens&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"special_tokens"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">mask</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Default: assume mask token is vocab_size (common convention)</span>
@@ -676,7 +678,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pseudo-likelihood for MaskGIT.</span>
+<span class="w">        </span><span class="sd">"""Compute pseudo-likelihood for MaskGIT.</span>
 
 <span class="sd">        Uses the specified strategy to estimate log p(x).</span>
 
@@ -687,10 +689,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Log-probabilities [batch]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_strategy</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_strategy</span> <span class="o">==</span> <span class="s2">"full"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_full_pseudolikelihood</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_strategy</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">likelihood_strategy</span> <span class="o">==</span> <span class="s2">"random"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_random_pseudolikelihood</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># parallel</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_parallel_pseudolikelihood</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -702,11 +704,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute exact pseudo-likelihood (expensive).</span>
+<span class="w">        </span><span class="sd">"""Compute exact pseudo-likelihood (expensive).</span>
 
 <span class="sd">        Masks each position independently and sums log probabilities.</span>
 <span class="sd">        Requires L forward passes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">device</span>
 
@@ -740,10 +742,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pseudo-likelihood from random position subset.</span>
+<span class="w">        </span><span class="sd">"""Compute pseudo-likelihood from random position subset.</span>
 
 <span class="sd">        Samples K random positions and scales up the estimate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">device</span>
         <span class="n">k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_mask_samples</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
@@ -779,11 +781,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute pseudo-likelihood with parallel masking.</span>
+<span class="w">        </span><span class="sd">"""Compute pseudo-likelihood with parallel masking.</span>
 
 <span class="sd">        Uses random masking similar to training, which allows batch</span>
 <span class="sd">        processing but provides a noisier estimate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">device</span>
 
@@ -825,7 +827,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteDPOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteDPOTrainer</span><span class="p">(</span><span class="n">BaseDPOTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified DPO trainer that auto-detects discrete model type.</span>
+<span class="w">    </span><span class="sd">"""Unified DPO trainer that auto-detects discrete model type.</span>
 
 <span class="sd">    This is a convenience class that automatically selects the appropriate</span>
 <span class="sd">    training strategy based on the model type.</span>
@@ -834,7 +836,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; # Works with any discrete model</span>
 <span class="sd">        &gt;&gt;&gt; trainer = DiscreteDPOTrainer(model, ref_model, config)</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(dataset)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.__init__">[docs]</a>
@@ -844,21 +846,21 @@ window.runMermaid = runMermaid;</script>
         <span class="n">ref_model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">PostTrainingConfig</span><span class="p">,</span>
         <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize discrete DPO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize discrete DPO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Discrete model to train</span>
 <span class="sd">            ref_model: Frozen reference model</span>
 <span class="sd">            config: Training configuration</span>
 <span class="sd">            accelerator: Optional pre-configured accelerator</span>
-<span class="sd">            model_type: Model type (&quot;autoreg&quot; or &quot;maskgit&quot;). Auto-detected if None.</span>
+<span class="sd">            model_type: Model type ("autoreg" or "maskgit"). Auto-detected if None.</span>
 <span class="sd">            vocab_size: Vocabulary size</span>
 <span class="sd">            **kwargs: Additional arguments passed to specific trainer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Auto-detect model type</span>
         <span class="k">if</span> <span class="n">model_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">model_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_model_type</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -866,16 +868,16 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
 
         <span class="c1"># Create appropriate trainer</span>
-        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"autoreg"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span> <span class="o">=</span> <span class="n">AutoregressiveDPOTrainer</span><span class="p">(</span>
                 <span class="n">model</span><span class="p">,</span> <span class="n">ref_model</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">accelerator</span><span class="p">,</span> <span class="n">vocab_size</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span> <span class="o">=</span> <span class="n">MaskGITDPOTrainer</span><span class="p">(</span>
                 <span class="n">model</span><span class="p">,</span> <span class="n">ref_model</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">accelerator</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Copy attributes from internal trainer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">model</span>
@@ -890,29 +892,29 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">best_accuracy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">best_accuracy</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_detect_model_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect model type from class name or attributes.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_detect_model_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Detect model type from class name or attributes."""</span>
         <span class="n">class_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="s2">&quot;maskgit&quot;</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">&quot;mask&quot;</span> <span class="ow">in</span> <span class="n">class_name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;maskgit&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;autoreg&quot;</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">&quot;gpt&quot;</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">&quot;causal&quot;</span> <span class="ow">in</span> <span class="n">class_name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;autoreg&quot;</span>
+        <span class="k">if</span> <span class="s2">"maskgit"</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">"mask"</span> <span class="ow">in</span> <span class="n">class_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"maskgit"</span>
+        <span class="k">if</span> <span class="s2">"autoreg"</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">"gpt"</span> <span class="ow">in</span> <span class="n">class_name</span> <span class="ow">or</span> <span class="s2">"causal"</span> <span class="ow">in</span> <span class="n">class_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"autoreg"</span>
 
         <span class="c1"># Check for mask token (MaskGIT models have this)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;mask_token&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
-            <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;special_tokens&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"mask_token"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"special_tokens"</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">special_tokens</span><span class="p">,</span> <span class="s2">"mask"</span><span class="p">)</span>
         <span class="p">):</span>
-            <span class="k">return</span> <span class="s2">&quot;maskgit&quot;</span>
+            <span class="k">return</span> <span class="s2">"maskgit"</span>
 
         <span class="c1"># Check for causal attribute</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;causal&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">causal</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;autoreg&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"causal"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">causal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">"autoreg"</span>
 
         <span class="c1"># Default to autoregressive</span>
-        <span class="k">return</span> <span class="s2">&quot;autoreg&quot;</span>
+        <span class="k">return</span> <span class="s2">"autoreg"</span>
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.compute_logprobs">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.compute_logprobs">[docs]</a>
@@ -922,44 +924,44 @@ window.runMermaid = runMermaid;</script>
         <span class="n">samples</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegate to internal trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Delegate to internal trainer."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">compute_logprobs</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.train">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.train">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegate training to internal trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Delegate training to internal trainer."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.validate">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegate validation to internal trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Delegate validation to internal trainer."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.save_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.save_checkpoint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegate checkpoint saving to internal trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Delegate checkpoint saving to internal trainer."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiscreteDPOTrainer.load_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.DiscreteDPOTrainer.load_checkpoint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delegate checkpoint loading to internal trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Delegate checkpoint loading to internal trainer."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trainer</span><span class="o">.</span><span class="n">load_checkpoint</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;AutoregressiveDPOTrainer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MaskGITDPOTrainer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DiscreteDPOTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"AutoregressiveDPOTrainer"</span><span class="p">,</span>
+    <span class="s2">"MaskGITDPOTrainer"</span><span class="p">,</span>
+    <span class="s2">"DiscreteDPOTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -971,7 +973,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

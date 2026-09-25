@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.flow_matching.continuous &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.flow_matching.continuous &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,13 +474,13 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.flow_matching.continuous</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Continuous flow-matching utilities for latent spaces.</span>
+<span></span><span class="sd">"""Continuous flow-matching utilities for latent spaces.</span>
 
 <span class="sd">Implements:</span>
 <span class="sd">- Rectified flow with straight-line trajectories</span>
 <span class="sd">- RF++ (Reflow iteration for straighter paths)</span>
 <span class="sd">- Higher-order ODE solvers (Euler, Heun, RK4)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,7 +503,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Euler step for ODE integration.</span>
 
 <span class="sd">    Args:</span>
@@ -513,7 +515,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Next state x + v(x, t) * dt</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">velocity</span> <span class="o">=</span> <span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t_tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">velocity</span> <span class="o">*</span> <span class="n">dt</span>
@@ -527,8 +529,8 @@ window.runMermaid = runMermaid;</script>
     <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Heun&#39;s method (2nd order Runge-Kutta) for ODE integration.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Heun's method (2nd order Runge-Kutta) for ODE integration.</span>
 
 <span class="sd">    Predictor-corrector method with better accuracy than Euler.</span>
 
@@ -540,8 +542,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        y: Conditioning</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Next state using Heun&#39;s method</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Next state using Heun's method</span>
+<span class="sd">    """</span>
     <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">t_next_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span> <span class="o">+</span> <span class="n">dt</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
@@ -564,7 +566,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    4th order Runge-Kutta method for ODE integration.</span>
 
 <span class="sd">    Higher accuracy than Euler or Heun at cost of 4 model evaluations.</span>
@@ -578,7 +580,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Next state using RK4</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="n">t</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="c1"># k1</span>
@@ -600,14 +602,14 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Call model with standardized (x, t, y) signature.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Call model with standardized (x, t, y) signature."""</span>
     <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RectifiedFlow">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RectifiedFlow</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rectified flow matching for continuous latent variables.</span>
+<span class="w">    </span><span class="sd">"""Rectified flow matching for continuous latent variables.</span>
 
 <span class="sd">    Rectified flow learns straight-line trajectories between noise and data.</span>
 <span class="sd">    Instead of curved diffusion paths, the flow follows</span>
@@ -616,9 +618,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    The model learns to predict the constant velocity: ``v = x_1 - x_0``.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Liu et al., &quot;Flow Straight and Fast: Learning to Generate and Transfer</span>
-<span class="sd">        Data with Rectified Flow&quot; https://arxiv.org/abs/2209.03003</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Liu et al., "Flow Straight and Fast: Learning to Generate and Transfer</span>
+<span class="sd">        Data with Rectified Flow" https://arxiv.org/abs/2209.03003</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RectifiedFlow.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.__init__">[docs]</a>
@@ -630,7 +632,7 @@ window.runMermaid = runMermaid;</script>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="n">latent_shape</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span> <span class="o">=</span> <span class="n">base_std</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -642,7 +644,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample_base</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;latent_shape unknown. Call compute_loss at least once before sampling or set explicitly.&quot;</span>
+                <span class="s2">"latent_shape unknown. Call compute_loss at least once before sampling or set explicitly."</span>
             <span class="p">)</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span></div>
@@ -652,11 +654,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.RectifiedFlow.sample_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample_path</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x0</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
-        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">x0</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample a point along the straight-line path from x_0 to x_1.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Sample a point along the straight-line path from x_0 to x_1.</span>
 
 <span class="sd">        The rectified flow follows a straight path: x(t) = (1-t)·x_0 + t·x_1</span>
 <span class="sd">        with constant velocity: v = dx/dt = x_1 - x_0</span>
@@ -669,7 +671,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            x_t: Point on path at time t</span>
 <span class="sd">            target_v: Constant velocity vector (x_1 - x_0)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">while</span> <span class="n">t</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="n">x0</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">x_t</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">x1</span>
@@ -682,12 +684,12 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">,</span>
-        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">x1</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span>
         <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">base_samples</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">base_samples</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute rectified flow training loss.</span>
+<span class="w">        </span><span class="sd">"""Compute rectified flow training loss.</span>
 
 <span class="sd">        The model learns to predict the velocity field v(x_t, t) = x_1 - x_0</span>
 <span class="sd">        that pushes noise x_0 to data x_1 along straight paths.</span>
@@ -705,8 +707,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            MSE loss between predicted and true velocity</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If base_samples shape doesn&#39;t match x1 shape.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            ValueError: If base_samples shape doesn't match x1 shape.</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
         <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -715,7 +717,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">base_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">base_samples</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;base_samples shape </span><span class="si">{</span><span class="n">base_samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> must match x1 shape </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"base_samples shape </span><span class="si">{</span><span class="n">base_samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> must match x1 shape </span><span class="si">{</span><span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="n">x0</span> <span class="o">=</span> <span class="n">base_samples</span>
         <span class="k">else</span><span class="p">:</span>
@@ -735,21 +737,21 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euler&quot;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"euler"</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">null_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">initial_state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sample from the learned flow.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Velocity field v(x, t)</span>
 <span class="sd">            batch_size: Number of samples</span>
 <span class="sd">            num_steps: Number of integration steps</span>
-<span class="sd">            solver: ODE solver (&#39;euler&#39;, &#39;heun&#39;, &#39;rk4&#39;)</span>
+<span class="sd">            solver: ODE solver ('euler', 'heun', 'rk4')</span>
 <span class="sd">            y: Conditioning</span>
 <span class="sd">            guidance_scale: CFG scale</span>
 <span class="sd">            null_y: Null conditioning for CFG</span>
@@ -758,7 +760,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Generated samples</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">initial_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_base</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
@@ -771,14 +773,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Select solver</span>
-        <span class="k">if</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;euler&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">"euler"</span><span class="p">:</span>
             <span class="n">step_fn</span> <span class="o">=</span> <span class="n">euler_step</span>
-        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;heun&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">"heun"</span><span class="p">:</span>
             <span class="n">step_fn</span> <span class="o">=</span> <span class="n">heun_step</span>
-        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">&quot;rk4&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">solver</span> <span class="o">==</span> <span class="s2">"rk4"</span><span class="p">:</span>
             <span class="n">step_fn</span> <span class="o">=</span> <span class="n">rk4_step</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown solver: </span><span class="si">{</span><span class="n">solver</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown solver: </span><span class="si">{</span><span class="n">solver</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Create CFG model wrapper outside loop to avoid closure issues</span>
         <span class="n">use_cfg</span> <span class="o">=</span> <span class="n">guidance_scale</span> <span class="o">!=</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">null_y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -812,7 +814,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RectifiedFlowPP</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Rectified Flow++ (RF++): Iterative reflow for straighter paths.</span>
 
 <span class="sd">    RF++ improves rectified flow by iteratively straightening the trajectories:</span>
@@ -822,12 +824,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    3. Retrain on the generated trajectories (not straight lines)</span>
 <span class="sd">    4. Repeat for further straightening</span>
 
-<span class="sd">    Reference: &quot;Improving the Training of Rectified Flows&quot; (arXiv:2405.20320)</span>
+<span class="sd">    Reference: "Improving the Training of Rectified Flows" (arXiv:2405.20320)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        base_rf: Base RectifiedFlow instance</span>
 <span class="sd">        num_reflow_iterations: Number of reflow iterations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -852,7 +854,7 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">latent_shape</span> <span class="o">=</span> <span class="n">latent_shape</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">base_std</span> <span class="o">=</span> <span class="n">base_std</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -871,7 +873,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate a trajectory from x0 to x1 using the current model.</span>
 
 <span class="sd">        This trajectory is used as the training target for reflow.</span>
@@ -885,9 +887,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            x0_trajectory: Re-generated starting point</span>
 <span class="sd">            x1: Target (same as input)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># For reflow, we generate a trajectory from x0</span>
-        <span class="c1"># The target is still x1, but we use the model&#39;s learned path</span>
+        <span class="c1"># The target is still x1, but we use the model's learned path</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x0</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="n">time_grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">dt</span> <span class="o">=</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">time_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -906,7 +908,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">num_trajectory_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute reflow loss using trajectories from the previous iteration.</span>
 
 <span class="sd">        In reflow, we train on model-generated trajectories instead of straight lines.</span>
@@ -921,7 +923,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Reflow loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_shape</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
         <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -932,7 +934,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># First iteration: standard rectified flow on straight noise-&gt;data lines.</span>
         <span class="c1"># Later iterations (reflow): integrate the current model from x0 to obtain</span>
-        <span class="c1"># x1_hat, then learn the straight path x0 -&gt; x1_hat. Training on the model&#39;s</span>
+        <span class="c1"># x1_hat, then learn the straight path x0 -&gt; x1_hat. Training on the model's</span>
         <span class="c1"># own endpoints is what progressively straightens the trajectories.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">x_t</span><span class="p">,</span> <span class="n">target_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample_path</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
@@ -944,7 +946,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">pred_v</span><span class="p">,</span> <span class="n">target_v</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">advance_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance to next reflow iteration.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Advance to next reflow iteration."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
@@ -953,14 +955,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euler&quot;</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"euler"</span><span class="p">,</span>
         <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">null_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">initial_state</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample using the reflow-trained model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Sample using the reflow-trained model."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
@@ -975,11 +977,11 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;RectifiedFlow&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RectifiedFlowPP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;euler_step&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;heun_step&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;rk4_step&quot;</span><span class="p">,</span>
+    <span class="s2">"RectifiedFlow"</span><span class="p">,</span>
+    <span class="s2">"RectifiedFlowPP"</span><span class="p">,</span>
+    <span class="s2">"euler_step"</span><span class="p">,</span>
+    <span class="s2">"heun_step"</span><span class="p">,</span>
+    <span class="s2">"rk4_step"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -991,7 +993,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

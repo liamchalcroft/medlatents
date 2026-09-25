@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.compile &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.compile &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.compile</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;torch.compile utilities for faster inference.</span>
+<span></span><span class="sd">"""torch.compile utilities for faster inference.</span>
 
 <span class="sd">This module provides utilities for compiling models and sampling functions</span>
 <span class="sd">using PyTorch 2.0+ torch.compile for significant speedups.</span>
@@ -481,9 +483,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    from medlatents.sampling.compile import compile_model, is_compile_available</span>
 
 <span class="sd">    if is_compile_available():</span>
-<span class="sd">        model = compile_model(model, mode=&quot;reduce-overhead&quot;)</span>
+<span class="sd">        model = compile_model(model, mode="reduce-overhead")</span>
 <span class="sd">        # Now model forward passes are compiled and faster</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -494,14 +496,14 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="n">CompileMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span> <span class="s2">&quot;max-autotune&quot;</span><span class="p">]</span>
+    <span class="n">CompileMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"default"</span><span class="p">,</span> <span class="s2">"reduce-overhead"</span><span class="p">,</span> <span class="s2">"max-autotune"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="is_compile_available">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.is_compile_available">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_compile_available</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if torch.compile is available (PyTorch 2.0+).&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">&quot;compile&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Check if torch.compile is available (PyTorch 2.0+)."""</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">"compile"</span><span class="p">)</span></div>
 
 
 
@@ -509,12 +511,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.compile_model">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compile_model</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">"reduce-overhead"</span><span class="p">,</span>
     <span class="n">fullgraph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compile a model for faster inference using torch.compile.</span>
 
 <span class="sd">    This is a no-op on PyTorch &lt; 2.0.</span>
@@ -522,9 +524,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to compile</span>
 <span class="sd">        mode: Compilation mode:</span>
-<span class="sd">            - &quot;default&quot;: Good balance of compile time and runtime</span>
-<span class="sd">            - &quot;reduce-overhead&quot;: Minimize overhead, best for small models</span>
-<span class="sd">            - &quot;max-autotune&quot;: Maximum optimization, longer compile time</span>
+<span class="sd">            - "default": Good balance of compile time and runtime</span>
+<span class="sd">            - "reduce-overhead": Minimize overhead, best for small models</span>
+<span class="sd">            - "max-autotune": Maximum optimization, longer compile time</span>
 <span class="sd">        fullgraph: If True, require entire function to be captured as single graph</span>
 <span class="sd">        dynamic: If True, enable dynamic shape support (recommended)</span>
 <span class="sd">        disable: If True, skip compilation (useful for debugging)</span>
@@ -534,10 +536,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; model = MaskGIT(vocab_size=8192, seq_length=1024)</span>
-<span class="sd">        &gt;&gt;&gt; model = compile_model(model, mode=&quot;reduce-overhead&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; model = compile_model(model, mode="reduce-overhead")</span>
 <span class="sd">        &gt;&gt;&gt; # Now generate() calls will be faster after warmup</span>
 <span class="sd">        &gt;&gt;&gt; samples = model.generate(initial_tokens)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">disable</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_compile_available</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">model</span>
 
@@ -549,12 +551,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.compile_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compile_function</span><span class="p">(</span>
     <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">"reduce-overhead"</span><span class="p">,</span>
     <span class="n">fullgraph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compile a function for faster execution using torch.compile.</span>
 
 <span class="sd">    This is a no-op on PyTorch &lt; 2.0.</span>
@@ -574,7 +576,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ... def sample_step(logits, mask):</span>
 <span class="sd">        ...     probs = F.softmax(logits, dim=-1)</span>
 <span class="sd">        ...     return torch.multinomial(probs, 1)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">disable</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_compile_available</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">fn</span>
 
@@ -585,10 +587,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CompiledSampler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CompiledSampler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper that provides compiled sampling for any discrete generative model.</span>
 
-<span class="sd">    This wrapper compiles the model&#39;s forward pass and provides optimized</span>
+<span class="sd">    This wrapper compiles the model's forward pass and provides optimized</span>
 <span class="sd">    sampling methods. Use this for maximum inference throughput.</span>
 
 <span class="sd">    Args:</span>
@@ -603,14 +605,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; samples = sampler.generate(initial_tokens)</span>
 <span class="sd">        &gt;&gt;&gt; # Subsequent calls are fast</span>
 <span class="sd">        &gt;&gt;&gt; samples = sampler.generate(initial_tokens)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="CompiledSampler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">CompileMode</span> <span class="o">=</span> <span class="s2">"reduce-overhead"</span><span class="p">,</span>
         <span class="n">warmup_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
@@ -627,13 +629,13 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_compiled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the model is compiled.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if the model is compiled."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span>
 
 <div class="viewcode-block" id="CompiledSampler.forward">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the (potentially compiled) model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass through the (potentially compiled) model."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_forward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled_forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -642,27 +644,27 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CompiledSampler.__call__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Call the model."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CompiledSampler.generate">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler.generate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate samples using the model&#39;s generate method.</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Generate samples using the model's generate method.</span>
 
-<span class="sd">        Delegates to the underlying model&#39;s generate() method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;generate&quot;</span><span class="p">):</span>
+<span class="sd">        Delegates to the underlying model's generate() method.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"generate"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no generate() method&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no generate() method"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CompiledSampler.warmup">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CompiledSampler.warmup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">warmup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_input</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Warmup the compiled model with sample inputs.</span>
 
 <span class="sd">        This triggers compilation and optimizes the compute graph.</span>
@@ -670,7 +672,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Args:</span>
 <span class="sd">            sample_input: Sample input tensor for warmup</span>
 <span class="sd">            num_steps: Number of warmup steps (default: self.warmup_steps)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -683,10 +685,10 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;is_compile_available&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compile_model&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compile_function&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CompiledSampler&quot;</span><span class="p">,</span>
+    <span class="s2">"is_compile_available"</span><span class="p">,</span>
+    <span class="s2">"compile_model"</span><span class="p">,</span>
+    <span class="s2">"compile_function"</span><span class="p">,</span>
+    <span class="s2">"CompiledSampler"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -698,7 +700,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

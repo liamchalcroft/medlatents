@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.flow_matching.discrete &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.flow_matching.discrete &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.flow_matching.discrete</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Flow matching for discrete latent sequences.</span>
+<span></span><span class="sd">"""Flow matching for discrete latent sequences.</span>
 
 <span class="sd">Implements mixture discrete probability paths for generative modeling of</span>
 <span class="sd">discrete data using continuous-time flows.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -498,7 +500,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.SourceDistribution.sample">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor_size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample from the source distribution.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Sample from the source distribution."""</span>
         <span class="o">...</span></div>
 
 
@@ -506,7 +508,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.SourceDistribution.sample_like">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor_like</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample with same shape as the given tensor.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Sample with same shape as the given tensor."""</span>
         <span class="o">...</span></div>
 </div>
 
@@ -569,10 +571,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_path">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.get_path">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_path</span><span class="p">(</span><span class="n">scheduler_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a discrete probability path with the specified scheduler.</span>
+<span class="w">    </span><span class="sd">"""Get a discrete probability path with the specified scheduler.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        scheduler_type: Type of scheduler. Currently supports &quot;polynomial&quot;.</span>
+<span class="sd">        scheduler_type: Type of scheduler. Currently supports "polynomial".</span>
 <span class="sd">        exponent: Required for polynomial scheduler. Must be &gt; 0.</span>
 
 <span class="sd">    Returns:</span>
@@ -580,16 +582,16 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If scheduler_type is not supported or exponent is missing/invalid.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">scheduler_type</span> <span class="o">==</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">scheduler_type</span> <span class="o">==</span> <span class="s2">"polynomial"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">exponent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;exponent is required for polynomial scheduler. &quot;</span>
-                <span class="s2">&quot;Example: get_path(&#39;polynomial&#39;, exponent=2.0)&quot;</span>
+                <span class="s2">"exponent is required for polynomial scheduler. "</span>
+                <span class="s2">"Example: get_path('polynomial', exponent=2.0)"</span>
             <span class="p">)</span>
         <span class="n">scheduler</span> <span class="o">=</span> <span class="n">PolynomialConvexScheduler</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">exponent</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scheduler_type</span><span class="si">}</span><span class="s2"> is not supported&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">scheduler_type</span><span class="si">}</span><span class="s2"> is not supported"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">(</span><span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">)</span></div>
 
@@ -602,27 +604,27 @@ window.runMermaid = runMermaid;</script>
     <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SourceDistribution</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">source_distribution</span> <span class="o">==</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">source_distribution</span> <span class="o">==</span> <span class="s2">"mask"</span><span class="p">:</span>
         <span class="n">mask_id</span> <span class="o">=</span> <span class="n">mask_token</span> <span class="k">if</span> <span class="n">mask_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vocab_size</span>
         <span class="k">return</span> <span class="n">MaskedSourceDistribution</span><span class="p">(</span><span class="n">mask_token</span><span class="o">=</span><span class="n">mask_id</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">source_distribution</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">source_distribution</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">UniformSourceDistribution</span><span class="p">(</span><span class="n">vocab_size</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">source_distribution</span><span class="si">}</span><span class="s2"> is not supported&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">source_distribution</span><span class="si">}</span><span class="s2"> is not supported"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="get_loss_function">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.get_loss_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_loss_function</span><span class="p">(</span><span class="n">loss_function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">MixtureDiscreteProbPath</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_Loss</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">loss_function</span> <span class="o">==</span> <span class="s2">&quot;cross_entropy&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">loss_function</span> <span class="o">==</span> <span class="s2">"cross_entropy"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">loss_function</span> <span class="o">==</span> <span class="s2">&quot;generalized_kl&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">loss_function</span> <span class="o">==</span> <span class="s2">"generalized_kl"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;generalized_kl loss requires a path argument&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"generalized_kl loss requires a path argument"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">MixturePathGeneralizedKL</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loss_function</span><span class="si">}</span><span class="s2"> is not supported&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">loss_function</span><span class="si">}</span><span class="s2"> is not supported"</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -634,7 +636,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

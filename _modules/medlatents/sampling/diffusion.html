@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.diffusion &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.diffusion &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,14 +474,14 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.diffusion</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Advanced sampling schedulers for discrete diffusion models.</span>
+<span></span><span class="sd">"""Advanced sampling schedulers for discrete diffusion models.</span>
 
 <span class="sd">Implements modern schedulers from continuous diffusion adapted for discrete:</span>
 <span class="sd">- DDIM (faster sampling)</span>
 <span class="sd">- DPM-Solver (high-quality fast sampling)</span>
 <span class="sd">- Euler (simple ODE solver)</span>
 <span class="sd">- Ancestral sampling (adds stochasticity)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
@@ -489,26 +491,26 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteScheduler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for discrete diffusion schedulers.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for discrete diffusion schedulers."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">num_train_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="n">num_inference_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="n">beta_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">beta_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span><span class="p">,</span>
         <span class="n">beta_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span>
         <span class="n">beta_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">num_train_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_train_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_train_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"num_train_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_train_steps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_inference_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_inference_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"num_inference_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">beta_start</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">beta_end</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;beta_start and beta_end must be in (0, 1), got </span><span class="si">{</span><span class="n">beta_start</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">beta_end</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"beta_start and beta_end must be in (0, 1), got </span><span class="si">{</span><span class="n">beta_start</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">beta_end</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">beta_end</span> <span class="o">&lt;=</span> <span class="n">beta_start</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;beta_end must be &gt; beta_start, got </span><span class="si">{</span><span class="n">beta_end</span><span class="si">}</span><span class="s2"> &lt;= </span><span class="si">{</span><span class="n">beta_start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"beta_end must be &gt; beta_start, got </span><span class="si">{</span><span class="n">beta_end</span><span class="si">}</span><span class="s2"> &lt;= </span><span class="si">{</span><span class="n">beta_start</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_train_steps</span> <span class="o">=</span> <span class="n">num_train_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span> <span class="o">=</span> <span class="n">num_inference_steps</span>
@@ -516,13 +518,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validated_logits</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Create beta schedule</span>
-        <span class="k">if</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_start</span><span class="p">,</span> <span class="n">beta_end</span><span class="p">,</span> <span class="n">num_train_steps</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">&quot;scaled_linear&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">"scaled_linear"</span><span class="p">:</span>
             <span class="c1"># Used in Stable Diffusion</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_start</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">beta_end</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">num_train_steps</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="k">elif</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
-            <span class="c1"># Cosine schedule from &quot;Improved Denoising Diffusion Probabilistic Models&quot;</span>
+        <span class="k">elif</span> <span class="n">beta_schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
+            <span class="c1"># Cosine schedule from "Improved Denoising Diffusion Probabilistic Models"</span>
             <span class="n">steps</span> <span class="o">=</span> <span class="n">num_train_steps</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_train_steps</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
             <span class="n">alphas_cumprod</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(((</span><span class="n">x</span> <span class="o">/</span> <span class="n">num_train_steps</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.008</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1.008</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -530,7 +532,7 @@ window.runMermaid = runMermaid;</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">betas</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">alphas_cumprod</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">alphas_cumprod</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">betas</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown beta schedule: </span><span class="si">{</span><span class="n">beta_schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown beta schedule: </span><span class="si">{</span><span class="n">beta_schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">alphas</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">betas</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alphas_cumprod</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -543,17 +545,17 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Single denoising step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Single denoising step."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_timesteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_inference_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the number of inference steps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set the number of inference steps."""</span>
         <span class="k">if</span> <span class="n">num_inference_steps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;num_inference_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"num_inference_steps must be &gt; 0, got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_inference_steps</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_train_steps</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;num_inference_steps must be &lt;= num_train_steps &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_train_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">"num_inference_steps must be &lt;= num_train_steps "</span>
+                <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_train_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">num_inference_steps</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span> <span class="o">=</span> <span class="n">num_inference_steps</span>
         <span class="c1"># Create timestep schedule (uniform spacing)</span>
@@ -562,23 +564,23 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_timesteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;timesteps&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;set_timesteps must be called before step().&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"timesteps"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"set_timesteps must be called before step()."</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;scheduler.timesteps is empty; call set_timesteps with &gt; 0.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"scheduler.timesteps is empty; call set_timesteps with &gt; 0."</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timestep</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">timestep</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;timestep must be a scalar value&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"timestep must be a scalar value"</span><span class="p">)</span>
             <span class="n">timestep_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestep</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timestep</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;timestep must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"timestep must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">timestep_value</span> <span class="o">=</span> <span class="n">timestep</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span> <span class="o">==</span> <span class="n">timestep_value</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">matches</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;timestep </span><span class="si">{</span><span class="n">timestep_value</span><span class="si">}</span><span class="s2"> is not in scheduler.timesteps; &quot;</span>
-                <span class="s2">&quot;call set_timesteps() and use its values.&quot;</span>
+                <span class="sa">f</span><span class="s2">"timestep </span><span class="si">{</span><span class="n">timestep_value</span><span class="si">}</span><span class="s2"> is not in scheduler.timesteps; "</span>
+                <span class="s2">"call set_timesteps() and use its values."</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 
@@ -598,13 +600,13 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_probs</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">tensor</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">tensor</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;model_output must have a non-empty vocab dimension&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"model_output must have a non-empty vocab dimension"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;model_output contains NaN or Inf values&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"model_output contains NaN or Inf values"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_looks_like_probs</span><span class="p">(</span><span class="n">tensor</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;model_output must be probabilities that sum to 1 along the last dimension. &quot;</span>
-                <span class="s2">&quot;Apply softmax before calling this scheduler.&quot;</span>
+                <span class="s2">"model_output must be probabilities that sum to 1 along the last dimension. "</span>
+                <span class="s2">"Apply softmax before calling this scheduler."</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validated_probs</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -612,13 +614,13 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_logits</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">tensor</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">tensor</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;model_output must have a non-empty vocab dimension&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"model_output must have a non-empty vocab dimension"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;model_output contains NaN or Inf values&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"model_output contains NaN or Inf values"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_looks_like_probs</span><span class="p">(</span><span class="n">tensor</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;model_output appears to be probabilities; this scheduler expects logits. &quot;</span>
-                <span class="s2">&quot;Pass raw logits instead of softmax outputs.&quot;</span>
+                <span class="s2">"model_output appears to be probabilities; this scheduler expects logits. "</span>
+                <span class="s2">"Pass raw logits instead of softmax outputs."</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validated_logits</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -626,24 +628,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DDIMScheduler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DDIMScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DDIMScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    DDIM scheduler for faster sampling.</span>
 
-<span class="sd">    Reference: &quot;Denoising Diffusion Implicit Models&quot; (Song et al., 2020)</span>
+<span class="sd">    Reference: "Denoising Diffusion Implicit Models" (Song et al., 2020)</span>
 <span class="sd">    https://arxiv.org/abs/2010.02502</span>
 
 <span class="sd">    Allows deterministic sampling and can skip timesteps for faster generation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DDIMScheduler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DDIMScheduler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            eta: stochasticity parameter (0 = deterministic DDIM, 1 = DDPM)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eta</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">eta</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;eta must be in [0, 1], got </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"eta must be in [0, 1], got </span><span class="si">{</span><span class="n">eta</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span></div>
 
@@ -657,7 +659,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">prev_timestep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        DDIM sampling step for discrete data.</span>
 
 <span class="sd">        Args:</span>
@@ -668,7 +670,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] denoised sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_probs_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">timestep_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
         <span class="c1"># Get alpha values</span>
@@ -717,28 +719,28 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DPMSolverScheduler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DPMSolverScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DPMSolverScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    DPM-Solver scheduler for high-quality fast sampling.</span>
 
-<span class="sd">    Reference: &quot;DPM-Solver: A Fast ODE Solver for Diffusion Probabilistic Model Sampling&quot;</span>
+<span class="sd">    Reference: "DPM-Solver: A Fast ODE Solver for Diffusion Probabilistic Model Sampling"</span>
 <span class="sd">    https://arxiv.org/abs/2206.00927</span>
 
 <span class="sd">    Achieves high quality with very few steps (10-20).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DPMSolverScheduler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DPMSolverScheduler.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">prediction_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">prediction_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"epsilon"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            solver_order: order of DPM-Solver (1, 2, or 3)</span>
-<span class="sd">            prediction_type: &#39;epsilon&#39; or &#39;sample&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            prediction_type: 'epsilon' or 'sample'</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">solver_order</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solver_order must be 1, 2, or 3, got </span><span class="si">{</span><span class="n">solver_order</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">prediction_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span> <span class="s2">&quot;sample&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"solver_order must be 1, 2, or 3, got </span><span class="si">{</span><span class="n">solver_order</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prediction_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"epsilon"</span><span class="p">,</span> <span class="s2">"sample"</span><span class="p">}:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;prediction_type must be &#39;epsilon&#39; or &#39;sample&#39;, got </span><span class="si">{</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"prediction_type must be 'epsilon' or 'sample', got </span><span class="si">{</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver_order</span> <span class="o">=</span> <span class="n">solver_order</span>
@@ -754,11 +756,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        DPM-Solver sampling step adapted for discrete data.</span>
 
 <span class="sd">        Uses multi-step method for improved quality.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get timestep info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_probs_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">timestep_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
@@ -797,7 +799,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">prev_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_order_samples</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="c1"># Second-order correction</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">lambda_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_lambda</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;prev_lambda&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="p">(</span><span class="n">lambda_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_lambda</span><span class="p">)</span> <span class="o">/</span> <span class="n">h</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"prev_lambda"</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
 
             <span class="n">D</span> <span class="o">=</span> <span class="n">model_output</span>
             <span class="n">D_prev</span> <span class="o">=</span> <span class="n">prev_output</span>
@@ -823,11 +825,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="EulerDiscreteScheduler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.EulerDiscreteScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EulerDiscreteScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Euler discrete scheduler - simple ODE solver.</span>
 
 <span class="sd">    Good balance of speed and quality. Similar to DDPM but can skip steps.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="EulerDiscreteScheduler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.EulerDiscreteScheduler.__init__">[docs]</a>
@@ -843,7 +845,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Euler method step for discrete sampling.</span>
 
 <span class="sd">        Args:</span>
@@ -853,7 +855,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] denoised sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get timestep info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_probs_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">timestep_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
@@ -896,22 +898,22 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AncestralSamplingScheduler">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.AncestralSamplingScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AncestralSamplingScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ancestral sampling (stochastic) scheduler.</span>
 
 <span class="sd">    Adds noise at each step for more diverse samples.</span>
 <span class="sd">    Good for generation tasks where diversity is important.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AncestralSamplingScheduler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.AncestralSamplingScheduler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noise_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            noise_scale: scale of added noise (1.0 = standard, &gt;1.0 = more noise)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">noise_scale</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">or</span> <span class="n">noise_scale</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;noise_scale must be &gt;= 0, got </span><span class="si">{</span><span class="n">noise_scale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"noise_scale must be &gt;= 0, got </span><span class="si">{</span><span class="n">noise_scale</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">noise_scale</span> <span class="o">=</span> <span class="n">noise_scale</span></div>
 
@@ -924,7 +926,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Ancestral sampling step with added noise.</span>
 
 <span class="sd">        Args:</span>
@@ -934,7 +936,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] noisy denoised sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get alpha values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_probs_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">alpha_prod_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_cumprod</span><span class="p">[</span><span class="n">timestep</span><span class="p">]</span>
@@ -974,42 +976,42 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">DPMSolverPlusPlusScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    DPM-Solver++ scheduler for high-quality fast sampling.</span>
 
-<span class="sd">    Reference: &quot;DPM-Solver++: Fast Solver for Guided Sampling of Diffusion</span>
-<span class="sd">    Probabilistic Models&quot; (Lu et al., 2022)</span>
+<span class="sd">    Reference: "DPM-Solver++: Fast Solver for Guided Sampling of Diffusion</span>
+<span class="sd">    Probabilistic Models" (Lu et al., 2022)</span>
 <span class="sd">    https://arxiv.org/abs/2211.01095</span>
 
 <span class="sd">    Improvements over DPM-Solver:</span>
 <span class="sd">    - Better handling of guided sampling (CFG)</span>
 <span class="sd">    - Improved multistep methods</span>
 <span class="sd">    - Works well with as few as 10-20 steps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver_order</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">algorithm_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dpmsolver++&quot;</span><span class="p">,</span>
-        <span class="n">solver_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;midpoint&quot;</span><span class="p">,</span>
+        <span class="n">algorithm_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"dpmsolver++"</span><span class="p">,</span>
+        <span class="n">solver_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"midpoint"</span><span class="p">,</span>
         <span class="n">lower_order_final</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            solver_order: Order of DPM-Solver (1, 2, or 3)</span>
-<span class="sd">            algorithm_type: &#39;dpmsolver&#39; or &#39;dpmsolver++&#39; (recommended)</span>
-<span class="sd">            solver_type: &#39;midpoint&#39; or &#39;heun&#39; (for 2nd order)</span>
+<span class="sd">            algorithm_type: 'dpmsolver' or 'dpmsolver++' (recommended)</span>
+<span class="sd">            solver_type: 'midpoint' or 'heun' (for 2nd order)</span>
 <span class="sd">            lower_order_final: Use lower order for final step (more stable)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">solver_order</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solver_order must be 1, 2, or 3, got </span><span class="si">{</span><span class="n">solver_order</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">algorithm_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;dpmsolver&quot;</span><span class="p">,</span> <span class="s2">&quot;dpmsolver++&quot;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"solver_order must be 1, 2, or 3, got </span><span class="si">{</span><span class="n">solver_order</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">algorithm_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"dpmsolver"</span><span class="p">,</span> <span class="s2">"dpmsolver++"</span><span class="p">}:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;algorithm_type must be &#39;dpmsolver&#39; or &#39;dpmsolver++&#39;, got </span><span class="si">{</span><span class="n">algorithm_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"algorithm_type must be 'dpmsolver' or 'dpmsolver++', got </span><span class="si">{</span><span class="n">algorithm_type</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">solver_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;midpoint&quot;</span><span class="p">,</span> <span class="s2">&quot;heun&quot;</span><span class="p">}:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solver_type must be &#39;midpoint&#39; or &#39;heun&#39;, got </span><span class="si">{</span><span class="n">solver_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">solver_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"midpoint"</span><span class="p">,</span> <span class="s2">"heun"</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"solver_type must be 'midpoint' or 'heun', got </span><span class="si">{</span><span class="n">solver_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver_order</span> <span class="o">=</span> <span class="n">solver_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">algorithm_type</span> <span class="o">=</span> <span class="n">algorithm_type</span>
@@ -1021,13 +1023,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">sample_outputs</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert timestep to lambda (log-SNR).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert timestep to lambda (log-SNR)."""</span>
         <span class="n">alpha_cumprod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_cumprod</span><span class="p">[</span><span class="n">timestep</span><span class="p">]</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha_cumprod</span><span class="p">)</span> <span class="o">/</span> <span class="n">alpha_cumprod</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
         <span class="k">return</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_prev_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get previous timestep for scheduler.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get previous timestep for scheduler."""</span>
         <span class="n">timestep_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">timestep_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="p">[</span><span class="n">timestep_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
@@ -1040,7 +1042,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">return_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        DPM-Solver++ step adapted for discrete data.</span>
 
 <span class="sd">        Args:</span>
@@ -1051,7 +1053,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] updated sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_logits_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">step_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
         <span class="n">prev_timestep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_prev_timestep</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
@@ -1061,7 +1063,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">lambda_s</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_lambda</span><span class="p">(</span><span class="n">prev_timestep</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">prev_timestep</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+            <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">))</span>
         <span class="p">)</span>
 
         <span class="c1"># Compute h = lambda_s - lambda_t</span>
@@ -1109,7 +1111,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model_output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;First-order (Euler) update.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""First-order (Euler) update."""</span>
         <span class="c1"># For discrete: direct probability prediction</span>
         <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">model_output</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pred_probs</span>
@@ -1120,8 +1122,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model_output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Second-order (midpoint/Heun) update.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_type</span> <span class="o">==</span> <span class="s2">&quot;midpoint&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Second-order (midpoint/Heun) update."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_type</span> <span class="o">==</span> <span class="s2">"midpoint"</span><span class="p">:</span>
             <span class="c1"># Midpoint method</span>
             <span class="n">r</span> <span class="o">=</span> <span class="mf">0.5</span>
             <span class="n">D</span> <span class="o">=</span> <span class="n">model_output</span>
@@ -1147,7 +1149,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model_output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Third-order update.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Third-order update."""</span>
         <span class="c1"># Quadratic interpolation</span>
         <span class="n">D</span> <span class="o">=</span> <span class="n">model_output</span>
         <span class="n">D_1</span> <span class="o">=</span> <span class="n">model_output_1</span>
@@ -1161,14 +1163,14 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">HeunDiscreteScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Heun (2nd-order Runge-Kutta) scheduler for discrete diffusion.</span>
 
 <span class="sd">    Provides better accuracy than Euler with only 2x the compute per step.</span>
 <span class="sd">    Good balance between speed and quality.</span>
 
-<span class="sd">    Reference: Based on Heun&#39;s method adapted from continuous diffusion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Reference: Based on Heun's method adapted from continuous diffusion.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -1181,7 +1183,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">model_fn</span><span class="p">:</span> <span class="nb">callable</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Heun method step for discrete sampling.</span>
 
 <span class="sd">        Args:</span>
@@ -1192,7 +1194,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] denoised sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get timestep info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_logits_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="n">timestep_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
@@ -1238,16 +1240,16 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AdaptiveScheduler</span><span class="p">(</span><span class="n">DiscreteScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Adaptive scheduler that adjusts step size based on model confidence.</span>
 
-<span class="sd">    Uses the model&#39;s prediction confidence to dynamically adjust the</span>
+<span class="sd">    Uses the model's prediction confidence to dynamically adjust the</span>
 <span class="sd">    sampling trajectory, taking larger steps when confident and smaller</span>
 <span class="sd">    steps when uncertain.</span>
 
 <span class="sd">    This can significantly reduce the number of steps needed while</span>
 <span class="sd">    maintaining quality.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1256,18 +1258,18 @@ window.runMermaid = runMermaid;</script>
         <span class="n">confidence_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            min_steps: Minimum number of steps</span>
 <span class="sd">            max_steps: Maximum number of steps</span>
 <span class="sd">            confidence_threshold: Threshold for taking larger steps</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">min_steps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">min_steps</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;min_steps must be &gt;= 1, got </span><span class="si">{</span><span class="n">min_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"min_steps must be &gt;= 1, got </span><span class="si">{</span><span class="n">min_steps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_steps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">max_steps</span> <span class="o">&lt;</span> <span class="n">min_steps</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;max_steps must be &gt;= min_steps (</span><span class="si">{</span><span class="n">min_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"max_steps must be &gt;= min_steps (</span><span class="si">{</span><span class="n">min_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">max_steps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">confidence_threshold</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;confidence_threshold must be in (0, 1], got </span><span class="si">{</span><span class="n">confidence_threshold</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"confidence_threshold must be in (0, 1], got </span><span class="si">{</span><span class="n">confidence_threshold</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_steps</span> <span class="o">=</span> <span class="n">min_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">max_steps</span>
@@ -1281,7 +1283,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timestep</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">sample</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adaptive step that may skip timesteps based on confidence.</span>
 
 <span class="sd">        Args:</span>
@@ -1291,7 +1293,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            prev_sample: [batch, seq_len] denoised sample</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_logits_once</span><span class="p">(</span><span class="n">model_output</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_timesteps</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_steps_taken</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1312,7 +1314,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">prev_sample</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get sampling efficiency (steps saved ratio).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get sampling efficiency (steps saved ratio)."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_steps_taken</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">1.0</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_steps_taken</span>
@@ -1326,7 +1328,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

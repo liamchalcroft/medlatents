@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.rl.ddpo &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.rl.ddpo &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.rl.ddpo</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Denoising Diffusion Policy Optimization (DDPO).</span>
+<span></span><span class="sd">"""Denoising Diffusion Policy Optimization (DDPO).</span>
 
 <span class="sd">DDPO adapts PPO-style policy gradient methods to diffusion models by treating</span>
 <span class="sd">the denoising process as a multi-step MDP. Each denoising step is an action,</span>
@@ -484,8 +486,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">3. We can compute per-step log-probs for policy gradient</span>
 
 <span class="sd">Reference:</span>
-<span class="sd">- &quot;Training Diffusion Models with Reinforcement Learning&quot; (Black et al., 2023)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- "Training Diffusion Models with Reinforcement Learning" (Black et al., 2023)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -506,7 +508,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DDPOTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.DDPOTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DDPOTrainer</span><span class="p">(</span><span class="n">BaseRLTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DDPO trainer for diffusion models.</span>
+<span class="w">    </span><span class="sd">"""DDPO trainer for diffusion models.</span>
 
 <span class="sd">    Implements PPO-style policy gradient optimization for diffusion models.</span>
 <span class="sd">    The key idea is to:</span>
@@ -525,7 +527,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     diffusion=d3pm,</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(seq_length=256)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DDPOTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.DDPOTrainer.__init__">[docs]</a>
@@ -542,7 +544,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">clip_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">kl_coeff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize DDPO trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize DDPO trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Diffusion backbone model</span>
@@ -555,7 +557,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            num_inference_steps: Number of denoising steps</span>
 <span class="sd">            clip_range: PPO clipping range (uses config if None)</span>
 <span class="sd">            kl_coeff: KL penalty coefficient (uses config if None)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
             <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
@@ -575,10 +577,10 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_move_diffusion_to_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move diffusion tensors to device with non_blocking transfers.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Move diffusion tensors to device with non_blocking transfers."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
-        <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;betas&quot;</span><span class="p">,</span> <span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="s2">&quot;alphas_cumprod&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_t&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_bar_t&quot;</span><span class="p">,</span> <span class="s2">&quot;Q_bar_t_minus_1&quot;</span><span class="p">]</span>
+        <span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"betas"</span><span class="p">,</span> <span class="s2">"alphas"</span><span class="p">,</span> <span class="s2">"alphas_cumprod"</span><span class="p">,</span> <span class="s2">"Q_t"</span><span class="p">,</span> <span class="s2">"Q_bar_t"</span><span class="p">,</span> <span class="s2">"Q_bar_t_minus_1"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
             <span class="n">tensor</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -591,7 +593,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate denoising trajectories.</span>
+<span class="w">        </span><span class="sd">"""Generate denoising trajectories.</span>
 
 <span class="sd">        Samples full denoising paths while recording states, actions,</span>
 <span class="sd">        and log probabilities at each step.</span>
@@ -603,7 +605,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List of Trajectory objects</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">num_timesteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">num_timesteps</span>
 
@@ -612,7 +614,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timesteps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_timesteps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">step_size</span><span class="p">))[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span><span class="p">]</span>
 
         <span class="c1"># Initialize from noise</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
             <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">mask_token</span><span class="p">,</span>
@@ -698,7 +700,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">trajectories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute PPO-style clipped surrogate loss.</span>
+<span class="w">        </span><span class="sd">"""Compute PPO-style clipped surrogate loss.</span>
 
 <span class="sd">        The PPO objective is:</span>
 <span class="sd">            L = -min(r*A, clip(r, 1-ε, 1+ε)*A)</span>
@@ -710,7 +712,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple of (loss, metrics)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
         <span class="n">total_policy_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
@@ -776,10 +778,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_policy_loss</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">total_value_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kl_coeff</span> <span class="o">*</span> <span class="n">total_kl</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;policy_loss&quot;</span><span class="p">:</span> <span class="n">total_policy_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;value_loss&quot;</span><span class="p">:</span> <span class="n">total_value_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;kl&quot;</span><span class="p">:</span> <span class="n">total_kl</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"policy_loss"</span><span class="p">:</span> <span class="n">total_policy_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"value_loss"</span><span class="p">:</span> <span class="n">total_value_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"kl"</span><span class="p">:</span> <span class="n">total_kl</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="n">metrics</span></div>
@@ -790,11 +792,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DDPODiscreteFlowTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.DDPODiscreteFlowTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DDPODiscreteFlowTrainer</span><span class="p">(</span><span class="n">BaseRLTrainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DDPO trainer for discrete flow matching models.</span>
+<span class="w">    </span><span class="sd">"""DDPO trainer for discrete flow matching models.</span>
 
 <span class="sd">    Adapts DDPO for discrete flow matching where the model predicts</span>
 <span class="sd">    token distributions at each timestep along the flow.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DDPODiscreteFlowTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.rl.DDPODiscreteFlowTrainer.__init__">[docs]</a>
@@ -810,7 +812,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_inference_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize discrete flow DDPO trainer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize discrete flow DDPO trainer."""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
             <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
@@ -824,14 +826,14 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_inference_steps</span> <span class="o">=</span> <span class="n">num_inference_steps</span>
 
         <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
                 <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;vocab_size must be provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"vocab_size must be provided"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
 
         <span class="c1"># Get mask token</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;mask_token&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"mask_token"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mask_token</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span> <span class="o">=</span> <span class="n">vocab_size</span></div>
@@ -845,7 +847,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate flow trajectories.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate flow trajectories."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
 
         <span class="c1"># Time grid</span>
@@ -931,7 +933,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">trajectories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trajectory</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute policy loss (same as DDPOTrainer).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute policy loss (same as DDPOTrainer)."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
         <span class="n">num_steps</span> <span class="o">=</span> <span class="mi">0</span>
@@ -964,14 +966,14 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">num_steps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="n">num_steps</span>
 
-        <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()}</span></div>
+        <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="p">{</span><span class="s2">"loss"</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">()}</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DDPOTrainer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DDPODiscreteFlowTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"DDPOTrainer"</span><span class="p">,</span>
+    <span class="s2">"DDPODiscreteFlowTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -983,7 +985,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

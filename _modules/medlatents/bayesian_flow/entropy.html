@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.entropy &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.entropy &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,16 +474,16 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.entropy</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Entropy encoding utilities for Bayesian Flow Networks.</span>
+<span></span><span class="sd">"""Entropy encoding utilities for Bayesian Flow Networks.</span>
 
 <span class="sd">Entropy encoding helps address the mismatch between training and sampling</span>
 <span class="sd">entropy levels for discrete variables. By explicitly encoding the uncertainty</span>
 <span class="sd">level, the network can better handle the transition from noisy to clean states.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- Graves et al. &quot;Bayesian Flow Networks&quot; (2023)</span>
-<span class="sd">- Xue et al. &quot;Unifying Bayesian Flow Networks and Diffusion Models through SDEs&quot; (2024)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Graves et al. "Bayesian Flow Networks" (2023)</span>
+<span class="sd">- Xue et al. "Unifying Bayesian Flow Networks and Diffusion Models through SDEs" (2024)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -496,10 +498,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="compute_entropy">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.compute_entropy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_entropy</span><span class="p">(</span>
-    <span class="n">logits</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq classes&quot;</span><span class="p">],</span>
+    <span class="n">logits</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq classes"</span><span class="p">],</span>
     <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute normalized entropy of categorical distribution.</span>
 
 <span class="sd">    Explicitly encoding entropy helps the model be aware of the uncertainty</span>
@@ -511,7 +513,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        entropy: Entropy values [batch, seq], normalized if requested</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">log_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">probs</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">))</span>
     <span class="n">entropy</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">probs</span> <span class="o">*</span> <span class="n">log_probs</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -527,12 +529,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="encode_with_entropy">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.encode_with_entropy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">encode_with_entropy</span><span class="p">(</span>
-    <span class="n">logits</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq classes&quot;</span><span class="p">],</span>
+    <span class="n">logits</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq classes"</span><span class="p">],</span>
     <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">entropy_projection</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">prob_projection</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq hidden*2&quot;</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq hidden*2"</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Encode distribution parameters with entropy information.</span>
 
 <span class="sd">    Concatenates a projection of the probability distribution with a</span>
@@ -547,7 +549,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Encoding: Concatenated projections [batch, seq, hidden_dim * 2]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">shape</span>
 
@@ -569,8 +571,8 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;compute_entropy&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;encode_with_entropy&quot;</span><span class="p">,</span>
+    <span class="s2">"compute_entropy"</span><span class="p">,</span>
+    <span class="s2">"encode_with_entropy"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -582,7 +584,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.rasterization.zorder_curve &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.rasterization.zorder_curve &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.rasterization.zorder_curve</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Z-order (Morton) curve for spatial-to-sequence conversion.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Z-order (Morton) curve for spatial-to-sequence conversion."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
@@ -489,7 +491,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ZOrderCurve">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.ZOrderCurve">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ZOrderCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Z-order (Morton) curve for hierarchical locality-preserving rasterization.</span>
 
 <span class="sd">    The Z-order curve interleaves the bits of x and y coordinates, creating</span>
@@ -506,18 +508,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         [2,  3,  6,  7],</span>
 <span class="sd">         [8,  9,  12, 13],</span>
 <span class="sd">         [10, 11, 14, 15]]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_zorder_indices_2d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get precomputed reorder indices for 2D Z-order curve. Cached for performance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get precomputed reorder indices for 2D Z-order curve. Cached for performance."""</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="n">ZOrderCurve</span><span class="o">.</span><span class="n">_z_order_curve_2d</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">curve</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_part_by_1_vectorized</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vectorized bit spreading by factor of 2 for 2D Morton encoding.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Vectorized bit spreading by factor of 2 for 2D Morton encoding."""</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">&amp;=</span> <span class="mh">0x0000FFFF</span>
         <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">^</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0x00FF00FF</span>
@@ -529,7 +531,7 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_z_order_curve_2d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate 2D Z-order curve using vectorized operations. Cached for performance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate 2D Z-order curve using vectorized operations. Cached for performance."""</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
         <span class="c1"># Create coordinate grids</span>
         <span class="n">y_coords</span><span class="p">,</span> <span class="n">x_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span>
@@ -543,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.ZOrderCurve.spatial_to_sequence_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert 2D spatial to sequence using Z-order curve.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert 2D spatial to sequence using Z-order curve."""</span>
         <span class="n">original_shape</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
 
@@ -585,11 +587,11 @@ window.runMermaid = runMermaid;</script>
             <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[:,</span> <span class="n">valid_mask_reordered</span><span class="p">]</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;curve&quot;</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
-            <span class="s2">&quot;original_shape&quot;</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
-            <span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
-            <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
-            <span class="s2">&quot;valid_mask&quot;</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
+            <span class="s2">"curve"</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
+            <span class="s2">"original_shape"</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
+            <span class="s2">"padding"</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
+            <span class="s2">"order"</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+            <span class="s2">"valid_mask"</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span></div>
@@ -599,12 +601,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.ZOrderCurve.sequence_to_spatial_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert sequence back to spatial using Z-order curve.&quot;&quot;&quot;</span>
-        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;curve&quot;</span><span class="p">]</span>
-        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;original_shape&quot;</span><span class="p">]</span>
-        <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span>
-        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;valid_mask&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""Convert sequence back to spatial using Z-order curve."""</span>
+        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"curve"</span><span class="p">]</span>
+        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"original_shape"</span><span class="p">]</span>
+        <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"padding"</span><span class="p">]</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"order"</span><span class="p">]</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"valid_mask"</span><span class="p">]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">original_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
 
@@ -654,13 +656,13 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_zorder_indices_3d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get precomputed reorder indices for 3D Z-order curve. Cached for performance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get precomputed reorder indices for 3D Z-order curve. Cached for performance."""</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="n">ZOrderCurve</span><span class="o">.</span><span class="n">_z_order_curve_3d</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">curve</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_part_by_2_vectorized</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vectorized bit spreading by factor of 3 for 3D Morton encoding.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Vectorized bit spreading by factor of 3 for 3D Morton encoding."""</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
         <span class="n">n</span> <span class="o">&amp;=</span> <span class="mh">0x000003FF</span>  <span class="c1"># Keep only lowest 10 bits</span>
         <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">^</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mh">0xFF0000FF</span>
@@ -672,7 +674,7 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_z_order_curve_3d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate 3D Z-order curve using vectorized operations. Cached for performance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate 3D Z-order curve using vectorized operations. Cached for performance."""</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
         <span class="c1"># Create 3D coordinate grids</span>
         <span class="n">z_coords</span><span class="p">,</span> <span class="n">y_coords</span><span class="p">,</span> <span class="n">x_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span>
@@ -688,7 +690,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.ZOrderCurve.spatial_to_sequence_3d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_3d</span><span class="p">(</span><span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 3D spatial data to sequence using Z-order curve.</span>
 
 <span class="sd">        Args:</span>
@@ -697,7 +699,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, D*H*W] or [batch, D*H*W]</span>
 <span class="sd">            metadata: dict with curve, padding, original_shape, order</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">original_shape</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
 
@@ -745,11 +747,11 @@ window.runMermaid = runMermaid;</script>
             <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[:,</span> <span class="n">valid_mask_reordered</span><span class="p">]</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;curve&quot;</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
-            <span class="s2">&quot;original_shape&quot;</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
-            <span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
-            <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
-            <span class="s2">&quot;valid_mask&quot;</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
+            <span class="s2">"curve"</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
+            <span class="s2">"original_shape"</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
+            <span class="s2">"padding"</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
+            <span class="s2">"order"</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+            <span class="s2">"valid_mask"</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span></div>
@@ -762,7 +764,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert sequence back to 3D spatial using Z-order curve.</span>
 
 <span class="sd">        Args:</span>
@@ -771,12 +773,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: [batch, channels, D, H, W] or [batch, D, H, W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;curve&quot;</span><span class="p">]</span>
-        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;original_shape&quot;</span><span class="p">]</span>
-        <span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span>
-        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;valid_mask&quot;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"curve"</span><span class="p">]</span>
+        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"original_shape"</span><span class="p">]</span>
+        <span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"padding"</span><span class="p">]</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"order"</span><span class="p">]</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"valid_mask"</span><span class="p">]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
 
         <span class="n">depth</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">original_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
@@ -831,32 +833,32 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.rasterize_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rasterize_2d</span><span class="p">(</span>
     <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;scurve&quot;</span><span class="p">,</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">,</span> <span class="s2">&quot;zorder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"raster"</span><span class="p">,</span> <span class="s2">"scurve"</span><span class="p">,</span> <span class="s2">"hilbert"</span><span class="p">,</span> <span class="s2">"zorder"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"raster"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert 2D spatial data to 1D sequence.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spatial: [batch, channels, H, W] or [batch, H, W]</span>
-<span class="sd">        method: &#39;raster&#39; (row-by-row), &#39;scurve&#39; (serpentine),</span>
-<span class="sd">                &#39;hilbert&#39; (space-filling curve), &#39;zorder&#39; (Morton/quad-tree)</span>
-<span class="sd">        **kwargs: method-specific arguments (e.g., order=&#39;row&#39;/&#39;col&#39;)</span>
+<span class="sd">        method: 'raster' (row-by-row), 'scurve' (serpentine),</span>
+<span class="sd">                'hilbert' (space-filling curve), 'zorder' (Morton/quad-tree)</span>
+<span class="sd">        **kwargs: method-specific arguments (e.g., order='row'/'col')</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sequence: [batch, channels, H*W] or [batch, H*W]</span>
 <span class="sd">        metadata: None for raster/scurve, dict for hilbert/zorder (needed for reconstruction)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;raster&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"raster"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RasterScan</span><span class="o">.</span><span class="n">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="kc">None</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;scurve&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"scurve"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SCurve</span><span class="o">.</span><span class="n">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="kc">None</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"hilbert"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">HilbertCurve</span><span class="o">.</span><span class="n">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;zorder&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"zorder"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ZOrderCurve</span><span class="o">.</span><span class="n">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -866,11 +868,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;raster&quot;</span><span class="p">,</span> <span class="s2">&quot;scurve&quot;</span><span class="p">,</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">,</span> <span class="s2">&quot;zorder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;raster&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"raster"</span><span class="p">,</span> <span class="s2">"scurve"</span><span class="p">,</span> <span class="s2">"hilbert"</span><span class="p">,</span> <span class="s2">"zorder"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"raster"</span><span class="p">,</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert 1D sequence back to 2D spatial data.</span>
 
 <span class="sd">    Args:</span>
@@ -878,25 +880,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        height, width: spatial dimensions</span>
 <span class="sd">        method: must match the rasterization method used</span>
 <span class="sd">        metadata: required for hilbert/zorder, None for raster/scurve</span>
-<span class="sd">        **kwargs: method-specific arguments (e.g., order=&#39;row&#39;/&#39;col&#39;)</span>
+<span class="sd">        **kwargs: method-specific arguments (e.g., order='row'/'col')</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        spatial: [batch, channels, H, W] or [batch, H, W]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;raster&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"raster"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RasterScan</span><span class="o">.</span><span class="n">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;scurve&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"scurve"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SCurve</span><span class="o">.</span><span class="n">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"hilbert"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;metadata required for Hilbert curve reconstruction&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"metadata required for Hilbert curve reconstruction"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">HilbertCurve</span><span class="o">.</span><span class="n">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;zorder&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"zorder"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;metadata required for Z-order reconstruction&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"metadata required for Z-order reconstruction"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ZOrderCurve</span><span class="o">.</span><span class="n">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -908,7 +910,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

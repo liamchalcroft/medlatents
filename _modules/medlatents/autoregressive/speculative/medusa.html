@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.autoregressive.speculative.medusa &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.autoregressive.speculative.medusa &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,12 +474,12 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.autoregressive.speculative.medusa</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Medusa: Multi-Head Speculative Decoding.</span>
+<span></span><span class="sd">"""Medusa: Multi-Head Speculative Decoding.</span>
 
 <span class="sd">Reference:</span>
-<span class="sd">- Cai et al., &quot;Medusa: Simple LLM Inference Acceleration Framework with</span>
-<span class="sd">  Multiple Decoding Heads&quot; (https://arxiv.org/abs/2401.10774)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Cai et al., "Medusa: Simple LLM Inference Acceleration Framework with</span>
+<span class="sd">  Multiple Decoding Heads" (https://arxiv.org/abs/2401.10774)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -489,7 +491,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MedusaHead">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MedusaHead">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MedusaHead</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A single Medusa prediction head.</span>
+<span class="w">    </span><span class="sd">"""A single Medusa prediction head.</span>
 
 <span class="sd">    Each head predicts tokens at a specific offset ahead of the current position.</span>
 <span class="sd">    The base model predicts the next token, while Medusa heads predict</span>
@@ -500,7 +502,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        vocab_size: Size of the vocabulary</span>
 <span class="sd">        offset: How many tokens ahead this head predicts (1 = next token)</span>
 <span class="sd">        dropout: Dropout probability</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MedusaHead.__init__">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MedusaHead.__init__">[docs]</a>
@@ -524,13 +526,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MedusaHead.forward">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MedusaHead.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_states</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            hidden_states: [batch, seq_len, hidden_size] from base model</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            logits: [batch, seq_len, vocab_size] predictions</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -543,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MedusaModel">
 <a class="viewcode-back" href="../../../../guides/autoregressive.html#medlatents.autoregressive.MedusaModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MedusaModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Autoregressive model with Medusa speculative decoding heads.</span>
+<span class="w">    </span><span class="sd">"""Autoregressive model with Medusa speculative decoding heads.</span>
 
 <span class="sd">    Wraps a base autoregressive model with multiple prediction heads</span>
 <span class="sd">    for parallel speculative decoding.</span>
@@ -554,7 +556,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        medusa_hidden_size: Hidden size for Medusa heads (default same as base)</span>
 <span class="sd">        medusa_dropout: Dropout for Medusa heads</span>
 <span class="sd">        medusa_offsets: Custom offsets for each head (default powers of 2)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MedusaModel.__init__">
 <a class="viewcode-back" href="../../../../guides/autoregressive.html#medlatents.autoregressive.MedusaModel.__init__">[docs]</a>
@@ -569,12 +571,12 @@ window.runMermaid = runMermaid;</script>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="n">base_model</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">):</span>
             <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">base_model</span><span class="o">.</span><span class="n">vocab_size</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">base_model</span><span class="o">.</span><span class="n">lm_head</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_model</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">):</span>
             <span class="n">hidden_size</span> <span class="o">=</span> <span class="n">base_model</span><span class="o">.</span><span class="n">hidden_size</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">hidden_size</span> <span class="o">=</span> <span class="n">base_model</span><span class="o">.</span><span class="n">lm_head</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -615,7 +617,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">input_ids</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Forward pass with both base model and Medusa predictions.</span>
 
 <span class="sd">        Args:</span>
@@ -626,15 +628,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Dict with:</span>
 <span class="sd">                base_logits: [batch, seq_len, vocab_size] base model predictions</span>
 <span class="sd">                medusa_logits: List of [batch, seq_len, vocab_size] for each head</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">base_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hidden_states&quot;</span><span class="p">)</span>
-            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logits&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="s2">&quot;last_hidden_state&quot;</span><span class="p">):</span>
+            <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hidden_states"</span><span class="p">)</span>
+            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"logits"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="s2">"last_hidden_state"</span><span class="p">):</span>
             <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">last_hidden_state</span>
-            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">logits</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="s2">&quot;logits&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">base_output</span><span class="o">.</span><span class="n">logits</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="s2">"logits"</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_output</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">base_output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">base_logits</span> <span class="o">=</span> <span class="n">base_output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_output</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
@@ -653,9 +655,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">medusa_logits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">head</span><span class="p">(</span><span class="n">medusa_hidden</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;base_logits&quot;</span><span class="p">:</span> <span class="n">base_logits</span><span class="p">,</span>
-            <span class="s2">&quot;medusa_logits&quot;</span><span class="p">:</span> <span class="n">medusa_logits</span><span class="p">,</span>
-            <span class="s2">&quot;hidden_states&quot;</span><span class="p">:</span> <span class="n">hidden_states</span><span class="p">,</span>
+            <span class="s2">"base_logits"</span><span class="p">:</span> <span class="n">base_logits</span><span class="p">,</span>
+            <span class="s2">"medusa_logits"</span><span class="p">:</span> <span class="n">medusa_logits</span><span class="p">,</span>
+            <span class="s2">"hidden_states"</span><span class="p">:</span> <span class="n">hidden_states</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -671,23 +673,23 @@ window.runMermaid = runMermaid;</script>
         <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">max_medusa_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate using speculative decoding with Medusa heads.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate using speculative decoding with Medusa heads."""</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="n">generated</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;base_model_calls&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;medusa_accepts&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;medusa_rejects&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;total_tokens&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"base_model_calls"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"medusa_accepts"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"medusa_rejects"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"total_tokens"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">while</span> <span class="n">generated</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">max_length</span><span class="p">:</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">generated</span><span class="p">)</span>
-            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;base_logits&quot;</span><span class="p">]</span>
-            <span class="n">medusa_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;medusa_logits&quot;</span><span class="p">]</span>
+            <span class="n">base_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">"base_logits"</span><span class="p">]</span>
+            <span class="n">medusa_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">"medusa_logits"</span><span class="p">]</span>
 
-            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;base_model_calls&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">"base_model_calls"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="n">base_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">base_logits</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
@@ -738,19 +740,19 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">speculated_tokens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">expected_token</span><span class="p">):</span>
                     <span class="n">n_accepted</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;medusa_accepts&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="s2">"medusa_accepts"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
 
-            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;medusa_rejects&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">speculated_tokens</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_accepted</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">"medusa_rejects"</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">speculated_tokens</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_accepted</span>
 
             <span class="k">if</span> <span class="n">n_accepted</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">accepted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">speculated_tokens</span><span class="p">[:</span><span class="n">n_accepted</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">generated</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">generated</span><span class="p">,</span> <span class="n">accepted</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;total_tokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">accepted</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="s2">"total_tokens"</span><span class="p">]</span> <span class="o">+=</span> <span class="n">accepted</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">generated</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">generated</span><span class="p">,</span> <span class="n">next_token</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;total_tokens&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="s2">"total_tokens"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="k">if</span> <span class="n">generated</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
                 <span class="k">break</span>
@@ -771,7 +773,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">use_speculative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate tokens (with or without speculative decoding).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate tokens (with or without speculative decoding)."""</span>
         <span class="k">if</span> <span class="n">use_speculative</span><span class="p">:</span>
             <span class="n">generated</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_speculative</span><span class="p">(</span>
                 <span class="n">input_ids</span><span class="o">=</span><span class="n">input_ids</span><span class="p">,</span>
@@ -798,18 +800,18 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MultiTokenPredictionLoss">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MultiTokenPredictionLoss">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MultiTokenPredictionLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-token prediction auxiliary loss for training.</span>
+<span class="w">    </span><span class="sd">"""Multi-token prediction auxiliary loss for training.</span>
 
 <span class="sd">    Encourages the model to predict multiple future tokens simultaneously.</span>
 
-<span class="sd">    Reference: &quot;Lookahead Decoding: Fast Language Model Inference with</span>
-<span class="sd">    Parallel Decoding&quot; (Fu et al., 2023)</span>
+<span class="sd">    Reference: "Lookahead Decoding: Fast Language Model Inference with</span>
+<span class="sd">    Parallel Decoding" (Fu et al., 2023)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        vocab_size: Vocabulary size</span>
 <span class="sd">        num_future_tokens: Number of future tokens to predict (default 3)</span>
 <span class="sd">        loss_weight: Weight for auxiliary loss (default 0.1)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MultiTokenPredictionLoss.__init__">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MultiTokenPredictionLoss.__init__">[docs]</a>
@@ -832,7 +834,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">targets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute multi-token prediction loss.</span>
 
 <span class="sd">        Args:</span>
@@ -842,7 +844,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Combined loss (base CE + multi-token auxiliary)</span>
 <span class="sd">            metrics: Dict with loss components</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="n">base_ce</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
@@ -875,9 +877,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">base_ce</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_weight</span> <span class="o">*</span> <span class="n">aux_loss</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;base_ce&quot;</span><span class="p">:</span> <span class="n">base_ce</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;aux_loss&quot;</span><span class="p">:</span> <span class="n">aux_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;total_loss&quot;</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"base_ce"</span><span class="p">:</span> <span class="n">base_ce</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"aux_loss"</span><span class="p">:</span> <span class="n">aux_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"total_loss"</span><span class="p">:</span> <span class="n">total_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="n">metrics</span></div>
@@ -888,7 +890,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MedusaTrainer">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MedusaTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MedusaTrainer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Training wrapper for Medusa models.</span>
+<span class="w">    </span><span class="sd">"""Training wrapper for Medusa models.</span>
 
 <span class="sd">    Handles the joint training of base model and Medusa heads.</span>
 
@@ -896,7 +898,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        model: MedusaModel to train</span>
 <span class="sd">        medusa_loss_weight: Weight for Medusa head losses</span>
 <span class="sd">        multi_token_loss: Optional multi-token prediction loss</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MedusaTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MedusaTrainer.__init__">[docs]</a>
@@ -919,7 +921,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">input_ids</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">targets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute training loss.</span>
 
 <span class="sd">        Args:</span>
@@ -928,13 +930,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with loss and metrics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">targets</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
 
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="p">)</span>
-        <span class="n">base_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;base_logits&quot;</span><span class="p">]</span>
-        <span class="n">medusa_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;medusa_logits&quot;</span><span class="p">]</span>
+        <span class="n">base_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">"base_logits"</span><span class="p">]</span>
+        <span class="n">medusa_logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">"medusa_logits"</span><span class="p">]</span>
 
         <span class="n">base_ce</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
             <span class="n">base_logits</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span>
@@ -974,10 +976,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">base_ce</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">medusa_loss_weight</span> <span class="o">*</span> <span class="n">medusa_loss</span> <span class="o">+</span> <span class="n">aux_ce</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">total_loss</span><span class="p">,</span>
-            <span class="s2">&quot;base_ce&quot;</span><span class="p">:</span> <span class="n">base_ce</span><span class="p">,</span>
-            <span class="s2">&quot;medusa_loss&quot;</span><span class="p">:</span> <span class="n">medusa_loss</span><span class="p">,</span>
-            <span class="s2">&quot;aux_loss&quot;</span><span class="p">:</span> <span class="n">aux_ce</span><span class="p">,</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">total_loss</span><span class="p">,</span>
+            <span class="s2">"base_ce"</span><span class="p">:</span> <span class="n">base_ce</span><span class="p">,</span>
+            <span class="s2">"medusa_loss"</span><span class="p">:</span> <span class="n">medusa_loss</span><span class="p">,</span>
+            <span class="s2">"aux_loss"</span><span class="p">:</span> <span class="n">aux_ce</span><span class="p">,</span>
             <span class="o">**</span><span class="n">aux_metrics</span><span class="p">,</span>
         <span class="p">}</span></div>
 </div>
@@ -985,10 +987,10 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;MedusaHead&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MedusaModel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MultiTokenPredictionLoss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MedusaTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"MedusaHead"</span><span class="p">,</span>
+    <span class="s2">"MedusaModel"</span><span class="p">,</span>
+    <span class="s2">"MultiTokenPredictionLoss"</span><span class="p">,</span>
+    <span class="s2">"MedusaTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1000,7 +1002,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

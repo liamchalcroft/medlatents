@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.flow_diffusion &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.flow_diffusion &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,15 +474,15 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.flow_diffusion</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Sampling utilities for flow matching and diffusion models.</span>
+<span></span><span class="sd">"""Sampling utilities for flow matching and diffusion models.</span>
 
 <span class="sd">Includes classifier-free guidance (CFG) for both flow matching and diffusion,</span>
 <span class="sd">plus utilities for generating samples with various conditioning strategies.</span>
 
 <span class="sd">Also includes Rectified Gradient Guidance (REG) from:</span>
-<span class="sd">&quot;REG: Rectified Gradient Guidance for Conditional Diffusion Models&quot;</span>
-<span class="sd">arXiv:2501.18865 (ICML&#39;25)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"REG: Rectified Gradient Guidance for Conditional Diffusion Models"</span>
+<span class="sd">arXiv:2501.18865 (ICML'25)</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
@@ -493,52 +495,52 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GuidanceType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Type of guidance to apply.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Type of guidance to apply."""</span>
 
-    <span class="n">ORIGINAL</span> <span class="o">=</span> <span class="s2">&quot;original&quot;</span>  <span class="c1"># Standard CFG</span>
-    <span class="n">REG</span> <span class="o">=</span> <span class="s2">&quot;reg&quot;</span>  <span class="c1"># Rectified Gradient Guidance</span>
-    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>  <span class="c1"># Linear schedule CFG</span>
-    <span class="n">COSINE</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span>  <span class="c1"># Cosine schedule CFG</span>
-    <span class="n">REG_LINEAR</span> <span class="o">=</span> <span class="s2">&quot;reg_linear&quot;</span>  <span class="c1"># REG with linear schedule</span>
-    <span class="n">REG_COSINE</span> <span class="o">=</span> <span class="s2">&quot;reg_cosine&quot;</span>  <span class="c1"># REG with cosine schedule</span>
+    <span class="n">ORIGINAL</span> <span class="o">=</span> <span class="s2">"original"</span>  <span class="c1"># Standard CFG</span>
+    <span class="n">REG</span> <span class="o">=</span> <span class="s2">"reg"</span>  <span class="c1"># Rectified Gradient Guidance</span>
+    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">"linear"</span>  <span class="c1"># Linear schedule CFG</span>
+    <span class="n">COSINE</span> <span class="o">=</span> <span class="s2">"cosine"</span>  <span class="c1"># Cosine schedule CFG</span>
+    <span class="n">REG_LINEAR</span> <span class="o">=</span> <span class="s2">"reg_linear"</span>  <span class="c1"># REG with linear schedule</span>
+    <span class="n">REG_COSINE</span> <span class="o">=</span> <span class="s2">"reg_cosine"</span>  <span class="c1"># REG with cosine schedule</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">REGConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for Rectified Gradient Guidance.</span>
+<span class="w">    </span><span class="sd">"""Configuration for Rectified Gradient Guidance.</span>
 
 <span class="sd">    REG modifies CFG by computing the gradient of the conditional output</span>
 <span class="sd">    w.r.t. the input, which rectifies the guidance direction.</span>
 
-<span class="sd">    Based on arXiv:2501.18865 (ICML&#39;25).</span>
+<span class="sd">    Based on arXiv:2501.18865 (ICML'25).</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        guidance_scale: Base CFG scale (w-1 in paper notation).</span>
-<span class="sd">        noise_schedule: Either &#39;ddpm&#39; for discrete schedules (uses alpha_bar)</span>
-<span class="sd">            or &#39;flow&#39; for continuous flow matching (uses sigma/time).</span>
+<span class="sd">        noise_schedule: Either 'ddpm' for discrete schedules (uses alpha_bar)</span>
+<span class="sd">            or 'flow' for continuous flow matching (uses sigma/time).</span>
 <span class="sd">        schedule_type: How to vary guidance over time:</span>
-<span class="sd">            - &#39;constant&#39;: Use fixed guidance_scale</span>
-<span class="sd">            - &#39;linear&#39;: Linear interpolation from guidance_scale to end_scale</span>
-<span class="sd">            - &#39;cosine&#39;: Cosine schedule with power s</span>
+<span class="sd">            - 'constant': Use fixed guidance_scale</span>
+<span class="sd">            - 'linear': Linear interpolation from guidance_scale to end_scale</span>
+<span class="sd">            - 'cosine': Cosine schedule with power s</span>
 <span class="sd">        end_scale: Final guidance scale for linear schedule.</span>
 <span class="sd">        cosine_power: Power for cosine schedule (s parameter).</span>
 <span class="sd">        interval: Optional (min, max) timestep interval for applying guidance.</span>
 <span class="sd">            Outside this interval, only conditional prediction is used.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span>
-    <span class="n">noise_schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ddpm&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ddpm&quot;</span>
-    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span>
+    <span class="n">noise_schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"ddpm"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ddpm"</span>
+    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"constant"</span><span class="p">,</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"constant"</span>
     <span class="n">end_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">cosine_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">interval</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_validate_guidance_scale</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;guidance_scale&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_guidance_scale</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"guidance_scale"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite, got </span><span class="si">{</span><span class="n">guidance_scale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite, got </span><span class="si">{</span><span class="n">guidance_scale</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="sample_with_cfg_flow">
@@ -551,7 +553,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Classifier-Free Guidance for flow matching models.</span>
 
 <span class="sd">    Args:</span>
@@ -564,7 +566,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Guided model output (logits or probabilities)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_validate_guidance_scale</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">guidance_scale</span> <span class="o">==</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">condition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># No guidance, regular conditional generation</span>
@@ -596,7 +598,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Classifier-Free Guidance for diffusion models.</span>
 
 <span class="sd">    Args:</span>
@@ -610,7 +612,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Guided model prediction (noise or x_0)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">_validate_guidance_scale</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span>
     <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
 
@@ -635,11 +637,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CFGFlowMatcher">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CFGFlowMatcher">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CFGFlowMatcher</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper for flow matching models with built-in CFG support.</span>
 
 <span class="sd">    Simplifies CFG inference by handling conditional/unconditional splits.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="CFGFlowMatcher.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CFGFlowMatcher.__init__">[docs]</a>
@@ -663,7 +665,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with CFG.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with CFG."""</span>
         <span class="k">return</span> <span class="n">sample_with_cfg_flow</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">x_t</span><span class="p">,</span>
@@ -679,11 +681,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CFGDiffuser">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CFGDiffuser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CFGDiffuser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper for diffusion models with built-in CFG support.</span>
 
 <span class="sd">    Simplifies CFG inference by handling conditional/unconditional splits.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="CFGDiffuser.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.CFGDiffuser.__init__">[docs]</a>
@@ -708,7 +710,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with CFG.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with CFG."""</span>
         <span class="k">return</span> <span class="n">sample_with_cfg_diffusion</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">x_t</span><span class="p">,</span>
@@ -731,10 +733,10 @@ window.runMermaid = runMermaid;</script>
     <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"flow"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">solver_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Unified generation with CFG for flow matching or diffusion.</span>
 
 <span class="sd">    Args:</span>
@@ -744,19 +746,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        condition: Conditioning information</span>
 <span class="sd">        guidance_scale: CFG scale</span>
 <span class="sd">        null_condition: Unconditional token</span>
-<span class="sd">        model_type: &#39;flow&#39; or &#39;diffusion&#39;</span>
+<span class="sd">        model_type: 'flow' or 'diffusion'</span>
 <span class="sd">        **solver_kwargs: Additional solver arguments</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated samples</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">guided_model</span><span class="p">:</span> <span class="nb">object</span>  <span class="c1"># type: ignore[assignment]</span>
-    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
         <span class="n">guided_model</span> <span class="o">=</span> <span class="n">CFGFlowMatcher</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">guidance_scale</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
         <span class="n">guided_model</span> <span class="o">=</span> <span class="n">CFGDiffuser</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">guidance_scale</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">. Use &#39;flow&#39; or &#39;diffusion&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">. Use 'flow' or 'diffusion'."</span><span class="p">)</span>
 
     <span class="c1"># Use of solver with the guided model</span>
     <span class="k">assert</span> <span class="n">guided_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -772,10 +774,10 @@ window.runMermaid = runMermaid;</script>
     <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">rescale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    CFG with rescaling to prevent oversaturation.</span>
 
-<span class="sd">    From &quot;Common Diffusion Noise Schedules and Sample Steps are Flawed&quot;</span>
+<span class="sd">    From "Common Diffusion Noise Schedules and Sample Steps are Flawed"</span>
 <span class="sd">    https://arxiv.org/abs/2305.08891</span>
 
 <span class="sd">    Args:</span>
@@ -786,17 +788,17 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Rescaled CFG output</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;guidance_scale must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"guidance_scale must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;guidance_scale must be finite, got </span><span class="si">{</span><span class="n">guidance_scale</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"guidance_scale must be finite, got </span><span class="si">{</span><span class="n">guidance_scale</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rescale_factor</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rescale_factor must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">rescale_factor</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rescale_factor must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">rescale_factor</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">rescale_factor</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rescale_factor must be finite, got </span><span class="si">{</span><span class="n">rescale_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rescale_factor must be finite, got </span><span class="si">{</span><span class="n">rescale_factor</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">rescale_factor</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rescale_factor must be between 0 and 1, got </span><span class="si">{</span><span class="n">rescale_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"rescale_factor must be between 0 and 1, got </span><span class="si">{</span><span class="n">rescale_factor</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Standard CFG</span>
     <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_uncond</span> <span class="o">+</span> <span class="n">guidance_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">pred_cond</span> <span class="o">-</span> <span class="n">pred_uncond</span><span class="p">)</span>
@@ -805,7 +807,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">std_cond</span> <span class="o">=</span> <span class="n">pred_cond</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pred_cond</span><span class="o">.</span><span class="n">ndim</span><span class="p">)),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">std_guided</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">pred</span><span class="o">.</span><span class="n">ndim</span><span class="p">)),</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">std_guided</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rescale_cfg requires non-constant guided predictions (std == 0)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"rescale_cfg requires non-constant guided predictions (std == 0)"</span><span class="p">)</span>
 
     <span class="c1"># Rescale</span>
     <span class="n">pred_rescaled</span> <span class="o">=</span> <span class="n">pred</span> <span class="o">*</span> <span class="p">(</span><span class="n">std_cond</span> <span class="o">/</span> <span class="n">std_guided</span><span class="p">)</span>
@@ -824,9 +826,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">guidance_schedule</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"flow"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    CFG with dynamic guidance scale based on timestep.</span>
 
 <span class="sd">    Useful for adaptive guidance (e.g., stronger at early steps, weaker at late steps).</span>
@@ -838,28 +840,28 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        condition: Conditioning tensor</span>
 <span class="sd">        guidance_schedule: Function t -&gt; guidance_scale (supports float or tensor input)</span>
 <span class="sd">        null_condition: Unconditional token</span>
-<span class="sd">        model_type: &#39;flow&#39; or &#39;diffusion&#39;</span>
+<span class="sd">        model_type: 'flow' or 'diffusion'</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Guided model output</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">t_scalar</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
     <span class="n">guidance_scale</span> <span class="o">=</span> <span class="n">guidance_schedule</span><span class="p">(</span><span class="n">t_scalar</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">guidance_scale</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
         <span class="n">guidance_scale</span> <span class="o">=</span> <span class="n">guidance_scale</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sample_with_cfg_flow</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">guidance_scale</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">sample_with_cfg_diffusion</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">guidance_scale</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># =============================================================================</span>
 <span class="c1"># Rectified Gradient Guidance (REG)</span>
-<span class="c1"># arXiv:2501.18865 (ICML&#39;25)</span>
+<span class="c1"># arXiv:2501.18865 (ICML'25)</span>
 <span class="c1"># =============================================================================</span>
 
 
@@ -869,9 +871,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">alpha_bar</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sigma</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ddpm&quot;</span><span class="p">,</span>
+    <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ddpm"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the REG rectification coefficient.</span>
 
 <span class="sd">    REG modifies the standard CFG formula:</span>
@@ -889,11 +891,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        t: Current timestep (normalized to [0, 1] for flow, discrete for DDPM)</span>
 <span class="sd">        alpha_bar: Cumulative product of alphas for DDPM schedule [batch]</span>
 <span class="sd">        sigma: Noise level for flow matching [batch]</span>
-<span class="sd">        noise_schedule: &#39;ddpm&#39; or &#39;flow&#39;</span>
+<span class="sd">        noise_schedule: 'ddpm' or 'flow'</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Rectification coefficient tensor, same shape as pred_cond</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Compute gradient of conditional prediction w.r.t. input</span>
     <span class="c1"># We sum over all dimensions to get a scalar for autograd</span>
     <span class="n">grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
@@ -906,19 +908,19 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Compute noise factor based on schedule</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">pred_cond</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">&quot;ddpm&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">"ddpm"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">alpha_bar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;alpha_bar required for DDPM noise schedule&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"alpha_bar required for DDPM noise schedule"</span><span class="p">)</span>
         <span class="c1"># noise_factor = sqrt(1 - alpha_bar)</span>
         <span class="n">noise_factor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha_bar</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">noise_factor</span> <span class="o">=</span> <span class="n">sigma</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># For linear flow matching: sigma = 1 - t (noise at t=0, clean at t=1)</span>
             <span class="n">noise_factor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown noise_schedule: </span><span class="si">{</span><span class="n">noise_schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown noise_schedule: </span><span class="si">{</span><span class="n">noise_schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># REG coefficient: 1 - noise_factor * grad</span>
     <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">noise_factor</span> <span class="o">*</span> <span class="n">grad</span>
@@ -933,13 +935,13 @@ window.runMermaid = runMermaid;</script>
     <span class="n">t_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">output_ndim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute time-dependent guidance scale.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        t: Current timestep [batch]</span>
 <span class="sd">        guidance_scale: Base/start guidance scale</span>
-<span class="sd">        schedule_type: &#39;constant&#39;, &#39;linear&#39;, or &#39;cosine&#39;</span>
+<span class="sd">        schedule_type: 'constant', 'linear', or 'cosine'</span>
 <span class="sd">        end_scale: End scale for linear schedule</span>
 <span class="sd">        cosine_power: Power s for cosine schedule</span>
 <span class="sd">        t_max: Maximum timestep value (1.0 for flow, 1000 for DDPM)</span>
@@ -947,27 +949,27 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Guidance scale tensor [batch, 1, 1, ...] with output_ndim dimensions</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Ensure t is 1D</span>
     <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;constant&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"constant"</span><span class="p">:</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">guidance_scale</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
         <span class="c1"># Linear from guidance_scale to end_scale as t goes from t_max to 0</span>
         <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="n">end_scale</span> <span class="o">-</span> <span class="n">guidance_scale</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">0</span> <span class="o">-</span> <span class="n">t_max</span><span class="p">)</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="n">guidance_scale</span>
 
-    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
         <span class="c1"># Cosine schedule from MDT paper</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span> <span class="o">/</span> <span class="n">t_max</span>  <span class="c1"># 0 to 1 as sampling progresses</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">progress</span><span class="p">,</span> <span class="n">cosine_power</span><span class="p">)))</span> <span class="o">*</span> <span class="mf">0.5</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">guidance_scale</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule_type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule_type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Expand to match output dimensions: [batch] -&gt; [batch, 1, 1, ...]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">output_ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -986,7 +988,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Rectified Gradient Guidance (REG) for diffusion models.</span>
 
 <span class="sd">    REG improves upon standard CFG by computing the gradient of the conditional</span>
@@ -994,7 +996,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    a better approximation to the optimal guidance under the scaled joint</span>
 <span class="sd">    distribution objective.</span>
 
-<span class="sd">    Based on arXiv:2501.18865 (ICML&#39;25).</span>
+<span class="sd">    Based on arXiv:2501.18865 (ICML'25).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Diffusion model (predicts noise or x_0)</span>
@@ -1010,14 +1012,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        REG-guided model prediction (noise or x_0)</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule=&quot;ddpm&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule="ddpm")</span>
 <span class="sd">        &gt;&gt;&gt; # During sampling loop:</span>
 <span class="sd">        &gt;&gt;&gt; pred = sample_with_reg_diffusion(</span>
 <span class="sd">        ...     model, x_t, t, condition,</span>
 <span class="sd">        ...     alpha_bar=scheduler.alphas_cumprod[t],</span>
 <span class="sd">        ...     reg_config=config</span>
 <span class="sd">        ... )</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">()</span>
     <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
 
@@ -1061,7 +1063,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">pred_uncond</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">null_condition</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
 
     <span class="c1"># Get scheduled guidance scale</span>
-    <span class="n">t_max</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">reg_config</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span> <span class="k">else</span> <span class="mf">1000.0</span>
+    <span class="n">t_max</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">reg_config</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">"flow"</span> <span class="k">else</span> <span class="mf">1000.0</span>
     <span class="n">scale</span> <span class="o">=</span> <span class="n">_get_scheduled_scale</span><span class="p">(</span>
         <span class="n">t</span><span class="p">,</span>
         <span class="n">reg_config</span><span class="o">.</span><span class="n">guidance_scale</span><span class="p">,</span>
@@ -1085,7 +1087,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">reg_config</span><span class="p">:</span> <span class="n">REGConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Rectified Gradient Guidance (REG) for flow matching models.</span>
 
 <span class="sd">    REG improves upon standard CFG by computing the gradient of the conditional</span>
@@ -1094,7 +1096,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    For flow matching, the noise factor is typically sigma or (1-t) for linear</span>
 <span class="sd">    interpolation schedules.</span>
 
-<span class="sd">    Based on arXiv:2501.18865 (ICML&#39;25).</span>
+<span class="sd">    Based on arXiv:2501.18865 (ICML'25).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Flow matching model</span>
@@ -1109,10 +1111,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        REG-guided velocity prediction</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule=&quot;flow&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule="flow")</span>
 <span class="sd">        &gt;&gt;&gt; velocity = sample_with_reg_flow(model, x_t, t, condition, reg_config=config)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">(</span><span class="n">noise_schedule</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">(</span><span class="n">noise_schedule</span><span class="o">=</span><span class="s2">"flow"</span><span class="p">)</span>
     <span class="n">_validate_guidance_scale</span><span class="p">(</span><span class="n">reg_config</span><span class="o">.</span><span class="n">guidance_scale</span><span class="p">)</span>
 
     <span class="c1"># No guidance case</span>
@@ -1138,7 +1140,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">t</span><span class="p">,</span>
         <span class="n">alpha_bar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span>
-        <span class="n">noise_schedule</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+        <span class="n">noise_schedule</span><span class="o">=</span><span class="s2">"flow"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Detach predictions</span>
@@ -1167,21 +1169,21 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">REGDiffuser</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper for diffusion models with Rectified Gradient Guidance (REG).</span>
 
 <span class="sd">    REG provides improved guidance over standard CFG by computing gradient-based</span>
 <span class="sd">    corrections that better approximate the optimal guidance under the scaled</span>
 <span class="sd">    joint distribution objective.</span>
 
-<span class="sd">    Based on arXiv:2501.18865 (ICML&#39;25).</span>
+<span class="sd">    Based on arXiv:2501.18865 (ICML'25).</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5)</span>
 <span class="sd">        &gt;&gt;&gt; guided_model = REGDiffuser(model, config)</span>
 <span class="sd">        &gt;&gt;&gt; # Use in sampling loop</span>
 <span class="sd">        &gt;&gt;&gt; pred = guided_model(x_t, t, condition, alpha_bar=alpha_bar_t)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1189,14 +1191,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">reg_config</span><span class="p">:</span> <span class="n">REGConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize REG wrapper.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Diffusion model</span>
 <span class="sd">            reg_config: REG configuration</span>
 <span class="sd">            null_condition: Unconditional token for CFG</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">null_condition</span> <span class="o">=</span> <span class="n">null_condition</span>
@@ -1210,7 +1212,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">alpha_bar</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with REG.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with REG."""</span>
         <span class="k">return</span> <span class="n">sample_with_reg_diffusion</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">x_t</span><span class="p">,</span>
@@ -1224,16 +1226,16 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">REGFlowMatcher</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wrapper for flow matching models with Rectified Gradient Guidance (REG).</span>
 
-<span class="sd">    Based on arXiv:2501.18865 (ICML&#39;25).</span>
+<span class="sd">    Based on arXiv:2501.18865 (ICML'25).</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule=&quot;flow&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; config = REGConfig(guidance_scale=1.5, noise_schedule="flow")</span>
 <span class="sd">        &gt;&gt;&gt; guided_model = REGFlowMatcher(model, config)</span>
 <span class="sd">        &gt;&gt;&gt; velocity = guided_model(x_t, t, condition)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1241,16 +1243,16 @@ window.runMermaid = runMermaid;</script>
         <span class="n">reg_config</span><span class="p">:</span> <span class="n">REGConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize REG wrapper.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Flow matching model</span>
 <span class="sd">            reg_config: REG configuration</span>
 <span class="sd">            null_condition: Unconditional token for CFG</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">(</span><span class="n">noise_schedule</span><span class="o">=</span><span class="s2">&quot;flow&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_config</span> <span class="o">=</span> <span class="n">reg_config</span> <span class="ow">or</span> <span class="n">REGConfig</span><span class="p">(</span><span class="n">noise_schedule</span><span class="o">=</span><span class="s2">"flow"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">null_condition</span> <span class="o">=</span> <span class="n">null_condition</span>
         <span class="n">_validate_guidance_scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_config</span><span class="o">.</span><span class="n">guidance_scale</span><span class="p">)</span>
 
@@ -1261,7 +1263,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">sigma</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with REG.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with REG."""</span>
         <span class="k">return</span> <span class="n">sample_with_reg_flow</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">x_t</span><span class="p">,</span>
@@ -1280,10 +1282,10 @@ window.runMermaid = runMermaid;</script>
     <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">reg_config</span><span class="p">:</span> <span class="n">REGConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">null_condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"flow"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">solver_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Unified generation with REG for flow matching or diffusion.</span>
 
 <span class="sd">    Args:</span>
@@ -1293,19 +1295,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        condition: Conditioning information</span>
 <span class="sd">        reg_config: REG configuration</span>
 <span class="sd">        null_condition: Unconditional token</span>
-<span class="sd">        model_type: &#39;flow&#39; or &#39;diffusion&#39;</span>
+<span class="sd">        model_type: 'flow' or 'diffusion'</span>
 <span class="sd">        **solver_kwargs: Additional solver arguments</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated samples</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">guided_model</span><span class="p">:</span> <span class="nb">object</span>  <span class="c1"># type: ignore[assignment]</span>
-    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
         <span class="n">guided_model</span> <span class="o">=</span> <span class="n">REGFlowMatcher</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">reg_config</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
         <span class="n">guided_model</span> <span class="o">=</span> <span class="n">REGDiffuser</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">reg_config</span><span class="p">,</span> <span class="n">null_condition</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">. Use &#39;flow&#39; or &#39;diffusion&#39;.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">. Use 'flow' or 'diffusion'."</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">guided_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">solver</span><span class="p">(</span><span class="n">guided_model</span><span class="p">,</span> <span class="n">x_init</span><span class="p">,</span> <span class="o">**</span><span class="n">solver_kwargs</span><span class="p">)</span>
@@ -1319,7 +1321,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.data.tokenized_datasets &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.data.tokenized_datasets &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.data.tokenized_datasets</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Datasets with tokenization support for medical imaging.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Datasets with tokenization support for medical imaging."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,9 +503,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">tokens</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">allow_special</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tokens&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"tokens"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate discrete token tensor against contract.</span>
+<span class="w">    </span><span class="sd">"""Validate discrete token tensor against contract.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tokens: Token tensor to validate</span>
@@ -514,17 +516,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Raises:</span>
 <span class="sd">        TypeError: If dtype is not torch.long</span>
 <span class="sd">        ValueError: If shape is wrong or values are out of range</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">tokens</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected dtype torch.long, got </span><span class="si">{</span><span class="n">tokens</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;Convert with tokens.long() before use.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected dtype torch.long, got </span><span class="si">{</span><span class="n">tokens</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="s2">"Convert with tokens.long() before use."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">tokens</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 1D [seq_len] or 2D [batch, seq_len], &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">tokens</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 1D [seq_len] or 2D [batch, seq_len], "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">tokens</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="n">max_valid</span> <span class="o">=</span> <span class="n">vocab_size</span> <span class="o">+</span> <span class="mi">4</span> <span class="k">if</span> <span class="n">allow_special</span> <span class="k">else</span> <span class="n">vocab_size</span>
@@ -535,24 +537,24 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">min_val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains negative values (min=</span><span class="si">{</span><span class="n">min_val</span><span class="si">}</span><span class="s2">). &quot;</span>
-                <span class="s2">&quot;Token indices must be non-negative.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains negative values (min=</span><span class="si">{</span><span class="n">min_val</span><span class="si">}</span><span class="s2">). "</span>
+                <span class="s2">"Token indices must be non-negative."</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">max_val</span> <span class="o">&gt;=</span> <span class="n">max_valid</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains out-of-range values (max=</span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;allowed=[0, </span><span class="si">{</span><span class="n">max_valid</span><span class="si">}</span><span class="s2">)). Check vocab_size=</span><span class="si">{</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;or set allow_special=</span><span class="si">{</span><span class="s1">&#39;True&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">allow_special</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;False&#39;</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains out-of-range values (max=</span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s2">, "</span>
+                <span class="sa">f</span><span class="s2">"allowed=[0, </span><span class="si">{</span><span class="n">max_valid</span><span class="si">}</span><span class="s2">)). Check vocab_size=</span><span class="si">{</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"or set allow_special=</span><span class="si">{</span><span class="s1">'True'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">allow_special</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'False'</span><span class="si">}</span><span class="s2">."</span>
             <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_continuous_latents</span><span class="p">(</span>
     <span class="n">latents</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">expected_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latents&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"latents"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate continuous latent tensor against contract.</span>
+<span class="w">    </span><span class="sd">"""Validate continuous latent tensor against contract.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        latents: Latent tensor to validate</span>
@@ -562,39 +564,39 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Raises:</span>
 <span class="sd">        TypeError: If dtype is not floating point</span>
 <span class="sd">        ValueError: If shape is wrong or contains non-finite values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">latents</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected floating dtype (float32/float16/bfloat16), &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Convert with latents.float() before use.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected floating dtype (float32/float16/bfloat16), "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Convert with latents.float() before use."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">latents</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 4D [B,C,H,W] or 5D [B,C,D,H,W], &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 4D [B,C,H,W] or 5D [B,C,D,H,W], "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">expected_channels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">expected_channels</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected </span><span class="si">{</span><span class="n">expected_channels</span><span class="si">}</span><span class="s2"> channels, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">. Shape is </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected </span><span class="si">{</span><span class="n">expected_channels</span><span class="si">}</span><span class="s2"> channels, "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">. Shape is </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="n">nan_count</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">inf_count</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains non-finite values (</span><span class="si">{</span><span class="n">nan_count</span><span class="si">}</span><span class="s2"> NaN, </span><span class="si">{</span><span class="n">inf_count</span><span class="si">}</span><span class="s2"> Inf). &quot;</span>
-            <span class="s2">&quot;Check encoder output or input data for corruption.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains non-finite values (</span><span class="si">{</span><span class="n">nan_count</span><span class="si">}</span><span class="s2"> NaN, </span><span class="si">{</span><span class="n">inf_count</span><span class="si">}</span><span class="s2"> Inf). "</span>
+            <span class="s2">"Check encoder output or input data for corruption."</span>
         <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_image_for_tokenization</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
+    <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"image"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate image tensor before tokenization.</span>
+<span class="w">    </span><span class="sd">"""Validate image tensor before tokenization.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data: Image tensor [C, H, W] or [C, D, H, W]</span>
@@ -603,26 +605,26 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Raises:</span>
 <span class="sd">        TypeError: If dtype is not floating point</span>
 <span class="sd">        ValueError: If shape is wrong or contains non-finite values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected floating dtype for tokenization, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Convert with data.float() before tokenizing.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected floating dtype for tokenization, "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Convert with data.float() before tokenizing."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 3D [C,H,W] or 4D [C,D,H,W] for tokenization, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;Add batch dimension with data.unsqueeze(0) if needed.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Expected 3D [C,H,W] or 4D [C,D,H,W] for tokenization, "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">D with shape </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="s2">"Add batch dimension with data.unsqueeze(0) if needed."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="n">nan_count</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="n">inf_count</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains non-finite values (</span><span class="si">{</span><span class="n">nan_count</span><span class="si">}</span><span class="s2"> NaN, </span><span class="si">{</span><span class="n">inf_count</span><span class="si">}</span><span class="s2"> Inf). &quot;</span>
-            <span class="s2">&quot;Check input data for corruption or normalize before tokenizing.&quot;</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">: Contains non-finite values (</span><span class="si">{</span><span class="n">nan_count</span><span class="si">}</span><span class="s2"> NaN, </span><span class="si">{</span><span class="n">inf_count</span><span class="si">}</span><span class="s2"> Inf). "</span>
+            <span class="s2">"Check input data for corruption or normalize before tokenizing."</span>
         <span class="p">)</span>
 
 
@@ -630,7 +632,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;seed must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"seed must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">generator</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">()</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -644,35 +646,35 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_load_array</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load medical imaging data from disk using medrs for NIfTI files.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Load medical imaging data from disk using medrs for NIfTI files."""</span>
 
-    <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.nii&quot;</span><span class="p">,</span> <span class="s2">&quot;.nii.gz&quot;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">".nii"</span><span class="p">,</span> <span class="s2">".nii.gz"</span><span class="p">)):</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">medrs</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">medrs</span><span class="o">.</span><span class="n">load_to_torch</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="c1"># Handle channel dimension - medrs returns (C, H, W, D) or (H, W, D)</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Add channel dim</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span>
-            <span class="s2">&quot;affine&quot;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span>
-            <span class="s2">&quot;spacing&quot;</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">spacing</span><span class="p">,</span>
-            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+            <span class="s2">"file_path"</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span>
+            <span class="s2">"affine"</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span>
+            <span class="s2">"spacing"</span><span class="p">:</span> <span class="n">img</span><span class="o">.</span><span class="n">spacing</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
         <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npy&quot;</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".npy"</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">}</span>
-    <span class="k">elif</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">):</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"file_path"</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span> <span class="s2">"shape"</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".npz"</span><span class="p">):</span>
         <span class="n">npz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">npz</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">npz</span><span class="p">[</span><span class="s2">"data"</span><span class="p">])</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span>
-            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-            <span class="s2">&quot;keys&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">npz</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+            <span class="s2">"file_path"</span><span class="p">:</span> <span class="n">file_path</span><span class="p">,</span>
+            <span class="s2">"shape"</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="s2">"keys"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">npz</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
         <span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unsupported file format: &#39;</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-            <span class="s2">&quot;Supported formats: .nii, .nii.gz (NIfTI), .npy, .npz (NumPy)&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unsupported file format: '</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">'. "</span>
+            <span class="s2">"Supported formats: .nii, .nii.gz (NIfTI), .npy, .npz (NumPy)"</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
@@ -686,7 +688,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TokenizedImageDataset">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.TokenizedImageDataset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TokenizedImageDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;On-the-fly discrete tokenization from NIfTI/NumPy with optional caching.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""On-the-fly discrete tokenization from NIfTI/NumPy with optional caching."""</span>
 
 <div class="viewcode-block" id="TokenizedImageDataset.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.TokenizedImageDataset.__init__">[docs]</a>
@@ -707,8 +709,8 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No files found matching pattern: &#39;</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                <span class="s2">&quot;Check that the path exists and uses glob syntax (e.g., &#39;data/*.nii.gz&#39;)&quot;</span>
+                <span class="sa">f</span><span class="s2">"No files found matching pattern: '</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">'. "</span>
+                <span class="s2">"Check that the path exists and uses glob syntax (e.g., 'data/*.nii.gz')"</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
@@ -726,7 +728,7 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_cache_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">file_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_hash</span><span class="si">}</span><span class="s2">.pt&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file_hash</span><span class="si">}</span><span class="s2">.pt"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
@@ -738,8 +740,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">cache_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cache_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">cached</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">tokens</span> <span class="o">=</span> <span class="n">cached</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">]</span>
-                <span class="n">metadata</span> <span class="o">=</span> <span class="n">cached</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">})</span>
+                <span class="n">tokens</span> <span class="o">=</span> <span class="n">cached</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">cached</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"file_path"</span><span class="p">:</span> <span class="n">file_path</span><span class="p">})</span>
                 <span class="k">return</span> <span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_metadata</span> <span class="k">else</span> <span class="n">tokens</span>
 
         <span class="n">data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">_load_array</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -752,12 +754,12 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Tokenizer is required to tokenize data. &quot;</span>
-                <span class="s2">&quot;Pass a DiscreteTokenizer instance to TokenizedImageDataset constructor.&quot;</span>
+                <span class="s2">"Tokenizer is required to tokenize data. "</span>
+                <span class="s2">"Pass a DiscreteTokenizer instance to TokenizedImageDataset constructor."</span>
             <span class="p">)</span>
 
         <span class="c1"># Validate input data before tokenization</span>
-        <span class="n">validate_image_for_tokenization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;TokenizedImageDataset[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">validate_image_for_tokenization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">"TokenizedImageDataset[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="c1"># Ensure batch dimension for tokenizer</span>
@@ -772,7 +774,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span><span class="p">:</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
-                <span class="p">{</span><span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="n">tokens</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">"tokens"</span><span class="p">:</span> <span class="n">tokens</span><span class="p">,</span> <span class="s2">"metadata"</span><span class="p">:</span> <span class="n">metadata</span><span class="p">},</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
             <span class="p">)</span>
 
@@ -783,7 +785,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousLatentDataset">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousLatentDataset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousLatentDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dataset that produces continuous latent codes using a tokenizer/encoder.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Dataset that produces continuous latent codes using a tokenizer/encoder."""</span>
 
 <div class="viewcode-block" id="ContinuousLatentDataset.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousLatentDataset.__init__">[docs]</a>
@@ -804,8 +806,8 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_pattern</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;No files found matching pattern: &#39;</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                <span class="s2">&quot;Check that the path exists and uses glob syntax (e.g., &#39;data/*.nii.gz&#39;)&quot;</span>
+                <span class="sa">f</span><span class="s2">"No files found matching pattern: '</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">'. "</span>
+                <span class="s2">"Check that the path exists and uses glob syntax (e.g., 'data/*.nii.gz')"</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
@@ -824,7 +826,7 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_cache_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="n">file_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_hash</span><span class="si">}</span><span class="s2">.pt&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">file_hash</span><span class="si">}</span><span class="s2">.pt"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
@@ -832,8 +834,8 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">_encode_latents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Tokenizer is required to encode latents. &quot;</span>
-                <span class="s2">&quot;Pass a ContinuousTokenizer instance to ContinuousLatentDataset constructor.&quot;</span>
+                <span class="s2">"Tokenizer is required to encode latents. "</span>
+                <span class="s2">"Pass a ContinuousTokenizer instance to ContinuousLatentDataset constructor."</span>
             <span class="p">)</span>
 
         <span class="c1"># Prioritized method resolution for encoding:</span>
@@ -843,11 +845,11 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Note: forward/__call__ are intentionally excluded as they typically</span>
         <span class="c1"># perform full reconstruction, not encoding.</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;tokenize&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"tokenize"</span><span class="p">):</span>
                 <span class="n">latents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;encode_latents&quot;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"encode_latents"</span><span class="p">):</span>
                 <span class="n">latents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode_latents</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;encode&quot;</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"encode"</span><span class="p">):</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer_kwargs</span><span class="p">)</span>
                 <span class="c1"># encode() returns (latents, extras) tuple - extract latents</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -856,9 +858,9 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">latents</span> <span class="o">=</span> <span class="n">result</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not expose &quot;</span>
-                    <span class="s2">&quot;tokenize/encode_latents/encode method. &quot;</span>
-                    <span class="s2">&quot;Ensure you&#39;re using a ContinuousTokenizer from medtokenizers.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not expose "</span>
+                    <span class="s2">"tokenize/encode_latents/encode method. "</span>
+                    <span class="s2">"Ensure you're using a ContinuousTokenizer from medtokenizers."</span>
                 <span class="p">)</span>
 
         <span class="n">latents</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span>
@@ -879,8 +881,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">cache_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">cache_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">cached</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cache_path</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">latents</span> <span class="o">=</span> <span class="n">cached</span><span class="p">[</span><span class="s2">&quot;latents&quot;</span><span class="p">]</span>
-                <span class="n">metadata</span> <span class="o">=</span> <span class="n">cached</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="n">file_path</span><span class="p">})</span>
+                <span class="n">latents</span> <span class="o">=</span> <span class="n">cached</span><span class="p">[</span><span class="s2">"latents"</span><span class="p">]</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">cached</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"file_path"</span><span class="p">:</span> <span class="n">file_path</span><span class="p">})</span>
                 <span class="k">return</span> <span class="p">(</span><span class="n">latents</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_metadata</span> <span class="k">else</span> <span class="n">latents</span>
 
         <span class="n">data</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="n">_load_array</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -892,14 +894,14 @@ window.runMermaid = runMermaid;</script>
             <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Validate input data before encoding</span>
-        <span class="n">validate_image_for_tokenization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ContinuousLatentDataset[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">validate_image_for_tokenization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">"ContinuousLatentDataset[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]"</span><span class="p">)</span>
 
         <span class="n">latents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_latents</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Validate output latents</span>
         <span class="k">if</span> <span class="n">latents</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">validate_continuous_latents</span><span class="p">(</span>
-                <span class="n">latents</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ContinuousLatentDataset output[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]&quot;</span>
+                <span class="n">latents</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="sa">f</span><span class="s2">"ContinuousLatentDataset output[</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">]"</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">latents</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -907,7 +909,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span><span class="p">:</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
-                <span class="p">{</span><span class="s2">&quot;latents&quot;</span><span class="p">:</span> <span class="n">latents</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">"latents"</span><span class="p">:</span> <span class="n">latents</span><span class="p">,</span> <span class="s2">"metadata"</span><span class="p">:</span> <span class="n">metadata</span><span class="p">},</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
             <span class="p">)</span>
 
@@ -918,7 +920,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PreTokenizedDataset">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.PreTokenizedDataset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PreTokenizedDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fast loading of pre-tokenized sequences from .pt files.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fast loading of pre-tokenized sequences from .pt files."""</span>
 
 <div class="viewcode-block" id="PreTokenizedDataset.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.PreTokenizedDataset.__init__">[docs]</a>
@@ -935,8 +937,8 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">consolidated</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_pattern</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span>
@@ -944,8 +946,8 @@ window.runMermaid = runMermaid;</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_pattern</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;No files found matching pattern: &#39;</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="s2">&quot;Check that the path exists and uses glob syntax (e.g., &#39;data/*.pt&#39;)&quot;</span>
+                    <span class="sa">f</span><span class="s2">"No files found matching pattern: '</span><span class="si">{</span><span class="n">file_pattern</span><span class="si">}</span><span class="s2">'. "</span>
+                    <span class="s2">"Check that the path exists and uses glob syntax (e.g., 'data/*.pt')"</span>
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="kc">None</span></div>
@@ -963,11 +965,11 @@ window.runMermaid = runMermaid;</script>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">]</span>
-            <span class="n">metadata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">]})</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"file_path"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">]})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tokens</span> <span class="o">=</span> <span class="n">data</span>
-            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;file_path&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">]}</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"file_path"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="n">idx</span><span class="p">]}</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_metadata</span> <span class="k">else</span> <span class="n">tokens</span></div>
 
@@ -976,7 +978,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PairedDataset">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.PairedDataset">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PairedDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Paired data for conditional generation (super-resolution, inpainting).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Paired data for conditional generation (super-resolution, inpainting)."""</span>
 
 <div class="viewcode-block" id="PairedDataset.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.PairedDataset.__init__">[docs]</a>
@@ -987,7 +989,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">tokenizer</span><span class="p">:</span> <span class="n">DiscreteTokenizer</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cache_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_cache</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">pair_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;matched&quot;</span><span class="p">,</span>
+        <span class="n">pair_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"matched"</span><span class="p">,</span>
         <span class="n">mask_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -996,7 +998,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_dataset</span> <span class="o">=</span> <span class="n">TokenizedImageDataset</span><span class="p">(</span>
             <span class="n">input_pattern</span><span class="p">,</span>
             <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/inputs&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/inputs"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
             <span class="n">return_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
@@ -1010,7 +1012,7 @@ window.runMermaid = runMermaid;</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span> <span class="o">=</span> <span class="n">TokenizedImageDataset</span><span class="p">(</span>
                 <span class="n">target_pattern</span><span class="p">,</span>
                 <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-                <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/targets&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/targets"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
                 <span class="n">return_metadata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">normalize</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span>
@@ -1024,16 +1026,16 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">mask_ratio</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">mask_token</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;mask_token is required when using mask_ratio. &quot;</span>
-                <span class="s2">&quot;Example: PairedDataset(..., mask_ratio=0.15, mask_token=tokenizer.mask_token)&quot;</span>
+                <span class="s2">"mask_token is required when using mask_ratio. "</span>
+                <span class="s2">"Example: PairedDataset(..., mask_ratio=0.15, mask_token=tokenizer.mask_token)"</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">&quot;matched&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">same_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">"matched"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">same_data</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dataset</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input/target dataset length mismatch in &#39;matched&#39; mode: &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> inputs vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> targets. &quot;</span>
-                    <span class="s2">&quot;Use pair_mode=&#39;indexed&#39; or &#39;random&#39; for mismatched lengths.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Input/target dataset length mismatch in 'matched' mode: "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> inputs vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> targets. "</span>
+                    <span class="s2">"Use pair_mode='indexed' or 'random' for mismatched lengths."</span>
                 <span class="p">)</span></div>
 
 
@@ -1046,18 +1048,18 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">same_data</span><span class="p">:</span>
             <span class="n">target_tokens</span> <span class="o">=</span> <span class="n">input_tokens</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="n">target_meta</span> <span class="o">=</span> <span class="n">input_meta</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">&quot;matched&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">"matched"</span><span class="p">:</span>
             <span class="n">target_tokens</span><span class="p">,</span> <span class="n">target_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">&quot;indexed&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">"indexed"</span><span class="p">:</span>
             <span class="n">target_idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">)</span>
             <span class="n">target_tokens</span><span class="p">,</span> <span class="n">target_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">[</span><span class="n">target_idx</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span> <span class="o">==</span> <span class="s2">"random"</span><span class="p">:</span>
             <span class="n">target_idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
             <span class="n">target_tokens</span><span class="p">,</span> <span class="n">target_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dataset</span><span class="p">[</span><span class="n">target_idx</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unknown pair_mode: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                <span class="s2">&quot;Valid options: &#39;matched&#39; (1:1 pairing), &#39;indexed&#39; (wrap-around), &#39;random&#39;.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unknown pair_mode: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pair_mode</span><span class="si">}</span><span class="s2">'. "</span>
+                <span class="s2">"Valid options: 'matched' (1:1 pairing), 'indexed' (wrap-around), 'random'."</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_ratio</span><span class="p">:</span>
@@ -1067,9 +1069,9 @@ window.runMermaid = runMermaid;</script>
             <span class="n">input_tokens</span><span class="p">[</span><span class="n">mask_indices</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">input_meta</span><span class="p">,</span>
-            <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target_meta</span><span class="p">,</span>
-            <span class="s2">&quot;masked&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"input"</span><span class="p">:</span> <span class="n">input_meta</span><span class="p">,</span>
+            <span class="s2">"target"</span><span class="p">:</span> <span class="n">target_meta</span><span class="p">,</span>
+            <span class="s2">"masked"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_ratio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">input_tokens</span><span class="p">,</span> <span class="n">target_tokens</span><span class="p">,</span> <span class="n">metadata</span></div>
@@ -1087,7 +1089,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
     <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-tokenize dataset and save to disk.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Pre-tokenize dataset and save to disk."""</span>
 
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
     <span class="n">output_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1107,22 +1109,22 @@ window.runMermaid = runMermaid;</script>
         <span class="n">all_tokens</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">all_metadata</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokenizing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tokenizing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files..."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">metadata</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
             <span class="n">all_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
             <span class="n">all_metadata</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
         <span class="n">all_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">all_tokens</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;tokens.pt&quot;</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="n">all_tokens</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">all_metadata</span><span class="p">},</span> <span class="n">output_file</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">all_tokens</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">"tokens.pt"</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="s2">"tokens"</span><span class="p">:</span> <span class="n">all_tokens</span><span class="p">,</span> <span class="s2">"metadata"</span><span class="p">:</span> <span class="n">all_metadata</span><span class="p">},</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">all_tokens</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokenizing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tokenizing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files..."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loader</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)):</span>
-                <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;tokens_</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">batch_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">.pt&quot;</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="s2">&quot;tokens&quot;</span><span class="p">:</span> <span class="n">tokens</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">[</span><span class="n">j</span><span class="p">]},</span> <span class="n">output_file</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files to </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"tokens_</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">batch_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">j</span><span class="si">:</span><span class="s2">06d</span><span class="si">}</span><span class="s2">.pt"</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">({</span><span class="s2">"tokens"</span><span class="p">:</span> <span class="n">tokens</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="s2">"metadata"</span><span class="p">:</span> <span class="n">metadata</span><span class="p">[</span><span class="n">j</span><span class="p">]},</span> <span class="n">output_file</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> files to </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -1141,16 +1143,16 @@ window.runMermaid = runMermaid;</script>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">,</span> <span class="n">DataLoader</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create train/val dataloaders with discrete tokenization support.</span>
+<span class="w">    </span><span class="sd">"""Create train/val dataloaders with discrete tokenization support.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        seed: Optional base seed for deterministic shuffling and worker seeding.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">tokenizer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">consolidated</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;tokenizer is required unless using pre-tokenized data. &quot;</span>
-            <span class="s2">&quot;Pass a DiscreteTokenizer or set consolidated=True with .pt tokens.&quot;</span>
+            <span class="s2">"tokenizer is required unless using pre-tokenized data. "</span>
+            <span class="s2">"Pass a DiscreteTokenizer or set consolidated=True with .pt tokens."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">consolidated</span><span class="p">:</span>
@@ -1160,14 +1162,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">TokenizedImageDataset</span><span class="p">(</span>
             <span class="n">train_pattern</span><span class="p">,</span>
             <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/train&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/train"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
             <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">val_dataset</span> <span class="o">=</span> <span class="n">TokenizedImageDataset</span><span class="p">(</span>
             <span class="n">val_pattern</span><span class="p">,</span>
             <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/val&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/val"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
             <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1212,28 +1214,28 @@ window.runMermaid = runMermaid;</script>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">DataLoader</span><span class="p">,</span> <span class="n">DataLoader</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create train/val dataloaders for continuous latent codes.</span>
+<span class="w">    </span><span class="sd">"""Create train/val dataloaders for continuous latent codes.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        seed: Optional base seed for deterministic shuffling and worker seeding.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">tokenizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;tokenizer is required for continuous latents. Pass a ContinuousTokenizer instance.&quot;</span>
+            <span class="s2">"tokenizer is required for continuous latents. Pass a ContinuousTokenizer instance."</span>
         <span class="p">)</span>
 
     <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">ContinuousLatentDataset</span><span class="p">(</span>
         <span class="n">train_pattern</span><span class="p">,</span>
         <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-        <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/train&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/train"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
         <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">val_dataset</span> <span class="o">=</span> <span class="n">ContinuousLatentDataset</span><span class="p">(</span>
         <span class="n">val_pattern</span><span class="p">,</span>
         <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
-        <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/val&quot;</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cache_dir</span><span class="si">}</span><span class="s2">/val"</span> <span class="k">if</span> <span class="n">cache_dir</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">use_cache</span><span class="o">=</span><span class="n">use_cache</span><span class="p">,</span>
         <span class="o">**</span><span class="n">dataset_kwargs</span><span class="p">,</span>
     <span class="p">)</span>
@@ -1265,17 +1267,17 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;TokenizedImageDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousLatentDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PreTokenizedDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PairedDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;pretokenize_dataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_tokenized_dataloaders&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_latent_dataloaders&quot;</span><span class="p">,</span>
+    <span class="s2">"TokenizedImageDataset"</span><span class="p">,</span>
+    <span class="s2">"ContinuousLatentDataset"</span><span class="p">,</span>
+    <span class="s2">"PreTokenizedDataset"</span><span class="p">,</span>
+    <span class="s2">"PairedDataset"</span><span class="p">,</span>
+    <span class="s2">"pretokenize_dataset"</span><span class="p">,</span>
+    <span class="s2">"get_tokenized_dataloaders"</span><span class="p">,</span>
+    <span class="s2">"get_latent_dataloaders"</span><span class="p">,</span>
     <span class="c1"># Validation functions</span>
-    <span class="s2">&quot;validate_discrete_tokens&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;validate_continuous_latents&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;validate_image_for_tokenization&quot;</span><span class="p">,</span>
+    <span class="s2">"validate_discrete_tokens"</span><span class="p">,</span>
+    <span class="s2">"validate_continuous_latents"</span><span class="p">,</span>
+    <span class="s2">"validate_image_for_tokenization"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1287,7 +1289,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

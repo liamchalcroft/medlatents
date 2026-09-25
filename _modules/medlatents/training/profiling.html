@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.profiling &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.profiling &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.profiling</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Profiling utilities for training bottleneck detection.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Profiling utilities for training bottleneck detection."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -490,11 +492,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimingStats</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Statistics for a timed section.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Statistics for a timed section."""</span>
 
     <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">min_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+    <span class="n">min_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
     <span class="n">max_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="nd">@property</span>
@@ -512,26 +514,26 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrainingProfiler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Profiler for training loop bottleneck detection.</span>
+<span class="w">    </span><span class="sd">"""Profiler for training loop bottleneck detection.</span>
 
 <span class="sd">    Usage:</span>
 <span class="sd">        profiler = TrainingProfiler(enabled=True)</span>
 
 <span class="sd">        for batch in dataloader:</span>
-<span class="sd">            with profiler.section(&quot;data_load&quot;):</span>
+<span class="sd">            with profiler.section("data_load"):</span>
 <span class="sd">                data = preprocess(batch)</span>
 
-<span class="sd">            with profiler.section(&quot;forward&quot;):</span>
+<span class="sd">            with profiler.section("forward"):</span>
 <span class="sd">                loss = model(data)</span>
 
-<span class="sd">            with profiler.section(&quot;backward&quot;):</span>
+<span class="sd">            with profiler.section("backward"):</span>
 <span class="sd">                loss.backward()</span>
 
-<span class="sd">            with profiler.section(&quot;optimizer&quot;):</span>
+<span class="sd">            with profiler.section("optimizer"):</span>
 <span class="sd">                optimizer.step()</span>
 
 <span class="sd">        profiler.print_report()</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">sync_cuda</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Synchronize CUDA for accurate GPU timing</span>
@@ -543,11 +545,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.section">[docs]</a>
     <span class="nd">@contextmanager</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Time a section of code.</span>
+<span class="w">        </span><span class="sd">"""Time a section of code.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name: Name of the section (e.g., &quot;forward&quot;, &quot;backward&quot;, &quot;data_load&quot;)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            name: Name of the section (e.g., "forward", "backward", "data_load")</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
             <span class="k">yield</span>
             <span class="k">return</span>
@@ -571,25 +573,25 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TrainingProfiler.reset">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all timing statistics.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Reset all timing statistics."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="TrainingProfiler.get_stats">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.get_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get timing statistics for all sections.</span>
+<span class="w">        </span><span class="sd">"""Get timing statistics for all sections.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict mapping section names to their timing statistics.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">name</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
-                <span class="s2">&quot;total_ms&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">total_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
-                <span class="s2">&quot;avg_ms&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">avg_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
-                <span class="s2">&quot;min_ms&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">min_time</span> <span class="o">*</span> <span class="mi">1000</span> <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">min_time</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s2">&quot;max_ms&quot;</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">max_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">"count"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                <span class="s2">"total_ms"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">total_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">"avg_ms"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">avg_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                <span class="s2">"min_ms"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">min_time</span> <span class="o">*</span> <span class="mi">1000</span> <span class="k">if</span> <span class="n">stats</span><span class="o">.</span><span class="n">min_time</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">"max_ms"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">max_time</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="p">}</span></div>
@@ -598,11 +600,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TrainingProfiler.get_percentages">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.get_percentages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_percentages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get percentage of time spent in each section.</span>
+<span class="w">        </span><span class="sd">"""Get percentage of time spent in each section.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict mapping section names to their percentage of total time.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">total_time</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">if</span> <span class="n">total</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{}</span>
@@ -612,56 +614,56 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TrainingProfiler.print_report">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.print_report">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">print_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">top_n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print a formatted profiling report.</span>
+<span class="w">        </span><span class="sd">"""Print a formatted profiling report.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            top_n: Only show top N sections by time (None = show all)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stats</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No profiling data collected.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"No profiling data collected."</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
         <span class="n">percentages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_percentages</span><span class="p">()</span>
 
         <span class="c1"># Sort by total time</span>
-        <span class="n">sorted_sections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;total_ms&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">sorted_sections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"total_ms"</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">top_n</span><span class="p">:</span>
             <span class="n">sorted_sections</span> <span class="o">=</span> <span class="n">sorted_sections</span><span class="p">[:</span><span class="n">top_n</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;TRAINING PROFILER REPORT&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Section&#39;</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Calls&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Total(ms)&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Avg(ms)&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;%&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"TRAINING PROFILER REPORT"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Section'</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'Calls'</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'Total(ms)'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'Avg(ms)'</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'%'</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"-"</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sorted_sections</span><span class="p">:</span>
             <span class="n">pct</span> <span class="o">=</span> <span class="n">percentages</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;total_ms&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;avg_ms&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">&gt;7.1f</span><span class="si">}</span><span class="s2">%&quot;</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'count'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'total_ms'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'avg_ms'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">pct</span><span class="si">:</span><span class="s2">&gt;7.1f</span><span class="si">}</span><span class="s2">%"</span>
             <span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
-        <span class="n">total_ms</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;total_ms&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;TOTAL&#39;</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">total_ms</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"-"</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+        <span class="n">total_ms</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"total_ms"</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'TOTAL'</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">''</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">total_ms</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">70</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TrainingProfiler.get_wandb_metrics">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.TrainingProfiler.get_wandb_metrics">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_wandb_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;profiler/&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get metrics formatted for wandb logging.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_wandb_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"profiler/"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get metrics formatted for wandb logging.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            prefix: Prefix for metric names</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict of metrics suitable for wandb.log()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">_avg_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;avg_ms&quot;</span><span class="p">]</span>
-            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">_total_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;total_ms&quot;</span><span class="p">]</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">_avg_ms"</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">"avg_ms"</span><span class="p">]</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">_total_ms"</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">"total_ms"</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">metrics</span></div>
 </div>
 
@@ -670,7 +672,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MemoryProfiler">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MemoryProfiler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MemoryProfiler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Track GPU memory usage during training.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Track GPU memory usage during training."""</span>
 
 <div class="viewcode-block" id="MemoryProfiler.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MemoryProfiler.__init__">[docs]</a>
@@ -684,7 +686,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MemoryProfiler.track">[docs]</a>
     <span class="nd">@contextmanager</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">track</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track memory usage for a section of code.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Track memory usage for a section of code."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
             <span class="k">yield</span>
             <span class="k">return</span>
@@ -705,11 +707,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MemoryProfiler.get_stats">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MemoryProfiler.get_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get memory statistics in MB.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get memory statistics in MB."""</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">name</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;delta_mb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
-                <span class="s2">&quot;peak_mb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_peak_memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+                <span class="s2">"delta_mb"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+                <span class="s2">"peak_mb"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_peak_memory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
             <span class="p">}</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_memory</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_peak_memory</span><span class="p">)</span>
         <span class="p">}</span></div>
@@ -718,23 +720,23 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MemoryProfiler.print_report">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MemoryProfiler.print_report">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">print_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print memory usage report.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Print memory usage report."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_peak_memory</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No memory profiling data collected.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"No memory profiling data collected."</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;MEMORY PROFILER REPORT&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Section&#39;</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Delta(MB)&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Peak(MB)&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"MEMORY PROFILER REPORT"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'Section'</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'Delta(MB)'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'Peak(MB)'</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"-"</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;peak_mb&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;delta_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;peak_mb&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"peak_mb"</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;20</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'delta_mb'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'peak_mb'</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"="</span> <span class="o">*</span> <span class="mi">50</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 </div>
 
 
@@ -746,7 +748,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span>
     <span class="n">profiler</span><span class="p">:</span> <span class="n">TrainingProfiler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Profile a single training step.</span>
+<span class="w">    </span><span class="sd">"""Profile a single training step.</span>
 
 <span class="sd">    Convenience function that profiles forward, backward, and optimizer steps.</span>
 
@@ -766,17 +768,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            loss_fn=lambda m, b: F.cross_entropy(m(b), targets)</span>
 <span class="sd">        )</span>
 <span class="sd">        wandb.log(metrics)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">profiler</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">profiler</span> <span class="o">=</span> <span class="n">TrainingProfiler</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;forward&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"forward"</span><span class="p">):</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
 
-    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;backward&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"backward"</span><span class="p">):</span>
         <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 
-    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">profiler</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">"optimizer"</span><span class="p">):</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
 
@@ -791,7 +793,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

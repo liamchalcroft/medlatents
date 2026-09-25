@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.generation.generator &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.generation.generator &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.generation.generator</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;High-level generators for discrete and continuous latent models.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""High-level generators for discrete and continuous latent models."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
@@ -496,7 +498,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_nibabel</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lazy import for nibabel to avoid loading it at module import time.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Lazy import for nibabel to avoid loading it at module import time."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span>
 
     <span class="k">return</span> <span class="n">nibabel</span>
@@ -504,22 +506,22 @@ window.runMermaid = runMermaid;</script>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_finite_positive</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite and &gt; 0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite and &gt; 0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_int_ge</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">minimum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">minimum</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be &gt;= </span><span class="si">{</span><span class="n">minimum</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be &gt;= </span><span class="si">{</span><span class="n">minimum</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DiscreteLatentGenerator">
 <a class="viewcode-back" href="../../../api/generation.html#medlatents.generation.DiscreteLatentGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteLatentGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Unified generator for discrete latent generative models.</span>
 
 <span class="sd">    Supports:</span>
@@ -527,13 +529,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - maskgit: Iterative parallel generation (MaskGIT)</span>
 <span class="sd">    - flow: Discrete flow matching generation</span>
 <span class="sd">    - diffusion: D3PM discrete diffusion generation</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiscreteLatentGenerator.__init__">
 <a class="viewcode-back" href="../../../api/generation.html#medlatents.generation.DiscreteLatentGenerator.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">],</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"diffusion"</span><span class="p">],</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">tokenizer</span><span class="p">:</span> <span class="n">DiscreteTokenizer</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
@@ -542,16 +544,16 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;special_tokens&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"special_tokens"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Initialize D3PM if using diffusion</span>
-        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
-            <span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;out_channels&quot;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
+            <span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"out_channels"</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Could not determine vocab_size from model. &quot;</span>
-                    <span class="s2">&quot;Ensure your model has an &#39;out_channels&#39; or &#39;vocab_size&#39; attribute. &quot;</span>
-                    <span class="s2">&quot;For DiscreteDiT models, set out_channels in the constructor.&quot;</span>
+                    <span class="s2">"Could not determine vocab_size from model. "</span>
+                    <span class="s2">"Ensure your model has an 'out_channels' or 'vocab_size' attribute. "</span>
+                    <span class="s2">"For DiscreteDiT models, set out_channels in the constructor."</span>
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -562,17 +564,17 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_encode_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;tokenize&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"tokenize"</span><span class="p">):</span>
             <span class="n">tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;encode&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"encode"</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
             <span class="n">tokens</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">result</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">..data.tokenizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tokenizer_module_name</span>
 
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Tokenizer </span><span class="si">{</span><span class="n">get_tokenizer_module_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="si">}</span><span class="s2"> (from </span><span class="si">{</span><span class="n">get_tokenizer_module_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span><span class="si">}</span><span class="s2">) &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;must expose tokenize() or encode() method&quot;</span>
+                <span class="sa">f</span><span class="s2">"Tokenizer </span><span class="si">{</span><span class="n">get_tokenizer_module_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="si">}</span><span class="s2"> (from </span><span class="si">{</span><span class="n">get_tokenizer_module_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span><span class="si">}</span><span class="s2">) "</span>
+                <span class="sa">f</span><span class="s2">"must expose tokenize() or encode() method"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
 
@@ -581,42 +583,42 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_checkpoints</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">],</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"diffusion"</span><span class="p">],</span>
         <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">tokenizer_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">weights_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load generator from model and tokenizer checkpoints.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load generator from model and tokenizer checkpoints."""</span>
         <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
 
         <span class="c1"># Load tokenizer</span>
         <span class="n">tokenizer_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
             <span class="n">tokenizer_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="n">weights_only</span>
         <span class="p">)</span>
-        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">DiscreteTokenizer</span><span class="p">(</span><span class="n">tokenizer_weights</span><span class="p">[</span><span class="s2">&quot;hparams&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">tokenizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">tokenizer_weights</span><span class="p">[</span><span class="s2">&quot;net&quot;</span><span class="p">])</span>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">DiscreteTokenizer</span><span class="p">(</span><span class="n">tokenizer_weights</span><span class="p">[</span><span class="s2">"hparams"</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">tokenizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">tokenizer_weights</span><span class="p">[</span><span class="s2">"net"</span><span class="p">])</span>
 
         <span class="c1"># Load model</span>
         <span class="n">model_weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="n">weights_only</span><span class="p">)</span>
-        <span class="n">hparams</span> <span class="o">=</span> <span class="n">model_weights</span><span class="p">[</span><span class="s2">&quot;hparams&quot;</span><span class="p">]</span>
-        <span class="n">model_size</span> <span class="o">=</span> <span class="n">hparams</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;model_size&quot;</span><span class="p">)</span>
+        <span class="n">hparams</span> <span class="o">=</span> <span class="n">model_weights</span><span class="p">[</span><span class="s2">"hparams"</span><span class="p">]</span>
+        <span class="n">model_size</span> <span class="o">=</span> <span class="n">hparams</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"model_size"</span><span class="p">)</span>
 
         <span class="c1"># Select model class based on type</span>
-        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">Autoreg_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Autoreg-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">MaskGIT_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;MaskGIT-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span> <span class="ow">or</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;DiscreteDiT-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"autoreg"</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">Autoreg_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">"Autoreg-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">MaskGIT_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">"MaskGIT-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span> <span class="ow">or</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="sa">f</span><span class="s2">"DiscreteDiT-</span><span class="si">{</span><span class="n">model_size</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">](</span><span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unknown model type: &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Valid options are: &#39;autoreg&#39;, &#39;maskgit&#39;, &#39;flow&#39;, &#39;diffusion&#39;.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unknown model type: '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. "</span>
+                <span class="sa">f</span><span class="s2">"Valid options are: 'autoreg', 'maskgit', 'flow', 'diffusion'."</span>
             <span class="p">)</span>
 
-        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">model_weights</span><span class="p">[</span><span class="s2">&quot;net&quot;</span><span class="p">])</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">model_weights</span><span class="p">[</span><span class="s2">"net"</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span></div>
 
@@ -633,7 +635,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate samples based on model type.</span>
 
 <span class="sd">        Args:</span>
@@ -647,32 +649,32 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Generated token sequences [num_samples, seq_length]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="s2">&quot;num_samples&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">seq_length</span><span class="p">,</span> <span class="s2">&quot;seq_length&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">_ensure_finite_positive</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="s2">"num_samples"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">seq_length</span><span class="p">,</span> <span class="s2">"seq_length"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">_ensure_finite_positive</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">top_k</span><span class="p">,</span> <span class="s2">&quot;top_k&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">top_k</span><span class="p">,</span> <span class="s2">"top_k"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">num_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_steps</span><span class="p">,</span> <span class="s2">&quot;num_steps&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_steps</span><span class="p">,</span> <span class="s2">"num_steps"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;seed must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"seed must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"autoreg"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_autoreg</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_maskgit</span><span class="p">(</span>
                     <span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">num_steps</span> <span class="ow">or</span> <span class="mi">12</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_flow</span><span class="p">(</span>
                     <span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">num_steps</span> <span class="ow">or</span> <span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_diffusion</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">temperature</span><span class="p">)</span></div>
 
 
@@ -683,7 +685,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate using autoregressive sampling.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate using autoregressive sampling."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">prompt_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">bos</span>
             <span class="n">eos_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span><span class="o">.</span><span class="n">eos</span>
@@ -707,7 +709,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate using iterative parallel decoding (MaskGIT).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate using iterative parallel decoding (MaskGIT)."""</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
             <span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">mask_token</span><span class="p">,</span>
@@ -722,17 +724,17 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">scheduler_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;polynomial&quot;</span><span class="p">,</span>
+        <span class="n">scheduler_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"polynomial"</span><span class="p">,</span>
         <span class="n">scheduler_power</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
-        <span class="n">source_dist</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+        <span class="n">source_dist</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate using discrete flow matching.</span>
+<span class="w">        </span><span class="sd">"""Generate using discrete flow matching.</span>
 
 <span class="sd">        Uses iterative sampling: at each step, the model predicts logits</span>
 <span class="sd">        which are converted to probabilities and sampled from.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_steps</span><span class="p">,</span> <span class="s2">&quot;num_steps&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">_ensure_int_ge</span><span class="p">(</span><span class="n">num_steps</span><span class="p">,</span> <span class="s2">"num_steps"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vocab_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">vocab_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">out_channels</span>
 
@@ -761,7 +763,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_diffusion</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate using D3PM discrete diffusion.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate using D3PM discrete diffusion."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">),</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span>
         <span class="p">)</span>
@@ -779,12 +781,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate samples and save as NIfTI volumes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate samples and save as NIfTI volumes."""</span>
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="n">volumes_dir</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;volumes&quot;</span>
+        <span class="n">volumes_dir</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">"volumes"</span>
         <span class="n">volumes_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating </span><span class="si">{</span><span class="n">num_samples</span><span class="si">}</span><span class="s2"> samples...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Generating </span><span class="si">{</span><span class="n">num_samples</span><span class="si">}</span><span class="s2"> samples..."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)):</span>
             <span class="c1"># Generate single sample</span>
             <span class="n">seed_i</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">i</span>
@@ -803,7 +805,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="c1"># Save as NIfTI</span>
             <span class="n">volume_nii</span> <span class="o">=</span> <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">volume</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-            <span class="n">volume_path</span> <span class="o">=</span> <span class="n">volumes_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;volume_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span>
+            <span class="n">volume_path</span> <span class="o">=</span> <span class="n">volumes_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"volume_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz"</span>
             <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">volume_nii</span><span class="p">,</span> <span class="n">volume_path</span><span class="p">)</span></div>
 
 
@@ -817,15 +819,15 @@ window.runMermaid = runMermaid;</script>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inpaint anomalies in volumes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Inpaint anomalies in volumes."""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 
         <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="n">volumes_dir</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">&quot;inpainted&quot;</span>
+        <span class="n">volumes_dir</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="s2">"inpainted"</span>
         <span class="n">volumes_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">input_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">input_pattern</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Inpainting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> volumes...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Inpainting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> volumes..."</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">input_files</span><span class="p">)):</span>
             <span class="c1"># Load volume</span>
@@ -849,7 +851,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">inpainted_nii</span> <span class="o">=</span> <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span>
                 <span class="n">inpainted_volume</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">volume_nii</span><span class="o">.</span><span class="n">affine</span>
             <span class="p">)</span>
-            <span class="n">output_path</span> <span class="o">=</span> <span class="n">volumes_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;inpainted_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span>
+            <span class="n">output_path</span> <span class="o">=</span> <span class="n">volumes_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"inpainted_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz"</span>
             <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">inpainted_nii</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div>
 </div>
 
@@ -858,30 +860,30 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousLatentGenerator">
 <a class="viewcode-back" href="../../../api/generation.html#medlatents.generation.ContinuousLatentGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousLatentGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generator for continuous latent diffusion and flow models.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generator for continuous latent diffusion and flow models."""</span>
 
 <div class="viewcode-block" id="ContinuousLatentGenerator.__init__">
 <a class="viewcode-back" href="../../../api/generation.html#medlatents.generation.ContinuousLatentGenerator.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;diffusion&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">],</span>
+        <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"diffusion"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">],</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">tokenizer</span><span class="p">:</span> <span class="n">ContinuousTokenizer</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
         <span class="n">diffusion</span><span class="p">:</span> <span class="n">ContinuousGaussianDiffusion</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">flow</span><span class="p">:</span> <span class="n">RectifiedFlow</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;diffusion&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="n">model_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"diffusion"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">}:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unsupported model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39; for ContinuousLatentGenerator. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Valid options are: &#39;diffusion&#39;, &#39;flow&#39;. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;For discrete models, use DiscreteLatentGenerator instead.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unsupported model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">' for ContinuousLatentGenerator. "</span>
+                <span class="sa">f</span><span class="s2">"Valid options are: 'diffusion', 'flow'. "</span>
+                <span class="sa">f</span><span class="s2">"For discrete models, use DiscreteLatentGenerator instead."</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">tokenizer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">tokenizer</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">tokenizer</span>
+            <span class="n">tokenizer</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="k">if</span> <span class="n">tokenizer</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"to"</span><span class="p">)</span> <span class="k">else</span> <span class="n">tokenizer</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
 
@@ -889,25 +891,25 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">flow</span> <span class="o">=</span> <span class="n">flow</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;eval&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"eval"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_infer_latent_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer latent shape from tokenizer configuration.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Infer latent shape from tokenizer configuration."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Cannot infer latent shape: no tokenizer provided. &quot;</span>
-                <span class="s2">&quot;Either pass a tokenizer to the constructor, or provide latent_shape &quot;</span>
-                <span class="s2">&quot;explicitly to the generate() method.&quot;</span>
+                <span class="s2">"Cannot infer latent shape: no tokenizer provided. "</span>
+                <span class="s2">"Either pass a tokenizer to the constructor, or provide latent_shape "</span>
+                <span class="s2">"explicitly to the generate() method."</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;latent_shape&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"latent_shape"</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">latent_shape</span><span class="p">)</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have &#39;latent_shape&#39; attribute. &quot;</span>
-            <span class="s2">&quot;This attribute should define the spatial dimensions of the latent representation.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have 'latent_shape' attribute. "</span>
+            <span class="s2">"This attribute should define the spatial dimensions of the latent representation."</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_diffusion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latent_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ContinuousGaussianDiffusion</span><span class="p">:</span>
@@ -945,7 +947,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
                 <span class="n">diffusion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_diffusion</span><span class="p">(</span><span class="n">latent_shape</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">diffusion</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
@@ -975,19 +977,19 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousLatentGenerator.decode_latents">
 <a class="viewcode-back" href="../../../api/generation.html#medlatents.generation.ContinuousLatentGenerator.decode_latents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode_latents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latents</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">decode_kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode latents to reconstruction using tokenizer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Decode latents to reconstruction using tokenizer."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Tokenizer required to decode latents. &quot;</span>
-                <span class="s2">&quot;Pass a tokenizer to the constructor or use generate_volumes() instead.&quot;</span>
+                <span class="s2">"Tokenizer required to decode latents. "</span>
+                <span class="s2">"Pass a tokenizer to the constructor or use generate_volumes() instead."</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;decode&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"decode"</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">latents</span><span class="p">,</span> <span class="o">**</span><span class="n">decode_kwargs</span><span class="p">))</span>
 
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have &#39;decode&#39; method. &quot;</span>
-            <span class="s2">&quot;Ensure you&#39;re using a ContinuousTokenizer or DiscreteTokenizer from medtokenizers.&quot;</span>
+            <span class="sa">f</span><span class="s2">"Tokenizer </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have 'decode' method. "</span>
+            <span class="s2">"Ensure you're using a ContinuousTokenizer or DiscreteTokenizer from medtokenizers."</span>
         <span class="p">)</span></div>
 
 
@@ -1030,7 +1032,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
             <span class="n">volume</span> <span class="o">=</span> <span class="n">reconstruction</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
             <span class="n">nii</span> <span class="o">=</span> <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">affine_matrix</span><span class="p">)</span>
-            <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;sample_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span><span class="p">)</span></div>
+            <span class="n">_get_nibabel</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">output_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"sample_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.nii.gz"</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -1043,7 +1045,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

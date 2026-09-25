@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Getting Started &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=a58bc63e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -168,13 +168,13 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </section>
 <section id="install-with-development-dependencies">
 <h3>Install with Development Dependencies<a class="headerlink" href="#install-with-development-dependencies" title="Link to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
 </pre></div>
 </div>
 </section>
 <section id="install-with-documentation-dependencies">
 <h3>Install with Documentation Dependencies<a class="headerlink" href="#install-with-documentation-dependencies" title="Link to this heading"></a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[docs]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[docs]"</span>
 </pre></div>
 </div>
 </section>
@@ -193,14 +193,14 @@ copy-pasteable starting point. For the full, runnable version see
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoregressiveTransformer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.configs</span><span class="w"> </span><span class="kn">import</span> <span class="n">MODEL_CONFIGS</span>
 
-<span class="c1"># Create a &quot;nano&quot; model from the shared size presets</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">MODEL_CONFIGS</span><span class="p">[</span><span class="s2">&quot;nano&quot;</span><span class="p">]</span>
+<span class="c1"># Create a "nano" model from the shared size presets</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">MODEL_CONFIGS</span><span class="p">[</span><span class="s2">"nano"</span><span class="p">]</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">AutoregressiveTransformer</span><span class="p">(</span>
     <span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
     <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
-    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">],</span>
-    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;depth&quot;</span><span class="p">],</span>
-    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;num_heads&quot;</span><span class="p">],</span>
+    <span class="n">hidden_size</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">"hidden_size"</span><span class="p">],</span>
+    <span class="n">depth</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">"depth"</span><span class="p">],</span>
+    <span class="n">num_heads</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">"num_heads"</span><span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># Synthetic token sequences (replace with your tokenized data)</span>
@@ -228,7 +228,7 @@ target length.</p>
 <span class="n">prompt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>   <span class="c1"># [batch, prompt_len]</span>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated samples shape: </span><span class="si">{</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Generated samples shape: </span><span class="si">{</span><span class="n">samples</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="c1"># Output: Generated samples shape: torch.Size([4, 256])</span>
 </pre></div>
 </div>
@@ -262,17 +262,17 @@ target length.</p>
 
 <span class="c1"># Load generator (exposes the loaded .model and .tokenizer)</span>
 <span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteLatentGenerator</span><span class="o">.</span><span class="n">from_checkpoints</span><span class="p">(</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
-    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;checkpoints/model.pt&quot;</span><span class="p">,</span>
-    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">&quot;tokenizer.pt&quot;</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">"checkpoints/model.pt"</span><span class="p">,</span>
+    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">"tokenizer.pt"</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Create inpainting mask (block region); True keeps the known region,</span>
 <span class="c1"># False marks voxels to inpaint.</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
     <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
-    <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span>
+    <span class="n">mask_type</span><span class="o">=</span><span class="s2">"block"</span><span class="p">,</span>
     <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
     <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">192</span><span class="p">),</span>
 <span class="p">)</span>
@@ -283,7 +283,7 @@ target length.</p>
     <span class="n">tokenizer</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
     <span class="n">volume</span><span class="o">=</span><span class="n">corrupted_image</span><span class="p">,</span>
     <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
     <span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -343,7 +343,7 @@ target length.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

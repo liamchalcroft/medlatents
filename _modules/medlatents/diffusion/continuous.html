@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.diffusion.continuous &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.diffusion.continuous &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.diffusion.continuous</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Continuous diffusion utilities for latent generative modelling.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Continuous diffusion utilities for latent generative modelling."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,29 +503,29 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousGaussianDiffusion">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousGaussianDiffusion">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousGaussianDiffusion</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gaussian diffusion process for continuous latent spaces.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Gaussian diffusion process for continuous latent spaces."""</span>
 
 <div class="viewcode-block" id="ContinuousGaussianDiffusion.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousGaussianDiffusion.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">num_timesteps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="n">schedule_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
-        <span class="n">prediction_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">,</span>
+        <span class="n">schedule_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cosine"</span><span class="p">,</span>
+        <span class="n">prediction_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"epsilon"</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">beta_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
         <span class="n">beta_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2e-2</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_timesteps</span> <span class="o">=</span> <span class="n">num_timesteps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">=</span> <span class="n">prediction_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="n">betas</span> <span class="o">=</span> <span class="n">_linear_beta_schedule</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">,</span> <span class="n">beta_start</span><span class="p">,</span> <span class="n">beta_end</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="n">betas</span> <span class="o">=</span> <span class="n">_cosine_beta_schedule</span><span class="p">(</span><span class="n">num_timesteps</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule_type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule_type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">register_schedule</span><span class="p">(</span><span class="n">betas</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span></div>
 
@@ -569,11 +571,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousGaussianDiffusion.q_sample">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">q_sample</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x_start</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">x_start</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">noise</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample from q(x_t | x_0) using the reparameterization trick.</span>
+        <span class="n">noise</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Sample from q(x_t | x_0) using the reparameterization trick.</span>
 
 <span class="sd">        The forward diffusion process gradually adds Gaussian noise to the data:</span>
 <span class="sd">        q(x_t | x_0) = 𝒩(x_t; √ᾱ_t x_0, (1 - ᾱ_t)I)</span>
@@ -590,7 +592,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Noisy data x_t at timestep t</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">noise</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_noise_like</span><span class="p">(</span><span class="n">x_start</span><span class="p">)</span>
         <span class="n">sqrt_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_start</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -599,7 +601,7 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_call_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call model with standardized (x, t, y) signature.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Call model with standardized (x, t, y) signature."""</span>
         <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ContinuousGaussianDiffusion.compute_loss">
@@ -607,17 +609,17 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">,</span>
-        <span class="n">x_start</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
+        <span class="n">x_start</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">],</span>
         <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">noise</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">noise</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch ..."</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute diffusion training loss.</span>
+<span class="w">        </span><span class="sd">"""Compute diffusion training loss.</span>
 
 <span class="sd">        The model learns to predict one of three targets:</span>
-<span class="sd">        - &quot;epsilon&quot;: The noise ε that was added (original DDPM)</span>
-<span class="sd">        - &quot;x0&quot;: The clean data x_0 directly</span>
-<span class="sd">        - &quot;v&quot;: The velocity v_t = √ᾱ_t · ε - √(1 - ᾱ_t) · x_0 (progressive distillation)</span>
+<span class="sd">        - "epsilon": The noise ε that was added (original DDPM)</span>
+<span class="sd">        - "x0": The clean data x_0 directly</span>
+<span class="sd">        - "v": The velocity v_t = √ᾱ_t · ε - √(1 - ᾱ_t) · x_0 (progressive distillation)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Denoising network</span>
@@ -628,7 +630,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            MSE loss between model prediction and target</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x_start</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_timesteps</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,),</span> <span class="n">device</span><span class="o">=</span><span class="n">x_start</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -638,11 +640,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
 
         <span class="c1"># Determine target based on prediction type</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"epsilon"</span><span class="p">:</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">noise</span>  <span class="c1"># Predict the noise that was added</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;x0&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"x0"</span><span class="p">:</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">x_start</span>  <span class="c1"># Predict the clean data directly</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"v"</span><span class="p">:</span>
             <span class="c1"># Predict the velocity (progressive distillation formulation)</span>
             <span class="n">sqrt_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_start</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">sqrt_one_minus_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span>
@@ -650,7 +652,7 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">sqrt_alpha</span> <span class="o">*</span> <span class="n">noise</span> <span class="o">-</span> <span class="n">sqrt_one_minus_alpha</span> <span class="o">*</span> <span class="n">x_start</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown prediction_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown prediction_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">model_output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
 
@@ -660,17 +662,17 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">predict_x0</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model_output</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">x_t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;epsilon&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"epsilon"</span><span class="p">:</span>
             <span class="n">sqrt_alpha_cumprod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">sqrt_one_minus_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_one_minus_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">x_t</span> <span class="o">-</span> <span class="n">sqrt_one_minus_alpha</span> <span class="o">*</span> <span class="n">model_output</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt_alpha_cumprod</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;x0&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"x0"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">model_output</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span> <span class="o">==</span> <span class="s2">"v"</span><span class="p">:</span>
             <span class="n">sqrt_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">sqrt_one_minus_alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sqrt_one_minus_alphas_cumprod</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">sqrt_alpha</span> <span class="o">*</span> <span class="n">x_t</span> <span class="o">-</span> <span class="n">sqrt_one_minus_alpha</span> <span class="o">*</span> <span class="n">model_output</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown prediction_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown prediction_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prediction_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ContinuousGaussianDiffusion.p_sample">
@@ -757,7 +759,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ContinuousGaussianDiffusion&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ContinuousGaussianDiffusion"</span><span class="p">]</span>
 </pre></div>
 
            </div>
@@ -768,7 +770,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

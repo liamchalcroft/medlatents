@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.conditioning.bundle &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.conditioning.bundle &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.conditioning.bundle</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Unified conditioning data structures for generative models.</span>
+<span></span><span class="sd">"""Unified conditioning data structures for generative models.</span>
 
 <span class="sd">Provides standardized containers for conditioning inputs during training and inference,</span>
 <span class="sd">supporting multiple modalities (time, class, text, spatial/image) with CFG dropout.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -490,7 +492,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditioningConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditioningConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for model conditioning capabilities.</span>
+<span class="w">    </span><span class="sd">"""Configuration for model conditioning capabilities.</span>
 
 <span class="sd">    This config specifies what types of conditioning a model supports and how</span>
 <span class="sd">    they should be processed. Used during model construction to set up the</span>
@@ -511,7 +513,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        spatial_method: How to inject spatial conditioning</span>
 <span class="sd">        block_conditioning: Conditioning method for transformer blocks</span>
 <span class="sd">        fusion_method: How to fuse multiple conditioning types</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Timestep conditioning (required for diffusion/flow)</span>
     <span class="n">use_timestep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
@@ -531,7 +533,7 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Image/spatial conditioning (for inpainting, super-res, multi-contrast MRI, etc.)</span>
     <span class="n">use_spatial</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">spatial_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">spatial_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;concat&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_attention&quot;</span><span class="p">,</span> <span class="s2">&quot;film&quot;</span><span class="p">,</span> <span class="s2">&quot;add&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;concat&quot;</span>
+    <span class="n">spatial_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"concat"</span><span class="p">,</span> <span class="s2">"cross_attention"</span><span class="p">,</span> <span class="s2">"film"</span><span class="p">,</span> <span class="s2">"add"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"concat"</span>
 
     <span class="c1"># Segmentation mask conditioning (for anatomy-aware generation)</span>
     <span class="n">use_segmentation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -543,24 +545,24 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Block conditioning method</span>
     <span class="n">block_conditioning</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
-        <span class="s2">&quot;adaln&quot;</span><span class="p">,</span> <span class="s2">&quot;adaln_zero&quot;</span><span class="p">,</span> <span class="s2">&quot;adain&quot;</span><span class="p">,</span> <span class="s2">&quot;adain_zero&quot;</span><span class="p">,</span> <span class="s2">&quot;film&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_attention&quot;</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;adaln_zero&quot;</span>
+        <span class="s2">"adaln"</span><span class="p">,</span> <span class="s2">"adaln_zero"</span><span class="p">,</span> <span class="s2">"adain"</span><span class="p">,</span> <span class="s2">"adain_zero"</span><span class="p">,</span> <span class="s2">"film"</span><span class="p">,</span> <span class="s2">"cross_attention"</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">"adaln_zero"</span>
 
     <span class="c1"># Multi-modal fusion</span>
-    <span class="n">fusion_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;concat&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_attention&quot;</span><span class="p">,</span> <span class="s2">&quot;gated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span>
+    <span class="n">fusion_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"add"</span><span class="p">,</span> <span class="s2">"concat"</span><span class="p">,</span> <span class="s2">"cross_attention"</span><span class="p">,</span> <span class="s2">"gated"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"add"</span>
 
 <div class="viewcode-block" id="ConditioningConfig.validate">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditioningConfig.validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate configuration consistency.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Validate configuration consistency."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_class</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_classes must be &gt; 0 when use_class=True&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"num_classes must be &gt; 0 when use_class=True"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spatial</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_channels</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;spatial_channels must be &gt; 0 when use_spatial=True&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"spatial_channels must be &gt; 0 when use_spatial=True"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_segmentation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_segmentation_classes</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_segmentation_classes must be &gt; 0 when use_segmentation=True&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"num_segmentation_classes must be &gt; 0 when use_segmentation=True"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_metadata</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata_dim</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;metadata_dim must be &gt; 0 when use_metadata=True&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"metadata_dim must be &gt; 0 when use_metadata=True"</span><span class="p">)</span></div>
 </div>
 
 
@@ -569,7 +571,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditioningBundle">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditioningBundle</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standardized container for all conditioning inputs.</span>
+<span class="w">    </span><span class="sd">"""Standardized container for all conditioning inputs.</span>
 
 <span class="sd">    This dataclass provides a unified interface for passing conditioning information</span>
 <span class="sd">    through models during training and inference. It supports multiple conditioning</span>
@@ -600,7 +602,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        metadata: Scanner/acquisition metadata [batch, dim]</span>
 <span class="sd">        null_class: Null class index for CFG</span>
 <span class="sd">        null_text: Null text embedding for CFG</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Required</span>
     <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
@@ -624,18 +626,18 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">batch_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get batch size from timesteps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get batch size from timesteps."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get device from timesteps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get device from timesteps."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps</span><span class="o">.</span><span class="n">device</span>
 
 <div class="viewcode-block" id="ConditioningBundle.to">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditioningBundle.to">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">non_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConditioningBundle&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move all tensors to specified device with batched transfers.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">non_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ConditioningBundle"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Move all tensors to specified device with batched transfers."""</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_move</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="n">non_blocking</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
@@ -663,8 +665,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">class_dropout_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">text_dropout_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">force_drop_ids</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConditioningBundle&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply CFG dropout to conditioning (for training).</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ConditioningBundle"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Apply CFG dropout to conditioning (for training).</span>
 
 <span class="sd">        Randomly drops conditioning to enable classifier-free guidance at inference.</span>
 
@@ -675,7 +677,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            New ConditioningBundle with dropout applied</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">new_class_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span>
         <span class="n">new_text_embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_embeddings</span>
         <span class="n">new_text_pooled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_pooled</span>
@@ -756,12 +758,12 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="ConditioningBundle.get_null_bundle">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditioningBundle.get_null_bundle">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_null_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConditioningBundle&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get null (unconditional) version of this bundle for CFG inference.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_null_bundle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ConditioningBundle"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get null (unconditional) version of this bundle for CFG inference.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            New ConditioningBundle with all conditioning replaced by null values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">null_class_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">null_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -808,26 +810,26 @@ window.runMermaid = runMermaid;</script>
         <span class="n">batch</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
         <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">ConditioningConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ConditioningBundle&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create bundle from dictionary batch (for DataLoader compatibility).</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ConditioningBundle"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create bundle from dictionary batch (for DataLoader compatibility).</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            batch: Dictionary with keys like &#39;tokens&#39;, &#39;class_labels&#39;, &#39;text_embeddings&#39;, etc.</span>
+<span class="sd">            batch: Dictionary with keys like 'tokens', 'class_labels', 'text_embeddings', etc.</span>
 <span class="sd">            timesteps: Timestep tensor (required if not in batch)</span>
 <span class="sd">            config: Optional config to determine null values</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            ConditioningBundle populated from batch</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get timesteps</span>
         <span class="k">if</span> <span class="n">timesteps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">timesteps</span>
-        <span class="k">elif</span> <span class="s2">&quot;timesteps&quot;</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;timesteps&quot;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="s2">&quot;t&quot;</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">"timesteps"</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"timesteps"</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">"t"</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s2">"t"</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;timesteps must be provided or present in batch&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"timesteps must be provided or present in batch"</span><span class="p">)</span>
 
         <span class="c1"># Determine null class</span>
         <span class="n">null_class</span> <span class="o">=</span> <span class="kc">None</span>
@@ -835,7 +837,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">null_class</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">num_classes</span>  <span class="c1"># Common convention</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_first_present</span><span class="p">(</span><span class="o">*</span><span class="n">keys</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Get first key that exists in batch.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Get first key that exists in batch."""</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">batch</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
@@ -843,18 +845,18 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
-            <span class="n">class_labels</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;class_labels&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;labels&quot;</span><span class="p">),</span>
-            <span class="n">text_embeddings</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;text_embeddings&quot;</span><span class="p">,</span> <span class="s2">&quot;text_emb&quot;</span><span class="p">),</span>
-            <span class="n">text_pooled</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;text_pooled&quot;</span><span class="p">,</span> <span class="s2">&quot;pooled_text&quot;</span><span class="p">),</span>
-            <span class="n">text_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;text_mask&quot;</span><span class="p">,</span> <span class="s2">&quot;attention_mask&quot;</span><span class="p">),</span>
+            <span class="n">class_labels</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"class_labels"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"labels"</span><span class="p">),</span>
+            <span class="n">text_embeddings</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"text_embeddings"</span><span class="p">,</span> <span class="s2">"text_emb"</span><span class="p">),</span>
+            <span class="n">text_pooled</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"text_pooled"</span><span class="p">,</span> <span class="s2">"pooled_text"</span><span class="p">),</span>
+            <span class="n">text_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"text_mask"</span><span class="p">,</span> <span class="s2">"attention_mask"</span><span class="p">),</span>
             <span class="n">spatial_condition</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span>
-                <span class="s2">&quot;spatial_condition&quot;</span><span class="p">,</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span> <span class="s2">&quot;input_condition&quot;</span>
+                <span class="s2">"spatial_condition"</span><span class="p">,</span> <span class="s2">"condition"</span><span class="p">,</span> <span class="s2">"input_condition"</span>
             <span class="p">),</span>
-            <span class="n">spatial_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;spatial_mask&quot;</span><span class="p">,</span> <span class="s2">&quot;condition_mask&quot;</span><span class="p">),</span>
-            <span class="n">segmentation_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;segmentation_mask&quot;</span><span class="p">,</span> <span class="s2">&quot;seg&quot;</span><span class="p">,</span> <span class="s2">&quot;labels_seg&quot;</span><span class="p">),</span>
-            <span class="n">metadata</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;scanner_params&quot;</span><span class="p">),</span>
+            <span class="n">spatial_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"spatial_mask"</span><span class="p">,</span> <span class="s2">"condition_mask"</span><span class="p">),</span>
+            <span class="n">segmentation_mask</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"segmentation_mask"</span><span class="p">,</span> <span class="s2">"seg"</span><span class="p">,</span> <span class="s2">"labels_seg"</span><span class="p">),</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="n">get_first_present</span><span class="p">(</span><span class="s2">"metadata"</span><span class="p">,</span> <span class="s2">"scanner_params"</span><span class="p">),</span>
             <span class="n">null_class</span><span class="o">=</span><span class="n">null_class</span><span class="p">,</span>
-            <span class="n">null_text</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;null_text&quot;</span><span class="p">),</span>
+            <span class="n">null_text</span><span class="o">=</span><span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"null_text"</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
@@ -866,9 +868,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">y_emb</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">text_pooled_emb</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">metadata_emb</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">fusion</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;concat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span>
+        <span class="n">fusion</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"add"</span><span class="p">,</span> <span class="s2">"concat"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"add"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine multiple conditioning embeddings into single vector.</span>
+<span class="w">        </span><span class="sd">"""Combine multiple conditioning embeddings into single vector.</span>
 
 <span class="sd">        This is a utility for models that need a single conditioning vector</span>
 <span class="sd">        (e.g., for AdaLN modulation).</span>
@@ -878,11 +880,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            y_emb: Optional class embedding [batch, dim]</span>
 <span class="sd">            text_pooled_emb: Optional pooled text embedding [batch, dim]</span>
 <span class="sd">            metadata_emb: Optional metadata embedding [batch, dim]</span>
-<span class="sd">            fusion: How to combine (&#39;add&#39; or &#39;concat&#39;)</span>
+<span class="sd">            fusion: How to combine ('add' or 'concat')</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Combined embedding [batch, dim] or [batch, combined_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">t_emb</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">y_emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -892,19 +894,19 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">metadata_emb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metadata_emb</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">fusion</span> <span class="o">==</span> <span class="s2">&quot;add&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fusion</span> <span class="o">==</span> <span class="s2">"add"</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="k">elif</span> <span class="n">fusion</span> <span class="o">==</span> <span class="s2">&quot;concat&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">fusion</span> <span class="o">==</span> <span class="s2">"concat"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown fusion method: </span><span class="si">{</span><span class="n">fusion</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown fusion method: </span><span class="si">{</span><span class="n">fusion</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ConditioningConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ConditioningBundle&quot;</span><span class="p">,</span>
+    <span class="s2">"ConditioningConfig"</span><span class="p">,</span>
+    <span class="s2">"ConditioningBundle"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -916,7 +918,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.rasterization.hilbert_curve &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.rasterization.hilbert_curve &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.rasterization.hilbert_curve</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Hilbert space-filling curve for spatial-to-sequence conversion.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Hilbert space-filling curve for spatial-to-sequence conversion."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
@@ -484,7 +486,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="HilbertCurve">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.HilbertCurve">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HilbertCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Hilbert space-filling curve for locality-preserving rasterization.</span>
 
 <span class="sd">    The Hilbert curve traverses a 2D grid such that nearby points in the</span>
@@ -505,26 +507,26 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         [3,  2,  13, 12],</span>
 <span class="sd">         [4,  7,  8,  11],</span>
 <span class="sd">         [5,  6,  9,  10]]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_hilbert_indices_2d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get precomputed reorder indices for 2D Hilbert curve.</span>
 
 <span class="sd">        Cached for performance - indices are computed once per order.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            indices: flattened indices for reordering</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="o">.</span><span class="n">_hilbert_curve_2d</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">curve</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_hilbert_curve_2d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate 2D Hilbert curve of given order using vectorized operations.</span>
 
 <span class="sd">        Cached for performance - curves are computed once per order.</span>
@@ -534,7 +536,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            curve: [2^order, 2^order] array with traversal indices</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
         <span class="n">total</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
 
@@ -578,7 +580,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.HilbertCurve.spatial_to_sequence_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_2d</span><span class="p">(</span><span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 2D spatial data to sequence using Hilbert curve.</span>
 
 <span class="sd">        Args:</span>
@@ -586,8 +588,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, height*width] or [batch, height*width]</span>
-<span class="sd">            metadata: dict with &#39;curve&#39;, &#39;original_shape&#39;, &#39;padding&#39; for reconstruction</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            metadata: dict with 'curve', 'original_shape', 'padding' for reconstruction</span>
+<span class="sd">        """</span>
         <span class="n">original_shape</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
 
@@ -631,11 +633,11 @@ window.runMermaid = runMermaid;</script>
             <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[:,</span> <span class="n">valid_mask_reordered</span><span class="p">]</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;curve&quot;</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
-            <span class="s2">&quot;original_shape&quot;</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
-            <span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
-            <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
-            <span class="s2">&quot;valid_mask&quot;</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
+            <span class="s2">"curve"</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
+            <span class="s2">"original_shape"</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
+            <span class="s2">"padding"</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
+            <span class="s2">"order"</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+            <span class="s2">"valid_mask"</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span></div>
@@ -645,7 +647,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.HilbertCurve.sequence_to_spatial_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sequence_to_spatial_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert sequence back to 2D spatial data using Hilbert curve.</span>
 
 <span class="sd">        Args:</span>
@@ -654,12 +656,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: original shape</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;curve&quot;</span><span class="p">]</span>
-        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;original_shape&quot;</span><span class="p">]</span>
-        <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span>
-        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;valid_mask&quot;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"curve"</span><span class="p">]</span>
+        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"original_shape"</span><span class="p">]</span>
+        <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"padding"</span><span class="p">]</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"order"</span><span class="p">]</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"valid_mask"</span><span class="p">]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
 
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">original_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
@@ -710,21 +712,21 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_hilbert_indices_3d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get precomputed reorder indices for 3D Hilbert curve.</span>
 
 <span class="sd">        Cached for performance - indices are computed once per order.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            indices: flattened indices for reordering</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">curve</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="o">.</span><span class="n">_hilbert_curve_3d</span><span class="p">(</span><span class="n">order</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">curve</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
     <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_hilbert_curve_3d</span><span class="p">(</span><span class="n">order</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate 3D Hilbert curve of given order using vectorized operations.</span>
 
 <span class="sd">        Cached for performance - curves are computed once per order.</span>
@@ -734,7 +736,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            curve: [2^order, 2^order, 2^order] array with traversal indices</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
         <span class="n">total</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span> <span class="o">*</span> <span class="n">n</span>
 
@@ -791,7 +793,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.HilbertCurve.spatial_to_sequence_3d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_3d</span><span class="p">(</span><span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 3D spatial data to sequence using Hilbert curve.</span>
 
 <span class="sd">        Args:</span>
@@ -799,8 +801,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, D*H*W] or [batch, D*H*W]</span>
-<span class="sd">            metadata: dict with &#39;curve&#39;, &#39;original_shape&#39;, &#39;padding&#39; for reconstruction</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            metadata: dict with 'curve', 'original_shape', 'padding' for reconstruction</span>
+<span class="sd">        """</span>
         <span class="n">original_shape</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
 
@@ -848,11 +850,11 @@ window.runMermaid = runMermaid;</script>
             <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[:,</span> <span class="n">valid_mask_reordered</span><span class="p">]</span>
 
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;curve&quot;</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
-            <span class="s2">&quot;original_shape&quot;</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
-            <span class="s2">&quot;padding&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
-            <span class="s2">&quot;order&quot;</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
-            <span class="s2">&quot;valid_mask&quot;</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
+            <span class="s2">"curve"</span><span class="p">:</span> <span class="n">curve</span><span class="p">,</span>
+            <span class="s2">"original_shape"</span><span class="p">:</span> <span class="n">original_shape</span><span class="p">,</span>
+            <span class="s2">"padding"</span><span class="p">:</span> <span class="p">(</span><span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span><span class="p">),</span>
+            <span class="s2">"order"</span><span class="p">:</span> <span class="n">order</span><span class="p">,</span>
+            <span class="s2">"valid_mask"</span><span class="p">:</span> <span class="n">valid_mask</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">sequence</span><span class="p">,</span> <span class="n">metadata</span></div>
@@ -862,7 +864,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.HilbertCurve.sequence_to_spatial_3d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sequence_to_spatial_3d</span><span class="p">(</span><span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert sequence back to 3D spatial data using Hilbert curve.</span>
 
 <span class="sd">        Args:</span>
@@ -871,12 +873,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: original shape</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;curve&quot;</span><span class="p">]</span>
-        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;original_shape&quot;</span><span class="p">]</span>
-        <span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;padding&quot;</span><span class="p">]</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span>
-        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;valid_mask&quot;</span><span class="p">]</span>
+<span class="sd">        """</span>
+        <span class="n">curve</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"curve"</span><span class="p">]</span>
+        <span class="n">original_shape</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"original_shape"</span><span class="p">]</span>
+        <span class="n">pad_d</span><span class="p">,</span> <span class="n">pad_h</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"padding"</span><span class="p">]</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"order"</span><span class="p">]</span>
+        <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">"valid_mask"</span><span class="p">]</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">order</span>
 
         <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">original_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span>
@@ -934,7 +936,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

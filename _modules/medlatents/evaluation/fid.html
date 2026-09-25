@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.evaluation.fid &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.evaluation.fid &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.evaluation.fid</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;FID-192 utilities with bootstrap CI estimation.</span>
+<span></span><span class="sd">"""FID-192 utilities with bootstrap CI estimation.</span>
 
 <span class="sd">Two reasons this lives in ``medlatents.evaluation`` rather than as a one-off</span>
 <span class="sd">script:</span>
@@ -480,8 +482,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">  * The fast ``fid_from_features`` (eigendecomposition-based, ~50× faster</span>
 <span class="sd">    than ``scipy.linalg.sqrtm`` on 192-dim covariances) is broadly useful.</span>
 
-<span class="sd">  * Bootstrap CI estimation for FID --- both the &quot;real-vs-real noise floor&quot;</span>
-<span class="sd">    (split a held-out set in two, repeat) and &quot;real-vs-gen estimator CI&quot;</span>
+<span class="sd">  * Bootstrap CI estimation for FID --- both the "real-vs-real noise floor"</span>
+<span class="sd">    (split a held-out set in two, repeat) and "real-vs-gen estimator CI"</span>
 <span class="sd">    (resample (real_idx, gen_idx) pairs, repeat) --- is a defensible answer</span>
 <span class="sd">    to the standard reviewer concern that single-seed FID numbers are</span>
 <span class="sd">    indistinguishable from noise. Exposing it as a library function lets</span>
@@ -497,7 +499,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        bootstrap_fid_real_vs_gen,</span>
 <span class="sd">    )</span>
 
-<span class="sd">    extractor = InceptionPool3FeatureExtractor(device=&quot;cuda&quot;)</span>
+<span class="sd">    extractor = InceptionPool3FeatureExtractor(device="cuda")</span>
 <span class="sd">    real_feats = extractor.extract(real_test_uint8).numpy()</span>
 <span class="sd">    gen_feats  = extractor.extract(generated_uint8).numpy()</span>
 
@@ -506,11 +508,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    # 95% CI on the FID estimator at a given sample size:</span>
 <span class="sd">    ci = bootstrap_fid_real_vs_gen(real_feats, gen_feats, n=10_000, B=200)</span>
-<span class="sd">    # {&#39;mean&#39;: ..., &#39;p2.5&#39;: ..., &#39;p97.5&#39;: ..., &#39;ci_width_95&#39;: ...}</span>
+<span class="sd">    # {'mean': ..., 'p2.5': ..., 'p97.5': ..., 'ci_width_95': ...}</span>
 
 <span class="sd">    # Noise floor of FID at this domain at varying sample sizes:</span>
 <span class="sd">    noise = bootstrap_fid_noise_floor(real_feats, n_per_half=[1000, 5000, 10000])</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -526,20 +528,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="fid_from_features">
 <a class="viewcode-back" href="../../../api/evaluation.html#medlatents.evaluation.fid_from_features">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fid_from_features</span><span class="p">(</span><span class="n">real_feats</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gen_feats</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">ridge</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Closed-form Fréchet Inception Distance on already-extracted features.</span>
+<span class="w">    </span><span class="sd">"""Closed-form Fréchet Inception Distance on already-extracted features.</span>
 
 <span class="sd">    Uses the symmetric form</span>
 <span class="sd">    ``tr( (sigma_r sigma_g)^{1/2} ) = sum sqrt eig( sigma_r^{1/2} sigma_g sigma_r^{1/2} )``</span>
 <span class="sd">    computed via two ``eigh`` calls. ~50× faster than ``scipy.linalg.sqrtm``</span>
 <span class="sd">    on the 192-dim covariances used for FID-192 at low resolution, and</span>
 <span class="sd">    numerically more stable (eigenvalues are non-negative by construction).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">real_feats</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">gen_feats</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;features must be (N, D); got real </span><span class="si">{</span><span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, gen </span><span class="si">{</span><span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"features must be (N, D); got real </span><span class="si">{</span><span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, gen </span><span class="si">{</span><span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;feature dim mismatch: </span><span class="si">{</span><span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"feature dim mismatch: </span><span class="si">{</span><span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">mu_r</span> <span class="o">=</span> <span class="n">real_feats</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mu_g</span> <span class="o">=</span> <span class="n">gen_feats</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -571,7 +573,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate FID&#39;s *estimator-variance* noise floor via random splits.</span>
+<span class="w">    </span><span class="sd">"""Estimate FID's *estimator-variance* noise floor via random splits.</span>
 
 <span class="sd">    For each ``n`` in ``n_per_half``, draw ``B`` random splits of</span>
 <span class="sd">    ``features`` into two disjoint halves of size ``n`` each, compute</span>
@@ -579,14 +581,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    come from the same underlying distribution, the resulting FID</span>
 <span class="sd">    distribution characterises the *minimum detectable* FID gap at sample</span>
 <span class="sd">    size ``n`` --- gaps below this floor are within metric noise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">out</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">N</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">n_per_half</span><span class="p">:</span>
         <span class="k">if</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">N</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  skip n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> (need </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="si">}</span><span class="s2"> disjoint, have </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  skip n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> (need </span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="si">}</span><span class="s2"> disjoint, have </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
             <span class="k">continue</span>
         <span class="n">fids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -595,19 +597,19 @@ window.runMermaid = runMermaid;</script>
             <span class="n">fids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fid_from_features</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">idx</span><span class="p">[:</span><span class="n">n</span><span class="p">]],</span> <span class="n">features</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">n</span><span class="p">:]]))</span>
         <span class="n">fids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fids</span><span class="p">)</span>
         <span class="n">out</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;n_per_half&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
-            <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span><span class="p">),</span>
-            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
-            <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
-            <span class="s2">&quot;p2.5&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
-            <span class="s2">&quot;p97.5&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)),</span>
-            <span class="s2">&quot;ci_width_95&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
-            <span class="s2">&quot;time_s&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
+            <span class="s2">"n_per_half"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+            <span class="s2">"B"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span><span class="p">),</span>
+            <span class="s2">"mean"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+            <span class="s2">"std"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
+            <span class="s2">"p2.5"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
+            <span class="s2">"p97.5"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)),</span>
+            <span class="s2">"ci_width_95"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
+            <span class="s2">"time_s"</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;  n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">: FID(real,real) mean=</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> 95%CI=[</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;p2.5&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;p97.5&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;time_s&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)&quot;</span>
+                <span class="sa">f</span><span class="s2">"  n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">: FID(real,real) mean=</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'mean'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> 95%CI=[</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'p2.5'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'p97.5'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'time_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)"</span>
             <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
@@ -623,7 +625,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;95% CI for FID(real, gen) via paired bootstrap of feature indices.</span>
+<span class="w">    </span><span class="sd">"""95% CI for FID(real, gen) via paired bootstrap of feature indices.</span>
 
 <span class="sd">    For ``B`` reps, sample ``n`` indices with replacement from each of</span>
 <span class="sd">    ``real_feats`` and ``gen_feats``, recompute FID. The resulting</span>
@@ -631,7 +633,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    size, given a fixed underlying generator. It does *not* capture</span>
 <span class="sd">    train-time stochasticity (which requires re-sampling the model itself).</span>
 <span class="sd">    Defaults ``n`` to ``min(len(real_feats), len(gen_feats))``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">real_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gen_feats</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -643,27 +645,27 @@ window.runMermaid = runMermaid;</script>
         <span class="n">fids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fid_from_features</span><span class="p">(</span><span class="n">real_feats</span><span class="p">[</span><span class="n">r_idx</span><span class="p">],</span> <span class="n">gen_feats</span><span class="p">[</span><span class="n">g_idx</span><span class="p">]))</span>
     <span class="n">fids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fids</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
-        <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span><span class="p">),</span>
-        <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
-        <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
-        <span class="s2">&quot;p2.5&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
-        <span class="s2">&quot;p97.5&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)),</span>
-        <span class="s2">&quot;ci_width_95&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
-        <span class="s2">&quot;time_s&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
+        <span class="s2">"n"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="s2">"B"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span><span class="p">),</span>
+        <span class="s2">"mean"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+        <span class="s2">"std"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">fids</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span>
+        <span class="s2">"p2.5"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
+        <span class="s2">"p97.5"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)),</span>
+        <span class="s2">"ci_width_95"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">fids</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span>
+        <span class="s2">"time_s"</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;  FID(real,gen) mean=</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> 95%CI=[</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;p2.5&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;p97.5&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;time_s&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)&quot;</span>
+            <span class="sa">f</span><span class="s2">"  FID(real,gen) mean=</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">'mean'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> 95%CI=[</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">'p2.5'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">'p97.5'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">] (</span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">'time_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)"</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;fid_from_features&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bootstrap_fid_noise_floor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bootstrap_fid_real_vs_gen&quot;</span><span class="p">,</span>
+    <span class="s2">"fid_from_features"</span><span class="p">,</span>
+    <span class="s2">"bootstrap_fid_noise_floor"</span><span class="p">,</span>
+    <span class="s2">"bootstrap_fid_real_vs_gen"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -675,7 +677,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.data.tokenizers &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.data.tokenizers &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.data.tokenizers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Tokenizer loading and management utilities.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Tokenizer loading and management utilities."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -494,55 +496,55 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_tokenizer_info">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.get_tokenizer_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_tokenizer_info</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract key information from a tokenizer instance.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Extract key information from a tokenizer instance."""</span>
     <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;quantizer_type&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;quantizer_type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-        <span class="s2">&quot;spatial_compression&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;spatial_compression&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-        <span class="s2">&quot;embedding_dim&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;embedding_dim&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-        <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;dim&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"quantizer_type"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"quantizer_type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"spatial_compression"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"spatial_compression"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"embedding_dim"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"embedding_dim"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"dim"</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"dim"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
     <span class="p">}</span>
 
-    <span class="n">quantizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">&quot;quantizer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">quantizer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="s2">"quantizer"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">quantizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="s2">&quot;codebook_size&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;num_embeddings&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;levels&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;latent_dim&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;channels&quot;</span><span class="p">,</span>
+            <span class="s2">"codebook_size"</span><span class="p">,</span>
+            <span class="s2">"num_embeddings"</span><span class="p">,</span>
+            <span class="s2">"levels"</span><span class="p">,</span>
+            <span class="s2">"latent_dim"</span><span class="p">,</span>
+            <span class="s2">"channels"</span><span class="p">,</span>
         <span class="p">):</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">quantizer</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
                 <span class="n">info</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">quantizer</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;latent_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;latent_channels&quot;</span><span class="p">,</span> <span class="s2">&quot;latent_shape&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"latent_dim"</span><span class="p">,</span> <span class="s2">"latent_channels"</span><span class="p">,</span> <span class="s2">"latent_shape"</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
             <span class="n">info</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;is_discrete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">DiscreteTokenizer</span><span class="p">)</span>
-    <span class="n">info</span><span class="p">[</span><span class="s2">&quot;is_continuous&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">ContinuousTokenizer</span><span class="p">)</span>
+    <span class="n">info</span><span class="p">[</span><span class="s2">"is_discrete"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">DiscreteTokenizer</span><span class="p">)</span>
+    <span class="n">info</span><span class="p">[</span><span class="s2">"is_continuous"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">ContinuousTokenizer</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">info</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_tokenizer_module_name</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the module name of a tokenizer for better error messages.</span>
+<span class="w">    </span><span class="sd">"""Get the module name of a tokenizer for better error messages.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tokenizer: Tokenizer instance from medtokenizers</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Module name string (e.g., &#39;ContinuousTokenizer&#39;, &#39;DiscreteTokenizer&#39;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Module name string (e.g., 'ContinuousTokenizer', 'DiscreteTokenizer')</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">tokenizer</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;Tokenizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_tokenizer_info&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_tokenizer_module_name&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DiscreteTokenizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousTokenizer&quot;</span><span class="p">,</span>
+    <span class="s2">"Tokenizer"</span><span class="p">,</span>
+    <span class="s2">"get_tokenizer_info"</span><span class="p">,</span>
+    <span class="s2">"get_tokenizer_module_name"</span><span class="p">,</span>
+    <span class="s2">"DiscreteTokenizer"</span><span class="p">,</span>
+    <span class="s2">"ContinuousTokenizer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -554,7 +556,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

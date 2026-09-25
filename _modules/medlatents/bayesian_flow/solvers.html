@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.solvers &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.solvers &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,14 +474,14 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.solvers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;BFN solver subpackage.</span>
+<span></span><span class="sd">"""BFN solver subpackage.</span>
 
 <span class="sd">Modules:</span>
 <span class="sd">- base: BaseBFNSolver</span>
 <span class="sd">- euler: EulerSolver, HeunSolver</span>
 <span class="sd">- dpm: DPMSolver2, DPMSolver3</span>
 <span class="sd">- exponential: ExponentialIntegrator, StochasticHeun</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseBFNSolver</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.dpm</span><span class="w"> </span><span class="kn">import</span> <span class="n">DPMSolver2</span><span class="p">,</span> <span class="n">DPMSolver3</span>
@@ -495,42 +497,42 @@ window.runMermaid = runMermaid;</script>
     <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a BFN solver by name.</span>
+<span class="w">    </span><span class="sd">"""Get a BFN solver by name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        solver_type: One of &#39;euler&#39;, &#39;heun&#39;, &#39;dpm2&#39;, &#39;dpm3&#39;, &#39;exponential&#39;, &#39;stochastic_heun&#39;</span>
+<span class="sd">        solver_type: One of 'euler', 'heun', 'dpm2', 'dpm3', 'exponential', 'stochastic_heun'</span>
 <span class="sd">        model: BayesianFlowTransformer model</span>
 <span class="sd">        num_steps: Number of solver steps</span>
 <span class="sd">        **kwargs: Additional solver arguments</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Solver instance</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">solvers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;euler&quot;</span><span class="p">:</span> <span class="n">EulerSolver</span><span class="p">,</span>
-        <span class="s2">&quot;heun&quot;</span><span class="p">:</span> <span class="n">HeunSolver</span><span class="p">,</span>
-        <span class="s2">&quot;dpm2&quot;</span><span class="p">:</span> <span class="n">DPMSolver2</span><span class="p">,</span>
-        <span class="s2">&quot;dpm3&quot;</span><span class="p">:</span> <span class="n">DPMSolver3</span><span class="p">,</span>
-        <span class="s2">&quot;exponential&quot;</span><span class="p">:</span> <span class="n">ExponentialIntegrator</span><span class="p">,</span>
-        <span class="s2">&quot;stochastic_heun&quot;</span><span class="p">:</span> <span class="n">StochasticHeun</span><span class="p">,</span>
+        <span class="s2">"euler"</span><span class="p">:</span> <span class="n">EulerSolver</span><span class="p">,</span>
+        <span class="s2">"heun"</span><span class="p">:</span> <span class="n">HeunSolver</span><span class="p">,</span>
+        <span class="s2">"dpm2"</span><span class="p">:</span> <span class="n">DPMSolver2</span><span class="p">,</span>
+        <span class="s2">"dpm3"</span><span class="p">:</span> <span class="n">DPMSolver3</span><span class="p">,</span>
+        <span class="s2">"exponential"</span><span class="p">:</span> <span class="n">ExponentialIntegrator</span><span class="p">,</span>
+        <span class="s2">"stochastic_heun"</span><span class="p">:</span> <span class="n">StochasticHeun</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">solver_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">solvers</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown solver: </span><span class="si">{</span><span class="n">solver_type</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">solvers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown solver: </span><span class="si">{</span><span class="n">solver_type</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">solvers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">solvers</span><span class="p">[</span><span class="n">solver_type</span><span class="p">](</span><span class="n">model</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;BaseBFNSolver&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;EulerSolver&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HeunSolver&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPMSolver2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPMSolver3&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ExponentialIntegrator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;StochasticHeun&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_bfn_solver&quot;</span><span class="p">,</span>
+    <span class="s2">"BaseBFNSolver"</span><span class="p">,</span>
+    <span class="s2">"EulerSolver"</span><span class="p">,</span>
+    <span class="s2">"HeunSolver"</span><span class="p">,</span>
+    <span class="s2">"DPMSolver2"</span><span class="p">,</span>
+    <span class="s2">"DPMSolver3"</span><span class="p">,</span>
+    <span class="s2">"ExponentialIntegrator"</span><span class="p">,</span>
+    <span class="s2">"StochasticHeun"</span><span class="p">,</span>
+    <span class="s2">"get_bfn_solver"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -542,7 +544,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

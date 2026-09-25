@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.flow_matching.core &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.flow_matching.core &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.flow_matching.core</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Self-contained discrete flow-matching utilities.</span>
+<span></span><span class="sd">"""Self-contained discrete flow-matching utilities.</span>
 
 <span class="sd">This module implements lightweight equivalents of the classes we previously</span>
 <span class="sd">depended on from the `flow_matching` reference implementation.  The goal is not</span>
@@ -484,7 +486,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">- Mixture discrete probability path (Bernoulli interpolation)</span>
 <span class="sd">- Generalized KL loss for discrete flow matching</span>
 <span class="sd">- Euler solver with configurable time scheduling</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -503,16 +505,16 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PolynomialConvexScheduler">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.PolynomialConvexScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PolynomialConvexScheduler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convex polynomial schedule used by mixture paths.</span>
+<span class="w">    </span><span class="sd">"""Convex polynomial schedule used by mixture paths.</span>
 
 <span class="sd">    kappa(t) = t**n, with inverse kappa^{-1}(k) = k**(1/n).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PolynomialConvexScheduler.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.PolynomialConvexScheduler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PolynomialConvexScheduler requires n &gt; 0&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"PolynomialConvexScheduler requires n &gt; 0"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
 
@@ -541,7 +543,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MixtureDiscreteProbPath">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixtureDiscreteProbPath">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MixtureDiscreteProbPath</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple Bernoulli mixture path between source and target tokens.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Simple Bernoulli mixture path between source and target tokens."""</span>
 
 <div class="viewcode-block" id="MixtureDiscreteProbPath.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixtureDiscreteProbPath.__init__">[docs]</a>
@@ -553,7 +555,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixtureDiscreteProbPath.sample">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x_0</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">x_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathSample</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">x_0</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">x_1</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x_0 and x_1 must share the same shape&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x_0 and x_1 must share the same shape"</span><span class="p">)</span>
 
         <span class="n">device</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">device</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
@@ -572,7 +574,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wraps models to expose a flow-matching friendly signature.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Wraps models to expose a flow-matching friendly signature."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -585,15 +587,15 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MixturePathGeneralizedKL">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixturePathGeneralizedKL">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MixturePathGeneralizedKL</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simplified generalized KL divergence for mixture paths.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Simplified generalized KL divergence for mixture paths."""</span>
 
 <div class="viewcode-block" id="MixturePathGeneralizedKL.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixturePathGeneralizedKL.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">,</span> <span class="n">reduction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">,</span> <span class="n">reduction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"mean"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
-        <span class="k">if</span> <span class="n">reduction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">}:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;reduction must be &#39;mean&#39;, &#39;sum&#39;, or &#39;none&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">reduction</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"mean"</span><span class="p">,</span> <span class="s2">"sum"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"reduction must be 'mean', 'sum', or 'none'"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span></div>
 
 
@@ -610,12 +612,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
             <span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
             <span class="n">x_1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
-            <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="n">reduction</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">view_as</span><span class="p">(</span><span class="n">x_1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">loss</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">"sum"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
 </div>
@@ -627,9 +629,9 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_time_grid</span><span class="p">(</span>
     <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-    <span class="n">schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"quadratic"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a time grid for discrete flow sampling.</span>
+<span class="w">    </span><span class="sd">"""Create a time grid for discrete flow sampling.</span>
 
 <span class="sd">    Different schedules can improve sample quality:</span>
 <span class="sd">    - uniform: Equal spacing (standard)</span>
@@ -643,35 +645,35 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Time grid from 0 to 1 with num_steps+1 points</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
     <span class="c1"># Create uniform grid in [0, 1], then transform</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"quadratic"</span><span class="p">:</span>
         <span class="c1"># t = u^2: more steps near t=0</span>
         <span class="k">return</span> <span class="n">u</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
         <span class="c1"># t = 0.5 * (1 - cos(π * u)): smooth S-curve</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
         <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">u</span><span class="p">))</span>
 
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="n">schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="MixtureDiscreteEulerSolver">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixtureDiscreteEulerSolver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MixtureDiscreteEulerSolver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lightweight Euler sampler for discrete mixture flows.</span>
+<span class="w">    </span><span class="sd">"""Lightweight Euler sampler for discrete mixture flows.</span>
 
 <span class="sd">    Iteratively refines token predictions by sampling from model logits</span>
 <span class="sd">    at each timestep. Supports different time grid schedules.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MixtureDiscreteEulerSolver.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.MixtureDiscreteEulerSolver.__init__">[docs]</a>
@@ -690,13 +692,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_init</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">step_size</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">time_grid</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">time_schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+        <span class="n">time_schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"quadratic"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dtype_categorical</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample from the discrete flow model.</span>
+<span class="w">        </span><span class="sd">"""Sample from the discrete flow model.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x_init: Initial tokens (e.g., from source distribution)</span>
@@ -710,7 +712,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Generated token sequence</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">del</span> <span class="n">dtype_categorical</span>  <span class="c1"># Not used in simplified solver</span>
 
         <span class="n">device</span> <span class="o">=</span> <span class="n">x_init</span><span class="o">.</span><span class="n">device</span>
@@ -726,10 +728,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">was_training</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">training</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time_grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># Don&#39;t sample at t=1</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">time_grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># Don't sample at t=1</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;[FlowSolver] step </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">time_grid</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> | t=</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="sa">f</span><span class="s2">"[FlowSolver] step </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">time_grid</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> | t=</span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
                     <span class="p">)</span>
 
                 <span class="n">t_batch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),),</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -742,7 +744,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="c1"># Apply top-k filtering</span>
                 <span class="k">if</span> <span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">top_k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">top_k_logits</span><span class="p">,</span> <span class="n">top_k_indices</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">top_k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="n">logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">))</span>
+                    <span class="n">logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"-inf"</span><span class="p">))</span>
                     <span class="n">logits</span><span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">top_k_indices</span><span class="p">,</span> <span class="n">top_k_logits</span><span class="p">)</span>
 
                 <span class="n">probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -760,11 +762,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteFlowTrainer">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.DiscreteFlowTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteFlowTrainer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper for discrete flow matching training with configurable timestep sampling.</span>
+<span class="w">    </span><span class="sd">"""Helper for discrete flow matching training with configurable timestep sampling.</span>
 
 <span class="sd">    This wraps the training loop logic for discrete flow matching,</span>
 <span class="sd">    providing easy integration of different timestep sampling strategies.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiscreteFlowTrainer.__init__">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.DiscreteFlowTrainer.__init__">[docs]</a>
@@ -773,14 +775,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">path</span><span class="p">:</span> <span class="n">MixtureDiscreteProbPath</span><span class="p">,</span>
         <span class="n">timestep_sampler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize the trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            path: The discrete probability path for interpolation</span>
 <span class="sd">            timestep_sampler: Optional custom timestep sampler function.</span>
 <span class="sd">                Should take (batch_size, device) and return timesteps.</span>
 <span class="sd">                If None, uses uniform sampling.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timestep_sampler</span> <span class="o">=</span> <span class="n">timestep_sampler</span></div>
 
@@ -788,7 +790,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteFlowTrainer.sample_timesteps">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.DiscreteFlowTrainer.sample_timesteps">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample_timesteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample timesteps for training.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Sample timesteps for training."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_sampler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep_sampler</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span></div>
@@ -803,7 +805,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">loss_fn</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute discrete flow matching loss.</span>
+<span class="w">        </span><span class="sd">"""Compute discrete flow matching loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model that takes (x, t) and returns logits</span>
@@ -813,7 +815,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Training loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">device</span>
 
@@ -841,14 +843,14 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;PolynomialConvexScheduler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MixtureDiscreteProbPath&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MixturePathGeneralizedKL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MixtureDiscreteEulerSolver&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ModelWrapper&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PathSample&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_time_grid&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DiscreteFlowTrainer&quot;</span><span class="p">,</span>
+    <span class="s2">"PolynomialConvexScheduler"</span><span class="p">,</span>
+    <span class="s2">"MixtureDiscreteProbPath"</span><span class="p">,</span>
+    <span class="s2">"MixturePathGeneralizedKL"</span><span class="p">,</span>
+    <span class="s2">"MixtureDiscreteEulerSolver"</span><span class="p">,</span>
+    <span class="s2">"ModelWrapper"</span><span class="p">,</span>
+    <span class="s2">"PathSample"</span><span class="p">,</span>
+    <span class="s2">"create_time_grid"</span><span class="p">,</span>
+    <span class="s2">"DiscreteFlowTrainer"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -860,7 +862,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

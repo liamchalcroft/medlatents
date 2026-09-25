@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.autoregressive &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.autoregressive &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.autoregressive</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Sampling techniques for autoregressive discrete generative models.</span>
+<span></span><span class="sd">"""Sampling techniques for autoregressive discrete generative models.</span>
 
 <span class="sd">Autoregressive models work for discrete data by modeling sequences:</span>
 <span class="sd">    p(x_1, x_2, ..., x_n) = ∏ p(x_i | x_1, ..., x_{i-1})</span>
@@ -488,7 +490,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">- Classifier-Free Guidance (CFG): Strengthen conditioning signal</span>
 
 <span class="sd">See rasterization module for converting spatial data to sequences.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
@@ -498,24 +500,24 @@ window.runMermaid = runMermaid;</script>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_finite_positive</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite and &gt; 0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite and &gt; 0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_probability</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">allow_zero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be finite, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">lower_ok</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">allow_zero</span> <span class="k">else</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">lower_ok</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-        <span class="n">lower_bound</span> <span class="o">=</span> <span class="s2">&quot;&gt;= 0&quot;</span> <span class="k">if</span> <span class="n">allow_zero</span> <span class="k">else</span> <span class="s2">&quot;&gt; 0&quot;</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be </span><span class="si">{</span><span class="n">lower_bound</span><span class="si">}</span><span class="s2"> and &lt;= 1.0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="s2">"&gt;= 0"</span> <span class="k">if</span> <span class="n">allow_zero</span> <span class="k">else</span> <span class="s2">"&gt; 0"</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be </span><span class="si">{</span><span class="n">lower_bound</span><span class="si">}</span><span class="s2"> and &lt;= 1.0, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_top_k</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Top-k sampling: keep only top k logits.</span>
 
 <span class="sd">    Args:</span>
@@ -524,23 +526,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        filtered_logits: [batch, vocab_size] with low-probability logits set to -inf</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;k must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"k must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;k must be &gt;= 0, got </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"k must be &gt;= 0, got </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">logits</span>
 
     <span class="n">values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
     <span class="n">min_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">logits</span> <span class="o">&lt;</span> <span class="n">min_values</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)),</span> <span class="n">logits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">logits</span> <span class="o">&lt;</span> <span class="n">min_values</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)),</span> <span class="n">logits</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="sample_nucleus">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.sampling.sample_nucleus">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_nucleus</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Nucleus (top-p) sampling: keep smallest set of tokens with cumulative probability &gt;= p.</span>
 
 <span class="sd">    More dynamic than top-k: adapts to the confidence of the model.</span>
@@ -552,8 +554,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        filtered_logits: [batch, vocab_size] with low-probability logits set to -inf</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">logits</span>
 
@@ -572,7 +574,7 @@ window.runMermaid = runMermaid;</script>
     <span class="p">)</span>
 
     <span class="n">filtered_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-    <span class="n">filtered_logits</span><span class="p">[</span><span class="n">indices_to_remove</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="n">filtered_logits</span><span class="p">[</span><span class="n">indices_to_remove</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">filtered_logits</span></div>
 
 
@@ -582,11 +584,11 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_min_p</span><span class="p">(</span>
     <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">min_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">base_top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Min-p sampling: Remove tokens with probability &lt; min_p * max_probability.</span>
 
 <span class="sd">    Better than top-p: scales with model confidence instead of using fixed threshold.</span>
-<span class="sd">    When model is confident, it&#39;s more selective. When uncertain, it&#39;s more diverse.</span>
+<span class="sd">    When model is confident, it's more selective. When uncertain, it's more diverse.</span>
 
 <span class="sd">    Works well for discrete latent codes across domains.</span>
 
@@ -599,9 +601,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        filtered_logits: [batch, vocab_size] with low-probability logits set to -inf</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">min_p</span><span class="p">,</span> <span class="s2">&quot;min_p&quot;</span><span class="p">,</span> <span class="n">allow_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">base_top_p</span><span class="p">,</span> <span class="s2">&quot;base_top_p&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">min_p</span><span class="p">,</span> <span class="s2">"min_p"</span><span class="p">,</span> <span class="n">allow_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">base_top_p</span><span class="p">,</span> <span class="s2">"base_top_p"</span><span class="p">)</span>
     <span class="c1"># Optional: apply top-p first</span>
     <span class="k">if</span> <span class="n">base_top_p</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
         <span class="n">logits</span> <span class="o">=</span> <span class="n">sample_nucleus</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">base_top_p</span><span class="p">)</span>
@@ -611,7 +613,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">threshold</span> <span class="o">=</span> <span class="n">min_p</span> <span class="o">*</span> <span class="n">max_probs</span>
 
     <span class="n">filtered_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-    <span class="n">filtered_logits</span><span class="p">[</span><span class="n">probs</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+    <span class="n">filtered_logits</span><span class="p">[</span><span class="n">probs</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">filtered_logits</span></div>
 
 
@@ -623,7 +625,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">unconditional_logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">guidance_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Classifier-Free Guidance: Interpolate between conditional and unconditional predictions.</span>
 
 <span class="sd">    Useful for conditional generation tasks such as:</span>
@@ -640,7 +642,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        guided_logits: [batch, vocab_size]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">unconditional_logits</span> <span class="o">+</span> <span class="n">guidance_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">conditional_logits</span> <span class="o">-</span> <span class="n">unconditional_logits</span><span class="p">)</span></div>
 
 
@@ -648,7 +650,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TemperatureScheduler">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.sampling.TemperatureScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TemperatureScheduler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Dynamic temperature scheduling during generation.</span>
 
 <span class="sd">    Start with high temperature (exploration), end with low (refinement):</span>
@@ -661,24 +663,24 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - cosine: smooth annealing (recommended)</span>
 <span class="sd">    - exponential: exponential decay</span>
 <span class="sd">    - adaptive: adjust based on entropy (experimental)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="TemperatureScheduler.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.TemperatureScheduler.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span>
+        <span class="n">schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"constant"</span><span class="p">,</span>
         <span class="n">start_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">end_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span>
         <span class="n">num_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
-<span class="sd">            schedule: &#39;constant&#39;, &#39;linear&#39;, &#39;cosine&#39;, &#39;exponential&#39;, or &#39;adaptive&#39;</span>
+<span class="sd">            schedule: 'constant', 'linear', 'cosine', 'exponential', or 'adaptive'</span>
 <span class="sd">            start_temp: initial temperature (higher = more exploration)</span>
 <span class="sd">            end_temp: final temperature (lower = more confident)</span>
 <span class="sd">            num_steps: number of generation steps (required for non-constant schedules)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">=</span> <span class="n">schedule</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span> <span class="o">=</span> <span class="n">start_temp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_temp</span> <span class="o">=</span> <span class="n">end_temp</span>
@@ -688,36 +690,36 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TemperatureScheduler.get_temperature">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.TemperatureScheduler.get_temperature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get temperature for current step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get temperature for current step."""</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step must be &gt;= 0, got </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;constant&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"step must be &gt;= 0, got </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"constant"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;num_steps is required for &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&#39; schedule. &quot;</span>
-                <span class="s2">&quot;Example: TemperatureScheduler(schedule=&#39;linear&#39;, start_temp=1.0, &quot;</span>
-                <span class="s2">&quot;end_temp=0.5, num_steps=100)&quot;</span>
+                <span class="sa">f</span><span class="s2">"num_steps is required for '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">' schedule. "</span>
+                <span class="s2">"Example: TemperatureScheduler(schedule='linear', start_temp=1.0, "</span>
+                <span class="s2">"end_temp=0.5, num_steps=100)"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step must be &lt; num_steps (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"step must be &lt; num_steps (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="si">}</span><span class="s2">), got </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">progress</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span><span class="p">)</span> <span class="o">*</span> <span class="n">progress</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="c1"># Smooth annealing (recommended for images)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_temp</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_temp</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">progress</span><span class="p">)</span>
             <span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;exponential&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"exponential"</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_temp</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span><span class="p">)</span> <span class="o">**</span> <span class="n">progress</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;adaptive&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span> <span class="o">==</span> <span class="s2">"adaptive"</span><span class="p">:</span>
             <span class="c1"># Adjust temperature based on entropy (experimental)</span>
             <span class="k">if</span> <span class="n">logits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_temp</span>
@@ -731,8 +733,8 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unknown schedule: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                <span class="s2">&quot;Valid options: &#39;constant&#39;, &#39;linear&#39;, &#39;cosine&#39;, &#39;exponential&#39;, &#39;adaptive&#39;.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unknown schedule: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="si">}</span><span class="s2">'. "</span>
+                <span class="s2">"Valid options: 'constant', 'linear', 'cosine', 'exponential', 'adaptive'."</span>
             <span class="p">)</span></div>
 </div>
 
@@ -747,7 +749,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sample from autoregressive model with temperature and filtering.</span>
 
 <span class="sd">    Order of operations:</span>
@@ -764,19 +766,19 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        sampled_tokens: [batch] sampled token indices</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">logits</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;logits must have shape [batch, vocab], got </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_ensure_finite_positive</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"logits must have shape [batch, vocab], got </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">_ensure_finite_positive</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">top_k</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;top_k must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">top_k</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top_k must be an int, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">top_k</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">top_k</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;top_k must be &gt;= 0, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top_k must be &gt;= 0, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">top_p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">top_p</span><span class="p">,</span> <span class="s2">&quot;top_p&quot;</span><span class="p">)</span>
+        <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">top_p</span><span class="p">,</span> <span class="s2">"top_p"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">min_p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">min_p</span><span class="p">,</span> <span class="s2">&quot;min_p&quot;</span><span class="p">,</span> <span class="n">allow_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">_ensure_probability</span><span class="p">(</span><span class="n">min_p</span><span class="p">,</span> <span class="s2">"min_p"</span><span class="p">,</span> <span class="n">allow_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># 1. Temperature</span>
     <span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">/</span> <span class="n">temperature</span>
@@ -805,7 +807,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

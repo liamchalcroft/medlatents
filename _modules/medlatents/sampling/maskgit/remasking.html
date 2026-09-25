@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.maskgit.remasking &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.maskgit.remasking &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,13 +474,13 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.maskgit.remasking</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Running Confidence Remasking for MaskGIT.</span>
+<span></span><span class="sd">"""Running Confidence Remasking for MaskGIT.</span>
 
 <span class="sd">Provides:</span>
 <span class="sd">- RunningConfidenceRemasker: Tracks confidence across steps for stable unmasking</span>
 <span class="sd">- RunningConfidenceScheduler: MaskGIT scheduler with running confidence remasking</span>
 <span class="sd">- RCRGenerator: Full generation pipeline with running confidence remasking</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
@@ -488,30 +490,30 @@ window.runMermaid = runMermaid;</script>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_probability</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_upper</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be a float, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">upper_ok</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">strict_upper</span> <span class="k">else</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">upper_ok</span><span class="p">):</span>
-        <span class="n">bound</span> <span class="o">=</span> <span class="s2">&quot;[0, 1)&quot;</span> <span class="k">if</span> <span class="n">strict_upper</span> <span class="k">else</span> <span class="s2">&quot;[0, 1]&quot;</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be in </span><span class="si">{</span><span class="n">bound</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="s2">"[0, 1)"</span> <span class="k">if</span> <span class="n">strict_upper</span> <span class="k">else</span> <span class="s2">"[0, 1]"</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> must be in </span><span class="si">{</span><span class="n">bound</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RunningConfidenceRemasker">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceRemasker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunningConfidenceRemasker</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Running Confidence Remasking for improved MaskGIT generation.</span>
+<span class="w">    </span><span class="sd">"""Running Confidence Remasking for improved MaskGIT generation.</span>
 
-<span class="sd">    Instead of using only the current step&#39;s confidence, this tracks</span>
+<span class="sd">    Instead of using only the current step's confidence, this tracks</span>
 <span class="sd">    confidence across multiple steps and uses running statistics to</span>
 <span class="sd">    make more stable unmasking decisions.</span>
 
-<span class="sd">    Reference: &quot;Improving MaskGIT with Running Confidence&quot; (2024)</span>
+<span class="sd">    Reference: "Improving MaskGIT with Running Confidence" (2024)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        decay: Exponential decay for running confidence (0.9 = 90% old, 10% new)</span>
 <span class="sd">        remask_threshold: Tokens below this percentile of running confidence get remasked</span>
-<span class="sd">        min_steps_before_remask: Don&#39;t remask until this many steps have passed</span>
+<span class="sd">        min_steps_before_remask: Don't remask until this many steps have passed</span>
 <span class="sd">        max_remask_per_step: Maximum fraction of tokens to remask per step</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RunningConfidenceRemasker.__init__">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceRemasker.__init__">[docs]</a>
@@ -523,13 +525,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">max_remask_per_step</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">decay</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;decay must be in (0, 1], got </span><span class="si">{</span><span class="n">decay</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">_validate_probability</span><span class="p">(</span><span class="n">remask_threshold</span><span class="p">,</span> <span class="s2">&quot;remask_threshold&quot;</span><span class="p">,</span> <span class="n">strict_upper</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"decay must be in (0, 1], got </span><span class="si">{</span><span class="n">decay</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">_validate_probability</span><span class="p">(</span><span class="n">remask_threshold</span><span class="p">,</span> <span class="s2">"remask_threshold"</span><span class="p">,</span> <span class="n">strict_upper</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">min_steps_before_remask</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">min_steps_before_remask</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;min_steps_before_remask must be non-negative int, got </span><span class="si">{</span><span class="n">min_steps_before_remask</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"min_steps_before_remask must be non-negative int, got </span><span class="si">{</span><span class="n">min_steps_before_remask</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
-        <span class="n">_validate_probability</span><span class="p">(</span><span class="n">max_remask_per_step</span><span class="p">,</span> <span class="s2">&quot;max_remask_per_step&quot;</span><span class="p">,</span> <span class="n">strict_upper</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">_validate_probability</span><span class="p">(</span><span class="n">max_remask_per_step</span><span class="p">,</span> <span class="s2">"max_remask_per_step"</span><span class="p">,</span> <span class="n">strict_upper</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">decay</span> <span class="o">=</span> <span class="n">decay</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remask_threshold</span> <span class="o">=</span> <span class="n">remask_threshold</span>
@@ -543,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RunningConfidenceRemasker.reset">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceRemasker.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset running statistics for new generation.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Reset running statistics for new generation."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running_confidence</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">step_count</span> <span class="o">=</span> <span class="mi">0</span></div>
 
@@ -555,7 +557,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">confidence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update running confidence and compute remasking decisions.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update running confidence and compute remasking decisions."""</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">confidence</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_confidence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -575,10 +577,10 @@ window.runMermaid = runMermaid;</script>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 
         <span class="n">running_conf_masked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_confidence</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-        <span class="n">running_conf_masked</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">running_conf_masked</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
 
         <span class="n">flat_conf</span> <span class="o">=</span> <span class="n">running_conf_masked</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">valid_conf</span> <span class="o">=</span> <span class="n">flat_conf</span><span class="p">[</span><span class="n">flat_conf</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)]</span>
+        <span class="n">valid_conf</span> <span class="o">=</span> <span class="n">flat_conf</span><span class="p">[</span><span class="n">flat_conf</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_conf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
@@ -598,12 +600,12 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Fixed K_MAX: use max_remask as upper bound (compile-friendly, no .item())</span>
         <span class="n">K_MAX</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_remask</span><span class="p">)</span>
 
-        <span class="c1"># Only process if there&#39;s any excess (tensor check avoids empty topk)</span>
+        <span class="c1"># Only process if there's any excess (tensor check avoids empty topk)</span>
         <span class="n">has_excess</span> <span class="o">=</span> <span class="n">excess_per_batch</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
         <span class="k">if</span> <span class="n">has_excess</span><span class="p">:</span>
             <span class="n">conf_for_limit</span> <span class="o">=</span> <span class="n">running_conf_masked</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-            <span class="n">conf_for_limit</span><span class="p">[</span><span class="o">~</span><span class="n">should_remask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+            <span class="n">conf_for_limit</span><span class="p">[</span><span class="o">~</span><span class="n">should_remask</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
 
             <span class="c1"># Fixed-shape topk (no .item() for k)</span>
             <span class="n">_</span><span class="p">,</span> <span class="n">topk_conf_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">conf_for_limit</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">K_MAX</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -624,7 +626,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RunningConfidenceScheduler">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunningConfidenceScheduler</span><span class="p">(</span><span class="n">MaskGITScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;MaskGIT scheduler with running confidence remasking.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""MaskGIT scheduler with running confidence remasking."""</span>
 
 <div class="viewcode-block" id="RunningConfidenceScheduler.__init__">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceScheduler.__init__">[docs]</a>
@@ -647,11 +649,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform one step with running confidence remasking.</span>
+<span class="w">        </span><span class="sd">"""Perform one step with running confidence remasking.</span>
 
 <span class="sd">        Uses fixed K_MAX for topk to enable torch.compile(fullgraph=True).</span>
 <span class="sd">        Final step unmasks all remaining positions without topk.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">is_final_step</span> <span class="o">=</span> <span class="n">step</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span> <span class="o">-</span> <span class="mi">1</span>
 
@@ -690,7 +692,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">K_MAX</span> <span class="o">=</span> <span class="n">seq_len</span>
 
         <span class="n">masked_conf</span> <span class="o">=</span> <span class="n">confidences</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-        <span class="n">masked_conf</span><span class="p">[</span><span class="o">~</span><span class="n">new_mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="n">masked_conf</span><span class="p">[</span><span class="o">~</span><span class="n">new_mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
 
         <span class="c1"># Clamp effective_k to K_MAX (all tensor ops, no sync)</span>
         <span class="n">effective_k</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">num_to_unmask</span><span class="p">,</span> <span class="n">num_masked</span><span class="p">)</span>
@@ -715,7 +717,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RunningConfidenceScheduler.reset">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RunningConfidenceScheduler.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset remasker state for new generation.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Reset remasker state for new generation."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remasker</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
 </div>
 
@@ -724,7 +726,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RCRGenerator">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RCRGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RCRGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Running Confidence Remasking Generator for MaskGIT.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Running Confidence Remasking Generator for MaskGIT."""</span>
 
 <div class="viewcode-block" id="RCRGenerator.__init__">
 <a class="viewcode-back" href="../../../../api/sampling.html#medlatents.sampling.RCRGenerator.__init__">[docs]</a>
@@ -747,13 +749,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">condition_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate tokens with running confidence remasking.</span>
+<span class="w">        </span><span class="sd">"""Generate tokens with running confidence remasking.</span>
 
 <span class="sd">        Uses fixed-iteration loop (no Python breaks for compile-friendliness).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">device</span>
 
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="s2">&quot;reset&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="s2">"reset"</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="n">tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
@@ -769,8 +771,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">mask</span><span class="p">[</span><span class="n">condition_mask</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;steps_taken&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;remask_events&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"steps_taken"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"remask_events"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Note: Loop runs to completion for compile-friendliness (no data-dependent breaks).</span>
@@ -790,8 +792,8 @@ window.runMermaid = runMermaid;</script>
             <span class="n">remask_count_tensor</span> <span class="o">+=</span> <span class="n">remasked</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
         <span class="c1"># Convert metrics after loop (single sync point)</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;remask_events&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">remask_count_tensor</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;steps_taken&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">num_steps</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s2">"remask_events"</span><span class="p">]</span> <span class="o">=</span> <span class="n">remask_count_tensor</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s2">"steps_taken"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">num_steps</span>
 
         <span class="k">return</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">metrics</span></div>
 </div>
@@ -799,9 +801,9 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;RunningConfidenceRemasker&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RunningConfidenceScheduler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RCRGenerator&quot;</span><span class="p">,</span>
+    <span class="s2">"RunningConfidenceRemasker"</span><span class="p">,</span>
+    <span class="s2">"RunningConfidenceScheduler"</span><span class="p">,</span>
+    <span class="s2">"RCRGenerator"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -813,7 +815,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

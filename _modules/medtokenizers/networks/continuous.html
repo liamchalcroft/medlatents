@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medtokenizers.networks.continuous &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medtokenizers.networks.continuous &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medtokenizers.networks.continuous</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Continuous latent space tokenizers (VAE/AE).</span>
+<span></span><span class="sd">"""Continuous latent space tokenizers (VAE/AE).</span>
 
 <span class="sd">This module implements tokenizers that map images to continuous latent</span>
 <span class="sd">representations, optionally with variational regularization (VAE).</span>
@@ -512,7 +514,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">```</span>
 
 <span class="sd">For AE (no KL), encoder outputs z directly without sampling.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -534,13 +536,13 @@ window.runMermaid = runMermaid;</script>
     <span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Float</span>
 
 
-<span class="n">FormulationType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;VAE&quot;</span><span class="p">,</span> <span class="s2">&quot;AE&quot;</span><span class="p">]</span>
+<span class="n">FormulationType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"VAE"</span><span class="p">,</span> <span class="s2">"AE"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="ContinuousTokenizer">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousTokenizer</span><span class="p">(</span><span class="n">BaseTokenizer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous latent tokenizer for medical imaging (VAE/AE).</span>
+<span class="w">    </span><span class="sd">"""Continuous latent tokenizer for medical imaging (VAE/AE).</span>
 
 <span class="sd">    This tokenizer learns a continuous latent representation using either:</span>
 <span class="sd">    - **VAE**: Variational Autoencoder with KL divergence regularization</span>
@@ -589,7 +591,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        dropout: Dropout probability in residual blocks</span>
 <span class="sd">        resolution: Input spatial resolution (for attention position info)</span>
 <span class="sd">        spatial_compression: Total downsampling factor (e.g., 8 = 3 downsamples)</span>
-<span class="sd">        formulation: &quot;VAE&quot; for variational, &quot;AE&quot; for deterministic</span>
+<span class="sd">        formulation: "VAE" for variational, "AE" for deterministic</span>
 <span class="sd">        name: Model identifier for saving/loading</span>
 <span class="sd">        **kwargs: Additional args passed to Encoder/Decoder (e.g., use_checkpointing)</span>
 
@@ -604,14 +606,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     channels=64,</span>
 <span class="sd">        ...     channels_mult=(1, 2, 4),</span>
 <span class="sd">        ...     spatial_compression=8,</span>
-<span class="sd">        ...     formulation=&#39;VAE&#39;</span>
+<span class="sd">        ...     formulation='VAE'</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; # Forward pass returns dict with reconstructions and KL loss</span>
 <span class="sd">        &gt;&gt;&gt; volume = torch.randn(1, 1, 128, 128, 128)</span>
 <span class="sd">        &gt;&gt;&gt; output = model(volume)</span>
-<span class="sd">        &gt;&gt;&gt; recon = output[&#39;reconstructions&#39;]</span>
-<span class="sd">        &gt;&gt;&gt; kl_loss = output.get(&#39;kl_loss&#39;)  # Only for VAE</span>
+<span class="sd">        &gt;&gt;&gt; recon = output['reconstructions']</span>
+<span class="sd">        &gt;&gt;&gt; kl_loss = output.get('kl_loss')  # Only for VAE</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; # For inference, use tokenize/detokenize</span>
 <span class="sd">        &gt;&gt;&gt; with model.inference_mode():</span>
@@ -619,9 +621,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     reconstructed = model.detokenize(latents)</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        Kingma &amp; Welling &quot;Auto-Encoding Variational Bayes&quot; (2013)</span>
-<span class="sd">        Rombach et al. &quot;High-Resolution Image Synthesis with Latent Diffusion Models&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Kingma &amp; Welling "Auto-Encoding Variational Bayes" (2013)</span>
+<span class="sd">        Rombach et al. "High-Resolution Image Synthesis with Latent Diffusion Models"</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ContinuousTokenizer.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.__init__">[docs]</a>
@@ -640,21 +642,21 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
         <span class="n">spatial_compression</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="n">formulation</span><span class="p">:</span> <span class="n">FormulationType</span> <span class="o">=</span> <span class="s2">&quot;VAE&quot;</span><span class="p">,</span>
+        <span class="n">formulation</span><span class="p">:</span> <span class="n">FormulationType</span> <span class="o">=</span> <span class="s2">"VAE"</span><span class="p">,</span>
         <span class="n">use_encoder_mid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">use_output_nonlinearity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">decoder_blocks_per_stage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">separate_quant_conv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ContinuousTokenizer&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ContinuousTokenizer"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Validate inputs</span>
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dim must be 2 or 3, got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">formulation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;AE&quot;</span><span class="p">,</span> <span class="s2">&quot;VAE&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;formulation must be &#39;AE&#39; or &#39;VAE&#39;, got </span><span class="si">{</span><span class="n">formulation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dim must be 2 or 3, got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">formulation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"AE"</span><span class="p">,</span> <span class="s2">"VAE"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"formulation must be 'AE' or 'VAE', got </span><span class="si">{</span><span class="n">formulation</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Default decoder_blocks_per_stage to MAISI-compatible [2, 2, 0] if not provided</span>
         <span class="k">if</span> <span class="n">decoder_blocks_per_stage</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -662,57 +664,57 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Store config for serialization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="n">dim</span><span class="p">,</span>
-            <span class="s2">&quot;in_channels&quot;</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
-            <span class="s2">&quot;out_channels&quot;</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
-            <span class="s2">&quot;z_channels&quot;</span><span class="p">:</span> <span class="n">z_channels</span><span class="p">,</span>
-            <span class="s2">&quot;z_factor&quot;</span><span class="p">:</span> <span class="n">z_factor</span><span class="p">,</span>
-            <span class="s2">&quot;latent_channels&quot;</span><span class="p">:</span> <span class="n">latent_channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels_mult&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">channels_mult</span><span class="p">),</span>
-            <span class="s2">&quot;num_res_blocks&quot;</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
-            <span class="s2">&quot;attn_resolutions&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn_resolutions</span><span class="p">),</span>
-            <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
-            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
-            <span class="s2">&quot;spatial_compression&quot;</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
-            <span class="s2">&quot;formulation&quot;</span><span class="p">:</span> <span class="n">formulation</span><span class="p">,</span>
-            <span class="s2">&quot;use_encoder_mid&quot;</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
-            <span class="s2">&quot;use_output_nonlinearity&quot;</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
-            <span class="s2">&quot;decoder_blocks_per_stage&quot;</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
-            <span class="s2">&quot;separate_quant_conv&quot;</span><span class="p">:</span> <span class="n">separate_quant_conv</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">"dim"</span><span class="p">:</span> <span class="n">dim</span><span class="p">,</span>
+            <span class="s2">"in_channels"</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
+            <span class="s2">"out_channels"</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
+            <span class="s2">"z_channels"</span><span class="p">:</span> <span class="n">z_channels</span><span class="p">,</span>
+            <span class="s2">"z_factor"</span><span class="p">:</span> <span class="n">z_factor</span><span class="p">,</span>
+            <span class="s2">"latent_channels"</span><span class="p">:</span> <span class="n">latent_channels</span><span class="p">,</span>
+            <span class="s2">"channels"</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
+            <span class="s2">"channels_mult"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">channels_mult</span><span class="p">),</span>
+            <span class="s2">"num_res_blocks"</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
+            <span class="s2">"attn_resolutions"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn_resolutions</span><span class="p">),</span>
+            <span class="s2">"dropout"</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
+            <span class="s2">"resolution"</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="s2">"spatial_compression"</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
+            <span class="s2">"formulation"</span><span class="p">:</span> <span class="n">formulation</span><span class="p">,</span>
+            <span class="s2">"use_encoder_mid"</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
+            <span class="s2">"use_output_nonlinearity"</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
+            <span class="s2">"decoder_blocks_per_stage"</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
+            <span class="s2">"separate_quant_conv"</span><span class="p">:</span> <span class="n">separate_quant_conv</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">latent_channels</span> <span class="o">=</span> <span class="n">latent_channels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spatial_compression</span> <span class="o">=</span> <span class="n">spatial_compression</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">formulation</span> <span class="o">=</span> <span class="n">formulation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">separate_quant_conv</span> <span class="o">=</span> <span class="n">separate_quant_conv</span> <span class="ow">and</span> <span class="p">(</span><span class="n">formulation</span> <span class="o">==</span> <span class="s2">&quot;VAE&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separate_quant_conv</span> <span class="o">=</span> <span class="n">separate_quant_conv</span> <span class="ow">and</span> <span class="p">(</span><span class="n">formulation</span> <span class="o">==</span> <span class="s2">"VAE"</span><span class="p">)</span>
 
         <span class="c1"># Prepare kwargs for encoder/decoder</span>
         <span class="n">layer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;in_channels&quot;</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
-            <span class="s2">&quot;out_channels&quot;</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels_mult&quot;</span><span class="p">:</span> <span class="n">channels_mult</span><span class="p">,</span>
-            <span class="s2">&quot;num_res_blocks&quot;</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
-            <span class="s2">&quot;attn_resolutions&quot;</span><span class="p">:</span> <span class="n">attn_resolutions</span><span class="p">,</span>
-            <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
-            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
-            <span class="s2">&quot;spatial_compression&quot;</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
-            <span class="s2">&quot;use_encoder_mid&quot;</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
-            <span class="s2">&quot;use_output_nonlinearity&quot;</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
-            <span class="s2">&quot;decoder_blocks_per_stage&quot;</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
+            <span class="s2">"in_channels"</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
+            <span class="s2">"out_channels"</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
+            <span class="s2">"channels"</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
+            <span class="s2">"channels_mult"</span><span class="p">:</span> <span class="n">channels_mult</span><span class="p">,</span>
+            <span class="s2">"num_res_blocks"</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
+            <span class="s2">"attn_resolutions"</span><span class="p">:</span> <span class="n">attn_resolutions</span><span class="p">,</span>
+            <span class="s2">"dropout"</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
+            <span class="s2">"resolution"</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="s2">"spatial_compression"</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
+            <span class="s2">"use_encoder_mid"</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
+            <span class="s2">"use_output_nonlinearity"</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
+            <span class="s2">"decoder_blocks_per_stage"</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Validate that spatial_compression divides resolution evenly</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">%</span> <span class="n">spatial_compression</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2"> is not divisible by &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;spatial_compression=</span><span class="si">{</span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">. Expected latent size would be &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">) but this causes &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;shape mismatch with target. Use compression that divides resolution evenly &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(powers of 2: 1, 2, 4, 8, 16).&quot;</span>
+                <span class="sa">f</span><span class="s2">"Resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2"> is not divisible by "</span>
+                <span class="sa">f</span><span class="s2">"spatial_compression=</span><span class="si">{</span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">. Expected latent size would be "</span>
+                <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">) but this causes "</span>
+                <span class="sa">f</span><span class="s2">"shape mismatch with target. Use compression that divides resolution evenly "</span>
+                <span class="sa">f</span><span class="s2">"(powers of 2: 1, 2, 4, 8, 16)."</span>
             <span class="p">)</span>
         <span class="n">layer_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -729,7 +731,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Standard VAE: encoder outputs 2*z_channels, combined quant_conv</span>
             <span class="k">if</span> <span class="n">z_factor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">z_factor</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">formulation</span> <span class="o">==</span> <span class="s2">&quot;VAE&quot;</span> <span class="k">else</span> <span class="mi">1</span>
+                <span class="n">z_factor</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">formulation</span> <span class="o">==</span> <span class="s2">"VAE"</span> <span class="k">else</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span>
                 <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">z_channels</span><span class="o">=</span><span class="n">z_factor</span> <span class="o">*</span> <span class="n">z_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">layer_kwargs</span>
             <span class="p">)</span>
@@ -744,19 +746,19 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Distribution for VAE vs AE (only used when not separate_quant_conv)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">GaussianDistribution</span><span class="p">()</span> <span class="k">if</span> <span class="n">formulation</span> <span class="o">==</span> <span class="s2">&quot;VAE&quot;</span> <span class="k">else</span> <span class="n">IdentityDistribution</span><span class="p">()</span>
+            <span class="n">GaussianDistribution</span><span class="p">()</span> <span class="k">if</span> <span class="n">formulation</span> <span class="o">==</span> <span class="s2">"VAE"</span> <span class="k">else</span> <span class="n">IdentityDistribution</span><span class="p">()</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ContinuousTokenizer.encode">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.encode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
-        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch latent_channels *spatial_compressed&quot;</span><span class="p">],</span>
+        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch latent_channels *spatial_compressed"</span><span class="p">],</span>
         <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode input to latent representation.</span>
+<span class="w">        </span><span class="sd">"""Encode input to latent representation.</span>
 
 <span class="sd">        For VAE:</span>
 <span class="sd">        - Encoder outputs (μ, log σ²)</span>
@@ -770,7 +772,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor of shape ``(B, C, *spatial)`` where:</span>
 <span class="sd">                - B: batch size</span>
-<span class="sd">                - C: number of channels (must match model&#39;s in_channels)</span>
+<span class="sd">                - C: number of channels (must match model's in_channels)</span>
 <span class="sd">                - spatial: (H, W) for 2D or (H, W, D) for 3D</span>
 
 <span class="sd">        Returns:</span>
@@ -781,8 +783,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError: If x is not a floating point tensor</span>
 <span class="sd">            ValueError: If x has wrong shape or contains NaN/Inf</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;in_channels&quot;</span><span class="p">],</span> <span class="s2">&quot;encode&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"in_channels"</span><span class="p">],</span> <span class="s2">"encode"</span><span class="p">)</span>
 
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
@@ -811,9 +813,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTokenizer.decode">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.decode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch latent_channels *spatial_compressed&quot;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode latent representation to output.</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch latent_channels *spatial_compressed"</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Decode latent representation to output.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            z: Latent tensor from encode() or external source.</span>
@@ -825,8 +827,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError: If z is not a floating point tensor</span>
 <span class="sd">            ValueError: If z has wrong shape or contains NaN/Inf</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_channels</span><span class="p">,</span> <span class="s2">&quot;decode&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">latent_channels</span><span class="p">,</span> <span class="s2">"decode"</span><span class="p">)</span>
 
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_quant_conv</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
@@ -835,9 +837,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTokenizer.forward">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="n">NetworkEval</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Full forward pass: encode -&gt; decode.</span>
+<span class="w">        </span><span class="sd">"""Full forward pass: encode -&gt; decode.</span>
 
 <span class="sd">        During training, returns a dict with all outputs for loss computation.</span>
 <span class="sd">        During evaluation, returns a NetworkEval namedtuple.</span>
@@ -847,16 +849,16 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Training mode (dict):</span>
-<span class="sd">                - &#39;reconstructions&#39;: Decoded output</span>
-<span class="sd">                - &#39;posteriors&#39;: (mean, logvar) for VAE, or identity for AE</span>
-<span class="sd">                - &#39;latent&#39;/&#39;latents&#39;: Sampled latent tensor</span>
-<span class="sd">                - &#39;kl_loss&#39;: KL divergence (VAE only)</span>
+<span class="sd">                - 'reconstructions': Decoded output</span>
+<span class="sd">                - 'posteriors': (mean, logvar) for VAE, or identity for AE</span>
+<span class="sd">                - 'latent'/'latents': Sampled latent tensor</span>
+<span class="sd">                - 'kl_loss': KL divergence (VAE only)</span>
 
 <span class="sd">            Eval mode (NetworkEval):</span>
 <span class="sd">                - reconstructions: Decoded output</span>
 <span class="sd">                - posteriors: Distribution parameters</span>
 <span class="sd">                - latent: Sampled latent</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">latent</span><span class="p">,</span> <span class="n">distribution_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
         <span class="n">reconstructions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
 
@@ -871,11 +873,11 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">{</span>
-                        <span class="s2">&quot;reconstructions&quot;</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
-                        <span class="s2">&quot;posteriors&quot;</span><span class="p">:</span> <span class="n">posteriors</span><span class="p">,</span>
-                        <span class="s2">&quot;kl_loss&quot;</span><span class="p">:</span> <span class="n">kl_loss</span><span class="p">,</span>
-                        <span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
-                        <span class="s2">&quot;latents&quot;</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
+                        <span class="s2">"reconstructions"</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
+                        <span class="s2">"posteriors"</span><span class="p">:</span> <span class="n">posteriors</span><span class="p">,</span>
+                        <span class="s2">"kl_loss"</span><span class="p">:</span> <span class="n">kl_loss</span><span class="p">,</span>
+                        <span class="s2">"latent"</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
+                        <span class="s2">"latents"</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
                     <span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># AE: IdentityDistribution format</span>
@@ -883,10 +885,10 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
-                <span class="s2">&quot;reconstructions&quot;</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
-                <span class="s2">&quot;posteriors&quot;</span><span class="p">:</span> <span class="n">posteriors</span><span class="p">,</span>
-                <span class="s2">&quot;latent&quot;</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
-                <span class="s2">&quot;latents&quot;</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
+                <span class="s2">"reconstructions"</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
+                <span class="s2">"posteriors"</span><span class="p">:</span> <span class="n">posteriors</span><span class="p">,</span>
+                <span class="s2">"latent"</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
+                <span class="s2">"latents"</span><span class="p">:</span> <span class="n">latent</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">NetworkEval</span><span class="p">(</span>
@@ -897,9 +899,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTokenizer.tokenize">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.tokenize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tokenize</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch latent_channels *spatial_compressed&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode input to latent representation (convenience method).</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch latent_channels *spatial_compressed"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Encode input to latent representation (convenience method).</span>
 
 <span class="sd">        For inference, this is the primary encoding method. For VAE, returns</span>
 <span class="sd">        the sampled latent (not the mean), enabling diverse reconstructions.</span>
@@ -909,14 +911,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Latent tensor suitable for storage, manipulation, or decoding</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="ContinuousTokenizer.get_latent_shape">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.ContinuousTokenizer.get_latent_shape">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_latent_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate output latent shape for given input shape.</span>
+<span class="w">        </span><span class="sd">"""Calculate output latent shape for given input shape.</span>
 
 <span class="sd">        Useful for pre-allocating memory or understanding compression ratio.</span>
 
@@ -924,9 +926,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            input_shape: Input tensor shape (B, C, H, W) or (B, C, H, W, D)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Expected latent shape (B, latent_channels, H&#39;, W&#39;) or (B, C&#39;, H&#39;, W&#39;, D&#39;)</span>
+<span class="sd">            Expected latent shape (B, latent_channels, H', W') or (B, C', H', W', D')</span>
 <span class="sd">            where spatial dims are compressed by spatial_compression factor</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">compression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_compression</span>
 
@@ -954,7 +956,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

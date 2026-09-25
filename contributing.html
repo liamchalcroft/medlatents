@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedLatents: Contributing Guide &mdash; MedLatents 0.1.0 documentation</title>
+  <title>MedLatents: Contributing Guide &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=a58bc63e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -179,7 +179,7 @@ day-to-day developer workflow for convenience.</p>
 <ol class="arabic simple" start="2">
 <li><p>Install development dependencies:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev,docs]"</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -250,7 +250,7 @@ ruff<span class="w"> </span>format<span class="w"> </span>src/<span class="w"> <
 <h3>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading"></a></h3>
 <p>Use Google-style docstrings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">sample_nucleus</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample from top-p (nucleus) distribution.</span>
+<span class="w">    </span><span class="sd">"""Sample from top-p (nucleus) distribution.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        logits: Logits of shape [batch, vocab_size].</span>
@@ -261,7 +261,7 @@ ruff<span class="w"> </span>format<span class="w"> </span>src/<span class="w"> <
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If p is not in (0, 1].</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="o">...</span>
 </pre></div>
 </div>
@@ -304,7 +304,7 @@ ruff<span class="w"> </span>format<span class="w"> </span>src/<span class="w"> <
 <li><p>Make your changes and commit:</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add my new feature&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add my new feature"</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
@@ -460,7 +460,7 @@ before starting, so the scope can be agreed up front.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

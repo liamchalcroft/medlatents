@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.networks.transformer &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.networks.transformer &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.networks.transformer</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Core transformer infrastructure for discrete latent models.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Core transformer infrastructure for discrete latent models."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -491,12 +493,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="init_weights">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.init_weights">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">init_weights</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard transformer weight initialization (GPT-2 style).</span>
+<span class="w">    </span><span class="sd">"""Standard transformer weight initialization (GPT-2 style).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        module: The module to initialize</span>
 <span class="sd">        std: Standard deviation for normal initialization (default: 0.02)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
         <span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">normal_</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">std</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -519,7 +521,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="precompute_freqs_cis">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.precompute_freqs_cis">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">precompute_freqs_cis</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10000.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Precompute RoPE (Rotary Position Embedding) rotation frequencies.</span>
+<span class="w">    </span><span class="sd">"""Precompute RoPE (Rotary Position Embedding) rotation frequencies.</span>
 
 <span class="sd">    RoPE encodes position information by rotating query and key vectors in the</span>
 <span class="sd">    attention mechanism. This is more robust than learned position embeddings</span>
@@ -538,11 +540,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        These are multiplied with complex views of Q and K to apply rotations.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Su et al., &quot;RoFormer: Enhanced Transformer with Rotary Position Embedding&quot;</span>
+<span class="sd">        Su et al., "RoFormer: Enhanced Transformer with Rotary Position Embedding"</span>
 <span class="sd">        https://arxiv.org/abs/2104.09864</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">dim</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> must be even for RoPE (got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Dimension </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2"> must be even for RoPE (got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
     <span class="c1"># Compute inverse frequencies: θ_d = 1 / (base^(2d/dim)) for d = 0, 2, 4, ...</span>
     <span class="c1"># This creates slower rotations for higher dimensions</span>
@@ -561,17 +563,17 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="apply_rotary_emb">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.apply_rotary_emb">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">apply_rotary_emb</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply rotary position embeddings using real-valued operations.</span>
+<span class="w">    </span><span class="sd">"""Apply rotary position embeddings using real-valued operations.</span>
 
-<span class="sd">    This implementation avoids complex number operations which don&#39;t support BF16,</span>
+<span class="sd">    This implementation avoids complex number operations which don't support BF16,</span>
 <span class="sd">    instead computing the rotation directly using cos/sin components.</span>
 
 <span class="sd">    RoPE rotates adjacent pairs of dimensions: [x₀, x₁], [x₂, x₃], ..., [x_{D-2}, x_{D-1}]</span>
 <span class="sd">    Each pair is treated as a 2D vector and rotated by an angle θ·position.</span>
 
 <span class="sd">    Mathematically:</span>
-<span class="sd">        [x&#39;₀]   [cos(θ)  -sin(θ)] [x₀]</span>
-<span class="sd">        [x&#39;₁] = [sin(θ)   cos(θ)] [x₁]</span>
+<span class="sd">        [x'₀]   [cos(θ)  -sin(θ)] [x₀]</span>
+<span class="sd">        [x'₁] = [sin(θ)   cos(θ)] [x₁]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor [batch, heads, seq_len, head_dim]</span>
@@ -579,10 +581,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Rotated tensor with same shape as input</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">B</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
     <span class="k">if</span> <span class="n">D</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Head dimension must be even for RoPE (got </span><span class="si">{</span><span class="n">D</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Head dimension must be even for RoPE (got </span><span class="si">{</span><span class="n">D</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
     <span class="c1"># Extract cos and sin from complex frequencies (works with any dtype)</span>
     <span class="c1"># freqs_cis is complex64, extract real (cos) and imag (sin) parts</span>
@@ -618,7 +620,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RMSNorm">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RMSNorm</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Root Mean Square Layer Normalization.</span>
+<span class="w">    </span><span class="sd">"""Root Mean Square Layer Normalization.</span>
 
 <span class="sd">    RMSNorm is a simpler and faster alternative to LayerNorm that only</span>
 <span class="sd">    normalizes by RMS (root mean square) without centering (mean subtraction).</span>
@@ -633,13 +635,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        RMSNorm(x) = x / sqrt(mean(x²) + eps) * gamma</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Zhang &amp; Sennrich, &quot;Root Mean Square Layer Normalization&quot;</span>
+<span class="sd">        Zhang &amp; Sennrich, "Root Mean Square Layer Normalization"</span>
 <span class="sd">        https://arxiv.org/abs/1910.07467</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dim: Feature dimension to normalize</span>
 <span class="sd">        eps: Epsilon for numerical stability</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RMSNorm.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm.__init__">[docs]</a>
@@ -655,13 +657,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RMSNorm.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNorm.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor [..., dim]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized tensor with same shape</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span></div>
 </div>
@@ -671,7 +673,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RMSNormZero">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RMSNormZero</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;RMSNorm with zero-initialized modulation (gate) for stable training.</span>
+<span class="w">    </span><span class="sd">"""RMSNorm with zero-initialized modulation (gate) for stable training.</span>
 
 <span class="sd">    Similar to AdaLN-Zero but using RMSNorm instead of LayerNorm.</span>
 <span class="sd">    Starts as identity and gradually learns normalization.</span>
@@ -680,7 +682,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        dim: Feature dimension to normalize</span>
 <span class="sd">        condition_dim: Conditioning dimension for modulation</span>
 <span class="sd">        eps: Epsilon for numerical stability</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RMSNormZero.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero.__init__">[docs]</a>
@@ -709,14 +711,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RMSNormZero.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.RMSNormZero.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor [batch, seq_len, dim]</span>
 <span class="sd">            condition: Conditioning tensor [batch, condition_dim]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Modulated normalized tensor</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># RMS normalize</span>
         <span class="n">x_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_norm</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span><span class="o">.</span><span class="n">type_as</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x_norm</span> <span class="o">=</span> <span class="n">x_norm</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
@@ -741,12 +743,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="Attention">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Attention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Self-attention with RoPE supporting both causal and bidirectional modes.</span>
 
 <span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
 <span class="sd">    Supports KV-caching for efficient autoregressive generation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Attention.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.__init__">[docs]</a>
@@ -777,10 +779,10 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
-        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"seq_len head_dim"</span><span class="p">],</span>
         <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">]:</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Fused QKV transform</span>
@@ -822,12 +824,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.Attention.forward_with_cache">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cache</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
-        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"seq_len head_dim"</span><span class="p">],</span>
         <span class="n">past_kv</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with KV-cache support for efficient autoregressive generation.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Forward pass with KV-cache support for efficient autoregressive generation.</span>
 
 <span class="sd">        When past_kv is provided, only the new tokens in x are processed and their</span>
 <span class="sd">        K/V are concatenated with the cached values. This reduces per-step complexity</span>
@@ -845,7 +847,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            output: Attention output [batch_size, seq_len, hidden_size]</span>
 <span class="sd">            new_kv: Updated (key, value) cache including new tokens.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Compute Q, K, V for new tokens</span>
@@ -858,7 +860,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="c1"># Apply rotary embeddings to new tokens</span>
-        <span class="c1"># freqs_cis should be positioned for the new token&#39;s position</span>
+        <span class="c1"># freqs_cis should be positioned for the new token's position</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="n">apply_rotary_emb</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">)</span>
 
@@ -878,7 +880,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">new_kv</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="c1"># Attention - for cached generation with single new token, use is_causal=False</span>
-        <span class="c1"># since we&#39;re only computing attention for the last token against all previous</span>
+        <span class="c1"># since we're only computing attention for the last token against all previous</span>
         <span class="c1"># The causal masking is implicit: we only have access to past tokens in cache</span>
         <span class="n">is_causal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">causal</span> <span class="ow">and</span> <span class="n">past_kv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="kc">None</span>
 
@@ -902,7 +904,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AttentionWithValueResidual">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AttentionWithValueResidual</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Self-attention with Value Residual Learning for very deep networks.</span>
 
 <span class="sd">    Adds a learnable residual path to the value computation, which helps</span>
@@ -910,7 +912,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    is a weighted combination of the input and the computed value.</span>
 
 <span class="sd">    Based on:</span>
-<span class="sd">    - &quot;Stabilizing Transformer Training by Preventing Attention Entropy Collapse&quot;</span>
+<span class="sd">    - "Stabilizing Transformer Training by Preventing Attention Entropy Collapse"</span>
 <span class="sd">    - DeepNet, DeepSeek-V2 (value residual for deep scaling)</span>
 
 <span class="sd">    Formula:</span>
@@ -927,7 +929,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        qkv_bias: Whether to use bias in QKV projections</span>
 <span class="sd">        qk_norm: Whether to apply QK LayerNorm</span>
 <span class="sd">        value_residual_mix: Initial mixing coefficient (default 0.0 for pure attention)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AttentionWithValueResidual.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual.__init__">[docs]</a>
@@ -967,10 +969,10 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.AttentionWithValueResidual.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">],</span>
-        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;seq_len head_dim&quot;</span><span class="p">],</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">],</span>
+        <span class="n">freqs_cis</span><span class="p">:</span> <span class="n">Complex</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"seq_len head_dim"</span><span class="p">],</span>
         <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq_len hidden&quot;</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq_len hidden"</span><span class="p">]:</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">C</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Fused QKV transform</span>
@@ -1021,13 +1023,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TransformerBlock">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TransformerBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transformer block supporting both causal and bidirectional attention.</span>
 
 <span class="sd">    Supports:</span>
 <span class="sd">    - QK LayerNorm for attention stability (arXiv:2312.16903)</span>
 <span class="sd">    - Peri-LN (peripheral LayerNorm) for training stability (arXiv:2502.02732)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="TransformerBlock.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TransformerBlock.__init__">[docs]</a>
@@ -1092,7 +1094,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">past_kv</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">attention_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with KV-cache support.</span>
+<span class="w">        </span><span class="sd">"""Forward pass with KV-cache support.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor [batch_size, seq_len, hidden_size]</span>
@@ -1103,7 +1105,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            output: Block output [batch_size, seq_len, hidden_size]</span>
 <span class="sd">            new_kv: Updated KV cache</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Attention with cache</span>
         <span class="n">attn_out</span><span class="p">,</span> <span class="n">new_kv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attn</span><span class="o">.</span><span class="n">forward_with_cache</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">norm1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">past_kv</span><span class="p">,</span> <span class="n">attention_mask</span>
@@ -1129,7 +1131,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_BaseTransformer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shared infrastructure for transformer backbones.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Shared infrastructure for transformer backbones."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1145,14 +1147,14 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">hidden_size</span> <span class="o">%</span> <span class="n">num_heads</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;hidden_size </span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2"> must be divisible by num_heads </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"hidden_size </span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2"> must be divisible by num_heads </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">hidden_size</span> <span class="o">//</span> <span class="n">num_heads</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;head dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="si">}</span><span class="s2"> must be even (hidden_size=</span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2">, num_heads=</span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="sa">f</span><span class="s2">"head dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="si">}</span><span class="s2"> must be even (hidden_size=</span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2">, num_heads=</span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2">)"</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rope_theta</span> <span class="o">=</span> <span class="n">rope_theta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="o">=</span> <span class="n">allow_dynamic_seq_length</span>
@@ -1160,7 +1162,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">gradient_checkpointing</span> <span class="o">=</span> <span class="n">gradient_checkpointing</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
-            <span class="s2">&quot;freqs_cis&quot;</span><span class="p">,</span>
+            <span class="s2">"freqs_cis"</span><span class="p">,</span>
             <span class="n">precompute_freqs_cis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">rope_theta</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span> <span class="o">=</span> <span class="n">seq_length</span>
@@ -1172,16 +1174,16 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the device of model parameters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the device of model parameters."""</span>
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">device</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update_rotary_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pre-compute and cache rotary embeddings for given sequence length.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Pre-compute and cache rotary embeddings for given sequence length."""</span>
         <span class="k">if</span> <span class="n">seq_length</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
-            <span class="s2">&quot;freqs_cis&quot;</span><span class="p">,</span>
+            <span class="s2">"freqs_cis"</span><span class="p">,</span>
             <span class="n">precompute_freqs_cis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rope_theta</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
                 <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freqs_cis</span><span class="o">.</span><span class="n">dtype</span>
             <span class="p">),</span>
@@ -1189,13 +1191,13 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span> <span class="o">=</span> <span class="n">seq_length</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_chunk_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or disable sequence chunking.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set or disable sequence chunking."""</span>
         <span class="k">if</span> <span class="n">chunk_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">chunk_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;chunk_size must be positive&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"chunk_size must be positive"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">ckpt_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper for gradient checkpointing.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Wrapper for gradient checkpointing."""</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">ckpt_forward</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">module</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
@@ -1206,7 +1208,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTransformer">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteTransformer</span><span class="p">(</span><span class="n">_BaseTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformer backbone purpose-built for discrete token sequences.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Transformer backbone purpose-built for discrete token sequences."""</span>
 
 <div class="viewcode-block" id="DiscreteTransformer.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteTransformer.__init__">[docs]</a>
@@ -1240,7 +1242,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">detect_anomalies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">likelihood_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="o">**</span><span class="n">forward_kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Detect anomalies by finding low likelihood tokens.</span>
 
 <span class="sd">        Args:</span>
@@ -1250,7 +1252,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            anomaly_mask: Binary mask of detected anomalies [batch_size, seq_len]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">forward_kwargs</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">forward_kwargs</span> <span class="k">else</span> <span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1269,7 +1271,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">forward_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Detect and inpaint anomalies in the latent sequence.</span>
 
 <span class="sd">        Args:</span>
@@ -1281,7 +1283,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            inpainted_sequence: Sequence with anomalies replaced [batch_size, seq_len]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="c1"># Detect anomalies</span>
@@ -1297,7 +1299,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">logits_temp</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">/</span> <span class="n">temperature</span>
             <span class="k">if</span> <span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">v</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits_temp</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">logits_temp</span><span class="p">[</span><span class="n">logits_temp</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;Inf&quot;</span><span class="p">)</span>
+                <span class="n">logits_temp</span><span class="p">[</span><span class="n">logits_temp</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"Inf"</span><span class="p">)</span>
 
             <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits_temp</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">probs</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span>
@@ -1312,7 +1314,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTransformer">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousTransformer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousTransformer</span><span class="p">(</span><span class="n">_BaseTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transformer backbone for continuous latent representations.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Transformer backbone for continuous latent representations."""</span>
 
 <div class="viewcode-block" id="ContinuousTransformer.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousTransformer.__init__">[docs]</a>
@@ -1349,7 +1351,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

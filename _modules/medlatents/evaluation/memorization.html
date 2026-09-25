@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.evaluation.memorization &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.evaluation.memorization &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,9 +474,9 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.evaluation.memorization</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Memorization probes for generative models.</span>
+<span></span><span class="sd">"""Memorization probes for generative models.</span>
 
-<span class="sd">Detects whether a generator&#39;s outputs are systematically closer to specific</span>
+<span class="sd">Detects whether a generator's outputs are systematically closer to specific</span>
 <span class="sd">training images than the training set is to itself --- the classical</span>
 <span class="sd">nearest-neighbor signature of memorization (Carlini et al. 2023; Stein et</span>
 <span class="sd">al. 2024).</span>
@@ -507,18 +509,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        InceptionPool3FeatureExtractor, memorization_metrics, memorization_pairs,</span>
 <span class="sd">    )</span>
 
-<span class="sd">    extractor = InceptionPool3FeatureExtractor(device=&quot;cuda&quot;)</span>
+<span class="sd">    extractor = InceptionPool3FeatureExtractor(device="cuda")</span>
 <span class="sd">    train_feats = extractor.extract(train_images_uint8)   # (N_train, 192)</span>
 <span class="sd">    gen_feats   = extractor.extract(generated_images_uint8)  # (N_gen, 192)</span>
 
 <span class="sd">    metrics = memorization_metrics(gen_feats, train_feats)</span>
-<span class="sd">    # {&#39;memorization_ratio&#39;: 0.94, &#39;auth_pct&#39;: 0.07,</span>
-<span class="sd">    #  &#39;median_d_gen_to_train&#39;: 0.18, &#39;median_d_train_to_train&#39;: 0.19, ...}</span>
+<span class="sd">    # {'memorization_ratio': 0.94, 'auth_pct': 0.07,</span>
+<span class="sd">    #  'median_d_gen_to_train': 0.18, 'median_d_train_to_train': 0.19, ...}</span>
 
 <span class="sd">    # For the qualitative side-by-side gallery:</span>
 <span class="sd">    pairs = memorization_pairs(gen_feats, train_feats, top_k=8)</span>
 <span class="sd">    # [(gen_idx, train_idx, distance), ...] sorted by distance</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -535,16 +537,16 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="InceptionPool3FeatureExtractor">
 <a class="viewcode-back" href="../../../api/evaluation.html#medlatents.evaluation.InceptionPool3FeatureExtractor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">InceptionPool3FeatureExtractor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract 192-d Inception V3 pool3 features (matches FID-192).</span>
+<span class="w">    </span><span class="sd">"""Extract 192-d Inception V3 pool3 features (matches FID-192).</span>
 
 <span class="sd">    The backbone is the same one used by ``torchmetrics.image.fid`` with</span>
 <span class="sd">    ``feature=192``; sharing the feature space ensures the memorization</span>
 <span class="sd">    metric and the reported FID values live on the same Inception manifold.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="InceptionPool3FeatureExtractor.__init__">
 <a class="viewcode-back" href="../../../api/evaluation.html#medlatents.evaluation.InceptionPool3FeatureExtractor.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">torchmetrics.image.fid</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrechetInceptionDistance</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
@@ -559,16 +561,16 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/evaluation.html#medlatents.evaluation.InceptionPool3FeatureExtractor.extract">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ``(N, 192)`` float features for the given images.</span>
+<span class="w">        </span><span class="sd">"""Return ``(N, 192)`` float features for the given images.</span>
 
 <span class="sd">        ``images`` may be ``(N, 1, H, W)`` or ``(N, 3, H, W)``, dtype uint8 or</span>
 <span class="sd">        float in [0,1]. Grayscale inputs are tiled to RGB. The inception</span>
 <span class="sd">        backbone in ``torchmetrics.image.fid`` expects uint8 inputs (the</span>
 <span class="sd">        normalisation is handled internally), so floats are rescaled to</span>
 <span class="sd">        ``[0, 255]`` and cast.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;images must be (N, C, H, W); got shape </span><span class="si">{</span><span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"images must be (N, C, H, W); got shape </span><span class="si">{</span><span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span>
             <span class="n">images</span> <span class="o">=</span> <span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">images</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -598,17 +600,17 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">cosine_distance_matrix</span><span class="p">(</span>
     <span class="n">query</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">reference</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
     <span class="n">block</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute ``(N_q, N_r)`` cosine-distance matrix in blocks.</span>
+<span class="w">    </span><span class="sd">"""Compute ``(N_q, N_r)`` cosine-distance matrix in blocks.</span>
 
 <span class="sd">    Returns a CPU tensor; switches to GPU for the matmul if ``device`` is</span>
 <span class="sd">    cuda. Block size keeps memory bounded for large reference sets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">_l2_normalise</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">_l2_normalise</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">):</span>
         <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">sim</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">@</span> <span class="n">r</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># (block, N_r) cosine similarity</span>
@@ -627,9 +629,9 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">memorization_metrics</span><span class="p">(</span>
     <span class="n">gen_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">train_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the memorization-ratio and AuthPct scalars.</span>
+<span class="w">    </span><span class="sd">"""Compute the memorization-ratio and AuthPct scalars.</span>
 
 <span class="sd">    Returns a dict with keys:</span>
 
@@ -641,19 +643,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - ``mean_d_gen_to_train``: mean version of the above</span>
 <span class="sd">    - ``mean_d_train_to_train``: ditto</span>
 <span class="sd">    - ``n_gen``, ``n_train``: sample counts</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Distance from generated to training (find nearest training neighbor)</span>
     <span class="n">d_gt</span> <span class="o">=</span> <span class="n">cosine_distance_matrix</span><span class="p">(</span><span class="n">gen_features</span><span class="p">,</span> <span class="n">train_features</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
     <span class="n">nn_dist_gt</span><span class="p">,</span> <span class="n">nn_idx_gt</span> <span class="o">=</span> <span class="n">d_gt</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N_gen,)</span>
 
     <span class="c1"># Distance from training to training (excluding self)</span>
     <span class="n">d_tt</span> <span class="o">=</span> <span class="n">cosine_distance_matrix</span><span class="p">(</span><span class="n">train_features</span><span class="p">,</span> <span class="n">train_features</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">d_tt</span><span class="o">.</span><span class="n">fill_diagonal_</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">))</span>
+    <span class="n">d_tt</span><span class="o">.</span><span class="n">fill_diagonal_</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">))</span>
     <span class="n">nn_dist_tt</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">d_tt</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N_train,)</span>
 
     <span class="c1"># AuthPct: for each generated sample, is its NN training neighbor closer</span>
-    <span class="c1"># to it than that training neighbor&#39;s own nearest training neighbor?</span>
-    <span class="c1"># i.e. is the gen &quot;authentic&quot; (further from any training sample than</span>
+    <span class="c1"># to it than that training neighbor's own nearest training neighbor?</span>
+    <span class="c1"># i.e. is the gen "authentic" (further from any training sample than</span>
     <span class="c1"># training samples are from each other)?</span>
     <span class="n">nn_train_distances</span> <span class="o">=</span> <span class="n">nn_dist_tt</span><span class="p">[</span><span class="n">nn_idx_gt</span><span class="p">]</span>  <span class="c1"># (N_gen,) — d(NN_train, NN2_train)</span>
     <span class="n">is_close_to_specific_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">nn_dist_gt</span> <span class="o">&lt;</span> <span class="n">nn_train_distances</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -663,14 +665,14 @@ window.runMermaid = runMermaid;</script>
     <span class="n">median_tt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">nn_dist_tt</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;memorization_ratio&quot;</span><span class="p">:</span> <span class="n">median_gt</span> <span class="o">/</span> <span class="n">median_tt</span> <span class="k">if</span> <span class="n">median_tt</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span>
-        <span class="s2">&quot;auth_pct&quot;</span><span class="p">:</span> <span class="n">auth_pct</span><span class="p">,</span>
-        <span class="s2">&quot;median_d_gen_to_train&quot;</span><span class="p">:</span> <span class="n">median_gt</span><span class="p">,</span>
-        <span class="s2">&quot;median_d_train_to_train&quot;</span><span class="p">:</span> <span class="n">median_tt</span><span class="p">,</span>
-        <span class="s2">&quot;mean_d_gen_to_train&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">nn_dist_gt</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span>
-        <span class="s2">&quot;mean_d_train_to_train&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">nn_dist_tt</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span>
-        <span class="s2">&quot;n_gen&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gen_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-        <span class="s2">&quot;n_train&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">train_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s2">"memorization_ratio"</span><span class="p">:</span> <span class="n">median_gt</span> <span class="o">/</span> <span class="n">median_tt</span> <span class="k">if</span> <span class="n">median_tt</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">),</span>
+        <span class="s2">"auth_pct"</span><span class="p">:</span> <span class="n">auth_pct</span><span class="p">,</span>
+        <span class="s2">"median_d_gen_to_train"</span><span class="p">:</span> <span class="n">median_gt</span><span class="p">,</span>
+        <span class="s2">"median_d_train_to_train"</span><span class="p">:</span> <span class="n">median_tt</span><span class="p">,</span>
+        <span class="s2">"mean_d_gen_to_train"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">nn_dist_gt</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span>
+        <span class="s2">"mean_d_train_to_train"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">nn_dist_tt</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()),</span>
+        <span class="s2">"n_gen"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">gen_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s2">"n_train"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">train_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
     <span class="p">}</span></div>
 
 
@@ -681,12 +683,12 @@ window.runMermaid = runMermaid;</script>
     <span class="n">gen_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">train_features</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the ``top_k`` (gen_idx, train_idx, cosine_distance) pairs with</span>
+<span class="w">    </span><span class="sd">"""Return the ``top_k`` (gen_idx, train_idx, cosine_distance) pairs with</span>
 <span class="sd">    the smallest gen→train distances --- the most likely memorisation</span>
 <span class="sd">    suspects to display in a side-by-side gallery.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">cosine_distance_matrix</span><span class="p">(</span><span class="n">gen_features</span><span class="p">,</span> <span class="n">train_features</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
     <span class="n">nn_dist</span><span class="p">,</span> <span class="n">nn_idx</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (N_gen,)</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">nn_dist</span><span class="p">)[:</span><span class="n">top_k</span><span class="p">]</span>
@@ -705,26 +707,26 @@ window.runMermaid = runMermaid;</script>
     <span class="n">pairs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]],</span>
     <span class="n">max_pairs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select image tensors for generated/training nearest-neighbor galleries.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Select image tensors for generated/training nearest-neighbor galleries."""</span>
 
     <span class="k">if</span> <span class="n">generated_images</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">or</span> <span class="n">train_images</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;images must be (N, C, H, W)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"images must be (N, C, H, W)"</span><span class="p">)</span>
     <span class="n">selected</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pairs</span> <span class="k">if</span> <span class="n">max_pairs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pairs</span><span class="p">[:</span><span class="n">max_pairs</span><span class="p">])</span>
     <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">gen_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;gen_idx&quot;</span><span class="p">])</span>
-            <span class="n">train_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;train_idx&quot;</span><span class="p">])</span>
-            <span class="n">distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">])</span>
+            <span class="n">gen_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"gen_idx"</span><span class="p">])</span>
+            <span class="n">train_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"train_idx"</span><span class="p">])</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="s2">"distance"</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">gen_idx</span><span class="p">,</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">distance</span> <span class="o">=</span> <span class="n">pair</span>
         <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;gen_idx&quot;</span><span class="p">:</span> <span class="n">gen_idx</span><span class="p">,</span>
-                <span class="s2">&quot;train_idx&quot;</span><span class="p">:</span> <span class="n">train_idx</span><span class="p">,</span>
-                <span class="s2">&quot;distance&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">distance</span><span class="p">),</span>
-                <span class="s2">&quot;generated&quot;</span><span class="p">:</span> <span class="n">generated_images</span><span class="p">[</span><span class="n">gen_idx</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
-                <span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">train_images</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
+                <span class="s2">"gen_idx"</span><span class="p">:</span> <span class="n">gen_idx</span><span class="p">,</span>
+                <span class="s2">"train_idx"</span><span class="p">:</span> <span class="n">train_idx</span><span class="p">,</span>
+                <span class="s2">"distance"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">distance</span><span class="p">),</span>
+                <span class="s2">"generated"</span><span class="p">:</span> <span class="n">generated_images</span><span class="p">[</span><span class="n">gen_idx</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
+                <span class="s2">"train"</span><span class="p">:</span> <span class="n">train_images</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span>
             <span class="p">}</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">rows</span></div>
@@ -732,11 +734,11 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;InceptionPool3FeatureExtractor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cosine_distance_matrix&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;memorization_metrics&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;memorization_pairs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;nearest_neighbor_gallery_pairs&quot;</span><span class="p">,</span>
+    <span class="s2">"InceptionPool3FeatureExtractor"</span><span class="p">,</span>
+    <span class="s2">"cosine_distance_matrix"</span><span class="p">,</span>
+    <span class="s2">"memorization_metrics"</span><span class="p">,</span>
+    <span class="s2">"memorization_pairs"</span><span class="p">,</span>
+    <span class="s2">"nearest_neighbor_gallery_pairs"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -748,7 +750,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

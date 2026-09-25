@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.schedulers &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.schedulers &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,14 +474,14 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.schedulers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;MaskGIT-specific scheduler for training.</span>
+<span></span><span class="sd">"""MaskGIT-specific scheduler for training.</span>
 
 <span class="sd">This module provides the get_mask_ratio function which is specific to</span>
 <span class="sd">MaskGIT training schedules (cosine, linear, square decay of mask ratio).</span>
 
 <span class="sd">For general-purpose schedule functions (cosine_schedule, linear_schedule,</span>
 <span class="sd">get_cosine_schedule_with_warmup), use medlatents.common.schedules.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
@@ -487,9 +489,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_mask_ratio">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.get_mask_ratio">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_mask_ratio</span><span class="p">(</span>
-    <span class="n">progress</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;square&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">schedule</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"cosine"</span><span class="p">,</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"square"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"cosine"</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get mask ratio based on training progress (0 to 1) and schedule type.</span>
 
 <span class="sd">    MaskGIT training uses a decreasing mask ratio schedule, starting with</span>
@@ -497,31 +499,31 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Args:</span>
 <span class="sd">        progress: Training progress from 0.0 (start) to 1.0 (end)</span>
-<span class="sd">        schedule: Schedule type (&#39;cosine&#39;, &#39;linear&#39;, &#39;square&#39;)</span>
+<span class="sd">        schedule: Schedule type ('cosine', 'linear', 'square')</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Mask ratio at this progress (higher = more tokens masked)</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; get_mask_ratio(0.0, &quot;cosine&quot;)  # Start: max masking</span>
+<span class="sd">        &gt;&gt;&gt; get_mask_ratio(0.0, "cosine")  # Start: max masking</span>
 <span class="sd">        1.0</span>
-<span class="sd">        &gt;&gt;&gt; get_mask_ratio(1.0, &quot;cosine&quot;)  # End: min masking</span>
+<span class="sd">        &gt;&gt;&gt; get_mask_ratio(1.0, "cosine")  # End: min masking</span>
 <span class="sd">        0.0</span>
-<span class="sd">        &gt;&gt;&gt; get_mask_ratio(0.5, &quot;cosine&quot;)  # Mid: half masking</span>
+<span class="sd">        &gt;&gt;&gt; get_mask_ratio(0.5, "cosine")  # Mid: half masking</span>
 <span class="sd">        0.5</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="nb">__import__</span><span class="p">(</span><span class="s2">&quot;math&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">__import__</span><span class="p">(</span><span class="s2">"math"</span><span class="p">)</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="nb">__import__</span><span class="p">(</span><span class="s2">"math"</span><span class="p">)</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span>
-    <span class="k">elif</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">&quot;square&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">schedule</span> <span class="o">==</span> <span class="s2">"square"</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">progress</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="n">schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="n">schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;get_mask_ratio&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"get_mask_ratio"</span><span class="p">]</span>
 </pre></div>
 
            </div>
@@ -532,7 +534,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

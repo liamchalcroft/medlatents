@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.conditioning.encoders &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.conditioning.encoders &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.conditioning.encoders</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Frozen pretrained encoders for REPA and representation alignment.</span>
+<span></span><span class="sd">"""Frozen pretrained encoders for REPA and representation alignment.</span>
 
 <span class="sd">Provides wrappers for visual encoders used as alignment targets during training:</span>
 <span class="sd">- DINOv2: General vision encoder (facebookresearch/dinov2)</span>
@@ -483,9 +485,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">alignment targets for diffusion/flow model hidden states during REPA training.</span>
 
 <span class="sd">Example:</span>
-<span class="sd">    &gt;&gt;&gt; encoder = FrozenDINOv2(device=&quot;cuda&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; encoder = FrozenDINOv2(device="cuda")</span>
 <span class="sd">    &gt;&gt;&gt; features = encoder(images)  # [B, N, D]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -500,7 +502,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenEncoder">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenEncoder</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for frozen pretrained encoders.</span>
+<span class="w">    </span><span class="sd">"""Base class for frozen pretrained encoders.</span>
 
 <span class="sd">    All parameters are frozen and the encoder runs in eval mode.</span>
 <span class="sd">    Subclasses implement specific encoder architectures.</span>
@@ -509,7 +511,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        embed_dim: Output embedding dimension</span>
 <span class="sd">        patch_size: Patch size for vision transformers</span>
 <span class="sd">        supports_3d: Whether encoder natively supports 3D inputs</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="FrozenEncoder.__init__">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder.__init__">[docs]</a>
@@ -535,7 +537,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenEncoder.freeze">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder.freeze">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Freeze all parameters and set to eval mode.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Freeze all parameters and set to eval mode."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
             <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span></div>
@@ -545,7 +547,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder.forward_features">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract patch-level features from images.</span>
+<span class="w">        </span><span class="sd">"""Extract patch-level features from images.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input images [batch, C, H, W] or [batch, C, D, H, W]</span>
@@ -553,14 +555,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Patch features [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="FrozenEncoder.preprocess">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder.preprocess">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocess images for this encoder.</span>
+<span class="w">        </span><span class="sd">"""Preprocess images for this encoder.</span>
 
 <span class="sd">        Override in subclasses for encoder-specific preprocessing.</span>
 
@@ -569,14 +571,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Preprocessed images ready for forward_features</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">x</span></div>
 
 
 <div class="viewcode-block" id="FrozenEncoder.forward">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenEncoder.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Full forward pass with preprocessing.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Full forward pass with preprocessing."""</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_features</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 </div>
@@ -586,20 +588,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenDINOv2">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenDINOv2">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenDINOv2</span><span class="p">(</span><span class="n">FrozenEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Frozen DINOv2 encoder for REPA alignment.</span>
+<span class="w">    </span><span class="sd">"""Frozen DINOv2 encoder for REPA alignment.</span>
 
 <span class="sd">    DINOv2 provides strong semantic features that transfer well across domains.</span>
 <span class="sd">    Supports: dinov2_vits14, dinov2_vitb14, dinov2_vitl14, dinov2_vitg14</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Oquab et al., &quot;DINOv2: Learning Robust Visual Features without Supervision&quot;</span>
+<span class="sd">        Oquab et al., "DINOv2: Learning Robust Visual Features without Supervision"</span>
 <span class="sd">        https://arxiv.org/abs/2304.07193</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model_name: DINOv2 variant (vits14, vitb14, vitl14, vitg14)</span>
 <span class="sd">        device: Device to load model on</span>
 <span class="sd">        trust_remote_code: Whether to trust remote code for custom implementations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># ImageNet normalization used by DINOv2</span>
     <span class="n">MEAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">)</span>
@@ -609,8 +611,8 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenDINOv2.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dinov2_vitb14&quot;</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"dinov2_vitb14"</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
         <span class="n">trust_remote_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -619,21 +621,21 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Map short names to full names</span>
         <span class="n">name_map</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;vits14&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vits14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;vitb14&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitb14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;vitl14&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitl14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;vitg14&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitg14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dinov2-vit-s&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vits14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dinov2-vit-b&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitb14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dinov2-vit-l&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitl14&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;dinov2-vit-g&quot;</span><span class="p">:</span> <span class="s2">&quot;dinov2_vitg14&quot;</span><span class="p">,</span>
+            <span class="s2">"vits14"</span><span class="p">:</span> <span class="s2">"dinov2_vits14"</span><span class="p">,</span>
+            <span class="s2">"vitb14"</span><span class="p">:</span> <span class="s2">"dinov2_vitb14"</span><span class="p">,</span>
+            <span class="s2">"vitl14"</span><span class="p">:</span> <span class="s2">"dinov2_vitl14"</span><span class="p">,</span>
+            <span class="s2">"vitg14"</span><span class="p">:</span> <span class="s2">"dinov2_vitg14"</span><span class="p">,</span>
+            <span class="s2">"dinov2-vit-s"</span><span class="p">:</span> <span class="s2">"dinov2_vits14"</span><span class="p">,</span>
+            <span class="s2">"dinov2-vit-b"</span><span class="p">:</span> <span class="s2">"dinov2_vitb14"</span><span class="p">,</span>
+            <span class="s2">"dinov2-vit-l"</span><span class="p">:</span> <span class="s2">"dinov2_vitl14"</span><span class="p">,</span>
+            <span class="s2">"dinov2-vit-g"</span><span class="p">:</span> <span class="s2">"dinov2_vitg14"</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">full_name</span> <span class="o">=</span> <span class="n">name_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">model_name</span><span class="p">)</span>
 
         <span class="c1"># Try loading from torch hub first (official implementation)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">encoder_obj</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-                <span class="s2">&quot;facebookresearch/dinov2&quot;</span><span class="p">,</span>
+                <span class="s2">"facebookresearch/dinov2"</span><span class="p">,</span>
                 <span class="n">full_name</span><span class="p">,</span>
                 <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
@@ -643,7 +645,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ViTModel</span>
 
-                <span class="n">hf_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;facebook/dinov2-</span><span class="si">{</span><span class="n">full_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;dinov2_&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">hf_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"facebook/dinov2-</span><span class="si">{</span><span class="n">full_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'dinov2_'</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">ViTModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
                     <span class="n">hf_name</span><span class="p">,</span> <span class="n">trust_remote_code</span><span class="o">=</span><span class="n">trust_remote_code</span>
                 <span class="p">)</span>
@@ -655,19 +657,19 @@ window.runMermaid = runMermaid;</script>
                 <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">forward_features</span> <span class="o">=</span> <span class="n">forward_features</span>  <span class="c1"># type: ignore[assignment]</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Failed to load DINOv2 model &#39;</span><span class="si">{</span><span class="n">full_name</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Tried torch.hub and transformers. Ensure you have internet access. &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Failed to load DINOv2 model '</span><span class="si">{</span><span class="n">full_name</span><span class="si">}</span><span class="s2">'. "</span>
+                    <span class="sa">f</span><span class="s2">"Tried torch.hub and transformers. Ensure you have internet access. "</span>
+                    <span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_obj</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_embed_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">,</span> <span class="s2">&quot;embed_dim&quot;</span><span class="p">,</span> <span class="mi">768</span><span class="p">))</span>  <span class="c1"># type: ignore[arg-type]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_embed_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">,</span> <span class="s2">"embed_dim"</span><span class="p">,</span> <span class="mi">768</span><span class="p">))</span>  <span class="c1"># type: ignore[arg-type]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_patch_size</span> <span class="o">=</span> <span class="mi">14</span>  <span class="c1"># DINOv2 uses 14x14 patches</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supports_3d</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># Register normalization buffers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span></div>
 
@@ -675,7 +677,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenDINOv2.preprocess">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenDINOv2.preprocess">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocess images for DINOv2.</span>
+<span class="w">        </span><span class="sd">"""Preprocess images for DINOv2.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Images in [0, 1] range, shape [batch, C, H, W]</span>
@@ -683,23 +685,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized images ready for DINOv2</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle single-channel (grayscale/medical) images</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Resize to DINOv2-compatible size (multiple of 14)</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
         <span class="n">target_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">//</span> <span class="mi">14</span><span class="p">)</span> <span class="o">*</span> <span class="mi">14</span>
         <span class="n">target_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="mi">14</span><span class="p">)</span> <span class="o">*</span> <span class="mi">14</span>
         <span class="k">if</span> <span class="n">target_h</span> <span class="o">!=</span> <span class="n">h</span> <span class="ow">or</span> <span class="n">target_w</span> <span class="o">!=</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">target_h</span><span class="p">,</span> <span class="n">target_w</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">target_h</span><span class="p">,</span> <span class="n">target_w</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Normalize</span>
-        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">)</span>
+        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span> <span class="o">/</span> <span class="n">std_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">x</span></div>
@@ -709,18 +711,18 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenDINOv2.forward_features">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract patch features from DINOv2.</span>
+<span class="w">        </span><span class="sd">"""Extract patch features from DINOv2.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Preprocessed images [batch, 3, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Patch tokens [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">forward_features</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined,operator]</span>
-        <span class="c1"># DINOv2 returns dict with &#39;x_norm_patchtokens&#39;</span>
+        <span class="c1"># DINOv2 returns dict with 'x_norm_patchtokens'</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">features</span><span class="p">[</span><span class="s2">&quot;x_norm_patchtokens&quot;</span><span class="p">]</span>  <span class="c1"># type: ignore[return-value]</span>
+            <span class="k">return</span> <span class="n">features</span><span class="p">[</span><span class="s2">"x_norm_patchtokens"</span><span class="p">]</span>  <span class="c1"># type: ignore[return-value]</span>
         <span class="c1"># Older versions return tuple (cls, patches)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">:]</span>  <span class="c1"># type: ignore[index,return-value]</span>
@@ -733,20 +735,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenSigLIP">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenSigLIP">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenSigLIP</span><span class="p">(</span><span class="n">FrozenEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Frozen SigLIP encoder for REPA alignment.</span>
+<span class="w">    </span><span class="sd">"""Frozen SigLIP encoder for REPA alignment.</span>
 
 <span class="sd">    SigLIP provides vision-language aligned features, useful when</span>
 <span class="sd">    text conditioning is also used.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Zhai et al., &quot;Sigmoid Loss for Language Image Pre-Training&quot;</span>
+<span class="sd">        Zhai et al., "Sigmoid Loss for Language Image Pre-Training"</span>
 <span class="sd">        https://arxiv.org/abs/2303.15343</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model_name: SigLIP variant (e.g., &#39;siglip-base-patch16-224&#39;)</span>
+<span class="sd">        model_name: SigLIP variant (e.g., 'siglip-base-patch16-224')</span>
 <span class="sd">        device: Device to load model on</span>
 <span class="sd">        trust_remote_code: Whether to trust remote code for custom models</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># CLIP/SigLIP normalization</span>
     <span class="n">MEAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.48145466</span><span class="p">,</span> <span class="mf">0.4578275</span><span class="p">,</span> <span class="mf">0.40821073</span><span class="p">)</span>
@@ -756,8 +758,8 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenSigLIP.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;google/siglip-base-patch16-224&quot;</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"google/siglip-base-patch16-224"</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
         <span class="n">trust_remote_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -772,18 +774,18 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;SigLIP requires the &#39;transformers&#39; library. Install with: pip install transformers&quot;</span>
+                <span class="s2">"SigLIP requires the 'transformers' library. Install with: pip install transformers"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load SigLIP model &#39;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to load SigLIP model '</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_obj</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_patch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">patch_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supports_3d</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span></div>
 
@@ -791,23 +793,23 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenSigLIP.preprocess">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenSigLIP.preprocess">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocess images for SigLIP.</span>
+<span class="w">        </span><span class="sd">"""Preprocess images for SigLIP.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Images in [0, 1] range, shape [batch, C, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized images ready for SigLIP</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle single-channel images</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Resize to expected size</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">)</span>
+        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span> <span class="o">/</span> <span class="n">std_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">x</span></div>
@@ -817,17 +819,17 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenSigLIP.forward_features">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract patch features from SigLIP.</span>
+<span class="w">        </span><span class="sd">"""Extract patch features from SigLIP.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Preprocessed images [batch, 3, 224, 224]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Patch tokens [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">pixel_values</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">last_hidden_state</span>
-        <span class="c1"># SigLIP doesn&#39;t have CLS token, return all tokens</span>
+        <span class="c1"># SigLIP doesn't have CLS token, return all tokens</span>
         <span class="k">return</span> <span class="n">hidden_states</span></div>
 </div>
 
@@ -836,7 +838,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenNeuroVFM">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenNeuroVFM">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenNeuroVFM</span><span class="p">(</span><span class="n">FrozenEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Frozen NeuroVFM encoder for medical imaging REPA alignment.</span>
+<span class="w">    </span><span class="sd">"""Frozen NeuroVFM encoder for medical imaging REPA alignment.</span>
 
 <span class="sd">    NeuroVFM is a neuroimaging foundation model pretrained on large-scale</span>
 <span class="sd">    brain MRI datasets, providing domain-specific semantic features.</span>
@@ -848,7 +850,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        model_name: NeuroVFM variant</span>
 <span class="sd">        device: Device to load model on</span>
 <span class="sd">        trust_remote_code: Whether to trust remote code</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">MEAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">)</span>
     <span class="n">STD</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">)</span>
@@ -857,8 +859,8 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenNeuroVFM.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;microsoft/NeuroVFM-base&quot;</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"microsoft/NeuroVFM-base"</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
         <span class="n">trust_remote_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -874,18 +876,18 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;NeuroVFM requires the &#39;transformers&#39; library. Install with: pip install transformers&quot;</span>
+                <span class="s2">"NeuroVFM requires the 'transformers' library. Install with: pip install transformers"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load NeuroVFM model &#39;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to load NeuroVFM model '</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_obj</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_patch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">patch_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supports_3d</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span></div>
 
@@ -893,31 +895,31 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenNeuroVFM.preprocess">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenNeuroVFM.preprocess">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocess images for NeuroVFM.</span>
+<span class="w">        </span><span class="sd">"""Preprocess images for NeuroVFM.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Images in [0, 1] range, shape [batch, C, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized images ready for NeuroVFM</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle single-channel medical images</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Resize to multiple of patch_size</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
         <span class="n">target_h</span> <span class="o">=</span> <span class="p">(</span><span class="n">h</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span>
         <span class="n">target_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_size</span>
         <span class="k">if</span> <span class="n">target_h</span> <span class="o">!=</span> <span class="n">h</span> <span class="ow">or</span> <span class="n">target_w</span> <span class="o">!=</span> <span class="n">w</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">target_h</span><span class="p">,</span> <span class="n">target_w</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">target_h</span><span class="p">,</span> <span class="n">target_w</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">)</span>
+        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span> <span class="o">/</span> <span class="n">std_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">x</span></div>
@@ -927,14 +929,14 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenNeuroVFM.forward_features">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract patch features from NeuroVFM.</span>
+<span class="w">        </span><span class="sd">"""Extract patch features from NeuroVFM.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Preprocessed images [batch, 3, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Patch tokens [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">last_hidden_state</span>
         <span class="c1"># Remove CLS token if present</span>
@@ -946,7 +948,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenMedSigLIP">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenMedSigLIP">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenMedSigLIP</span><span class="p">(</span><span class="n">FrozenEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Frozen MedSigLIP encoder for medical imaging REPA alignment.</span>
+<span class="w">    </span><span class="sd">"""Frozen MedSigLIP encoder for medical imaging REPA alignment.</span>
 
 <span class="sd">    MedSigLIP is a medical vision-language model based on SigLIP,</span>
 <span class="sd">    pretrained on medical image-text pairs.</span>
@@ -958,7 +960,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        model_name: MedSigLIP variant</span>
 <span class="sd">        device: Device to load model on</span>
 <span class="sd">        trust_remote_code: Whether to trust remote code</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">MEAN</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.48145466</span><span class="p">,</span> <span class="mf">0.4578275</span><span class="p">,</span> <span class="mf">0.40821073</span><span class="p">)</span>
     <span class="n">STD</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.26862954</span><span class="p">,</span> <span class="mf">0.26130258</span><span class="p">,</span> <span class="mf">0.27577711</span><span class="p">)</span>
@@ -967,8 +969,8 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenMedSigLIP.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Microsoft/med-siglip-base-patch16-256&quot;</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"Microsoft/med-siglip-base-patch16-256"</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
         <span class="n">trust_remote_code</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -984,18 +986,18 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;MedSigLIP requires the &#39;transformers&#39; library. Install with: pip install transformers&quot;</span>
+                <span class="s2">"MedSigLIP requires the 'transformers' library. Install with: pip install transformers"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load MedSigLIP model &#39;</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to load MedSigLIP model '</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device_obj</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embed_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hidden_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_patch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">patch_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_supports_3d</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MEAN</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">STD</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">freeze</span><span class="p">()</span></div>
 
@@ -1003,27 +1005,27 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FrozenMedSigLIP.preprocess">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenMedSigLIP.preprocess">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Preprocess images for MedSigLIP.</span>
+<span class="w">        </span><span class="sd">"""Preprocess images for MedSigLIP.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Images in [0, 1] range, shape [batch, C, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized images ready for MedSigLIP</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Handle single-channel medical images</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 1 or 3 channels, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Resize to expected size (256 for most medical models)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
-        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">)</span>
+        <span class="n">mean_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+        <span class="n">std_buf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_buffer</span><span class="p">(</span><span class="s2">"std"</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">))</span> <span class="o">/</span> <span class="n">std_buf</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">x</span></div>
@@ -1033,35 +1035,35 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.FrozenMedSigLIP.forward_features">[docs]</a>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract patch features from MedSigLIP.</span>
+<span class="w">        </span><span class="sd">"""Extract patch features from MedSigLIP.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Preprocessed images [batch, 3, 256, 256]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Patch tokens [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">output_hidden_states</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">hidden_states</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">last_hidden_state</span>
-        <span class="c1"># MedSigLIP typically doesn&#39;t have CLS token</span>
+        <span class="c1"># MedSigLIP typically doesn't have CLS token</span>
         <span class="k">return</span> <span class="n">hidden_states</span></div>
 </div>
 
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FrozenMedicalEncoder</span><span class="p">(</span><span class="n">FrozenEncoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for frozen medical imaging encoders.</span>
+<span class="w">    </span><span class="sd">"""Base class for frozen medical imaging encoders.</span>
 
 <span class="sd">    Provides common functionality for medical domain-specific encoders</span>
 <span class="sd">    like NeuroVFM, MedSigLIP, or custom pretrained models.</span>
 
 <span class="sd">    Subclasses should implement _load_encoder() and forward_features().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_path</span> <span class="o">=</span> <span class="n">model_path</span>
@@ -1070,34 +1072,34 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">adapt_2d_to_3d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;slice_wise&quot;</span><span class="p">,</span> <span class="s2">&quot;projection&quot;</span><span class="p">,</span> <span class="s2">&quot;central_slices&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;slice_wise&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"slice_wise"</span><span class="p">,</span> <span class="s2">"projection"</span><span class="p">,</span> <span class="s2">"central_slices"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"slice_wise"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adapt 3D volume for 2D encoder.</span>
+<span class="w">        </span><span class="sd">"""Adapt 3D volume for 2D encoder.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: 3D volume [batch, C, D, H, W]</span>
 <span class="sd">            mode: Adaptation strategy</span>
-<span class="sd">                - &#39;slice_wise&#39;: Process each slice independently</span>
-<span class="sd">                - &#39;projection&#39;: Max/mean projection along depth</span>
-<span class="sd">                - &#39;central_slices&#39;: Use central N slices as RGB</span>
+<span class="sd">                - 'slice_wise': Process each slice independently</span>
+<span class="sd">                - 'projection': Max/mean projection along depth</span>
+<span class="sd">                - 'central_slices': Use central N slices as RGB</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            2D images [batch*D, C, H, W] or [batch, 3, H, W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 5D input for 3D adaptation, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span><span class="si">}</span><span class="s2">D&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 5D input for 3D adaptation, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span><span class="si">}</span><span class="s2">D"</span><span class="p">)</span>
 
         <span class="n">batch</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;slice_wise&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"slice_wise"</span><span class="p">:</span>
             <span class="c1"># Reshape to [batch*D, C, H, W]</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;projection&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"projection"</span><span class="p">:</span>
             <span class="c1"># Max projection along depth</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># [batch, C, H, W]</span>
 
-        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;central_slices&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"central_slices"</span><span class="p">:</span>
             <span class="c1"># Take central 3 slices as RGB channels</span>
             <span class="n">center</span> <span class="o">=</span> <span class="n">d</span> <span class="o">//</span> <span class="mi">2</span>
             <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1112,28 +1114,28 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SliceWiseEncoder">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.SliceWiseEncoder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SliceWiseEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper that applies 2D encoder slice-wise to 3D volumes.</span>
+<span class="w">    </span><span class="sd">"""Wrapper that applies 2D encoder slice-wise to 3D volumes.</span>
 
 <span class="sd">    Enables using 2D pretrained encoders (DINOv2, SigLIP) on 3D medical images</span>
 <span class="sd">    by processing each slice independently.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        encoder: 2D frozen encoder</span>
-<span class="sd">        aggregation: How to aggregate slice features (&#39;none&#39;, &#39;mean&#39;, &#39;attention&#39;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        aggregation: How to aggregate slice features ('none', 'mean', 'attention')</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SliceWiseEncoder.__init__">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.SliceWiseEncoder.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">encoder</span><span class="p">:</span> <span class="n">FrozenEncoder</span><span class="p">,</span>
-        <span class="n">aggregation</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;attention&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">aggregation</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"mean"</span><span class="p">,</span> <span class="s2">"attention"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"none"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">encoder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">=</span> <span class="n">aggregation</span>
 
-        <span class="k">if</span> <span class="n">aggregation</span> <span class="o">==</span> <span class="s2">&quot;attention&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">aggregation</span> <span class="o">==</span> <span class="s2">"attention"</span><span class="p">:</span>
             <span class="c1"># Learnable attention over slices</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">slice_attention</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
                 <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">embed_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -1148,14 +1150,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SliceWiseEncoder.forward">
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.SliceWiseEncoder.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process 3D volume slice-wise.</span>
+<span class="w">        </span><span class="sd">"""Process 3D volume slice-wise.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: 3D volume [batch, C, D, H, W] or 2D image [batch, C, H, W]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Features [batch, D*num_patches, embed_dim] or [batch, num_patches, embed_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
             <span class="c1"># 2D input, process directly</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1172,15 +1174,15 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Reshape back</span>
         <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">num_patches</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
             <span class="c1"># Flatten D and patches dimensions</span>
             <span class="k">return</span> <span class="n">features</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">d</span> <span class="o">*</span> <span class="n">num_patches</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">"mean"</span><span class="p">:</span>
             <span class="c1"># Average over slices</span>
             <span class="k">return</span> <span class="n">features</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">&quot;attention&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">"attention"</span><span class="p">:</span>
             <span class="c1"># Weighted average with learned attention</span>
             <span class="c1"># Attention over slice dimension</span>
             <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice_attention</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># [batch, D, 1]</span>
@@ -1195,17 +1197,17 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.create_encoder">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_encoder</span><span class="p">(</span>
     <span class="n">encoder_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cpu"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrozenEncoder</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create frozen encoders.</span>
+<span class="w">    </span><span class="sd">"""Factory function to create frozen encoders.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        encoder_type: Encoder type identifier</span>
-<span class="sd">            - &#39;dinov2_vitb14&#39;, &#39;dinov2-vit-b&#39;, etc.</span>
-<span class="sd">            - &#39;siglip-base-patch16-224&#39;</span>
-<span class="sd">            - &#39;neurovfm-base&#39; or full model path</span>
-<span class="sd">            - &#39;medsiglip-base&#39; or full model path</span>
+<span class="sd">            - 'dinov2_vitb14', 'dinov2-vit-b', etc.</span>
+<span class="sd">            - 'siglip-base-patch16-224'</span>
+<span class="sd">            - 'neurovfm-base' or full model path</span>
+<span class="sd">            - 'medsiglip-base' or full model path</span>
 <span class="sd">        device: Device to load model on</span>
 <span class="sd">        **kwargs: Additional arguments for specific encoders (e.g., trust_remote_code)</span>
 
@@ -1213,42 +1215,42 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Frozen encoder instance</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; encoder = create_encoder(&quot;dinov2_vitb14&quot;, device=&quot;cuda&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; encoder = create_encoder(&quot;google/siglip-base-patch16-224&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; encoder = create_encoder(&quot;microsoft/NeuroVFM-base&quot;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &gt;&gt;&gt; encoder = create_encoder("dinov2_vitb14", device="cuda")</span>
+<span class="sd">        &gt;&gt;&gt; encoder = create_encoder("google/siglip-base-patch16-224")</span>
+<span class="sd">        &gt;&gt;&gt; encoder = create_encoder("microsoft/NeuroVFM-base")</span>
+<span class="sd">    """</span>
     <span class="n">encoder_type_lower</span> <span class="o">=</span> <span class="n">encoder_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="s2">&quot;dinov2&quot;</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span> <span class="ow">or</span> <span class="s2">&quot;dino&quot;</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"dinov2"</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span> <span class="ow">or</span> <span class="s2">"dino"</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FrozenDINOv2</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">encoder_type</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="s2">&quot;siglip&quot;</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span> <span class="ow">and</span> <span class="s2">&quot;med&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s2">"siglip"</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span> <span class="ow">and</span> <span class="s2">"med"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FrozenSigLIP</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">encoder_type</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="s2">&quot;neurovfm&quot;</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s2">"neurovfm"</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FrozenNeuroVFM</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">encoder_type</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="s2">&quot;medsiglip&quot;</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="s2">"medsiglip"</span> <span class="ow">in</span> <span class="n">encoder_type_lower</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FrozenMedSigLIP</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">encoder_type</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unknown encoder type: </span><span class="si">{</span><span class="n">encoder_type</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Supported: dinov2_vitb14, dinov2-vit-b, siglip-base-patch16-224, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;neurovfm-base, medsiglip-base (or full HuggingFace paths)&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unknown encoder type: </span><span class="si">{</span><span class="n">encoder_type</span><span class="si">}</span><span class="s2">. "</span>
+            <span class="sa">f</span><span class="s2">"Supported: dinov2_vitb14, dinov2-vit-b, siglip-base-patch16-224, "</span>
+            <span class="sa">f</span><span class="s2">"neurovfm-base, medsiglip-base (or full HuggingFace paths)"</span>
         <span class="p">)</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;FrozenEncoder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FrozenDINOv2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FrozenSigLIP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FrozenNeuroVFM&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FrozenMedSigLIP&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FrozenMedicalEncoder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SliceWiseEncoder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_encoder&quot;</span><span class="p">,</span>
+    <span class="s2">"FrozenEncoder"</span><span class="p">,</span>
+    <span class="s2">"FrozenDINOv2"</span><span class="p">,</span>
+    <span class="s2">"FrozenSigLIP"</span><span class="p">,</span>
+    <span class="s2">"FrozenNeuroVFM"</span><span class="p">,</span>
+    <span class="s2">"FrozenMedSigLIP"</span><span class="p">,</span>
+    <span class="s2">"FrozenMedicalEncoder"</span><span class="p">,</span>
+    <span class="s2">"SliceWiseEncoder"</span><span class="p">,</span>
+    <span class="s2">"create_encoder"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1260,7 +1262,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

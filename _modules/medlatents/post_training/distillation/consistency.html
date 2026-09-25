@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.distillation.consistency &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.distillation.consistency &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.distillation.consistency</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Consistency Model Training for fast sampling.</span>
+<span></span><span class="sd">"""Consistency Model Training for fast sampling.</span>
 
 <span class="sd">Consistency models learn to map any point on a diffusion trajectory directly</span>
 <span class="sd">to the clean data, enabling single-step or few-step generation. This module</span>
@@ -480,13 +482,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">Key concepts:</span>
 <span class="sd">1. Consistency function: f(x_t, t) → x_0 for any t</span>
-<span class="sd">2. Self-consistency: f(x_t, t) = f(x_{t&#39;}, t&#39;) for t, t&#39; on same trajectory</span>
+<span class="sd">2. Self-consistency: f(x_t, t) = f(x_{t'}, t') for t, t' on same trajectory</span>
 <span class="sd">3. Boundary condition: f(x_0, 0) = x_0</span>
 
 <span class="sd">References:</span>
-<span class="sd">- &quot;Consistency Models&quot; (Song et al., 2023)</span>
-<span class="sd">- &quot;Improved Techniques for Consistency Training&quot; (Song &amp; Dhariwal, 2023)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- "Consistency Models" (Song et al., 2023)</span>
+<span class="sd">- "Improved Techniques for Consistency Training" (Song &amp; Dhariwal, 2023)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -510,7 +512,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="pseudo_huber_loss">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.distillation.pseudo_huber_loss">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pseudo_huber_loss</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00054</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pseudo-Huber loss for consistency training.</span>
+<span class="w">    </span><span class="sd">"""Pseudo-Huber loss for consistency training.</span>
 
 <span class="sd">    More robust than MSE for high-dimensional data.</span>
 <span class="sd">    L(x, y) = sqrt((x - y)^2 + c^2) - c</span>
@@ -522,7 +524,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Loss value</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">(((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">c</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
 
 
@@ -533,7 +535,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">s1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1280</span><span class="p">,</span>
     <span class="n">rho</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">7.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the discretization schedule N(k) for consistency training.</span>
+<span class="w">    </span><span class="sd">"""Get the discretization schedule N(k) for consistency training.</span>
 
 <span class="sd">    N(k) increases from s0 to s1 over training according to a schedule.</span>
 
@@ -545,7 +547,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Function that maps training step to discretization N</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">total_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -561,7 +563,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">s1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1280</span><span class="p">,</span>
     <span class="n">mu0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get EMA decay schedule for consistency training.</span>
+<span class="w">    </span><span class="sd">"""Get EMA decay schedule for consistency training.</span>
 
 <span class="sd">    The EMA decay increases with N to maintain consistency.</span>
 
@@ -573,7 +575,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Function that maps training step to EMA decay</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span><span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="n">step</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">total_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -587,7 +589,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ConsistencyTrainer">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.distillation.ConsistencyTrainer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConsistencyTrainer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Consistency training/distillation for diffusion models.</span>
+<span class="w">    </span><span class="sd">"""Consistency training/distillation for diffusion models.</span>
 
 <span class="sd">    Supports two modes:</span>
 <span class="sd">    1. Consistency Training (CT): Train from scratch with self-consistency</span>
@@ -599,7 +601,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     student=student_model,</span>
 <span class="sd">        ...     teacher=teacher_model,</span>
 <span class="sd">        ...     config=config,</span>
-<span class="sd">        ...     mode=&quot;distillation&quot;,</span>
+<span class="sd">        ...     mode="distillation",</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(train_loader)</span>
 <span class="sd">        &gt;&gt;&gt;</span>
@@ -607,10 +609,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; trainer = ConsistencyTrainer(</span>
 <span class="sd">        ...     student=model,</span>
 <span class="sd">        ...     config=config,</span>
-<span class="sd">        ...     mode=&quot;training&quot;,</span>
+<span class="sd">        ...     mode="training",</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; trainer.train(train_loader)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ConsistencyTrainer.__init__">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.distillation.ConsistencyTrainer.__init__">[docs]</a>
@@ -621,7 +623,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">teacher</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">diffusion</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">accelerator</span><span class="p">:</span> <span class="n">Accelerator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;training&quot;</span><span class="p">,</span> <span class="s2">&quot;distillation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;distillation&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"training"</span><span class="p">,</span> <span class="s2">"distillation"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"distillation"</span><span class="p">,</span>
         <span class="n">sigma_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.002</span><span class="p">,</span>
         <span class="n">sigma_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">80.0</span><span class="p">,</span>
         <span class="n">sigma_data</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -629,30 +631,30 @@ window.runMermaid = runMermaid;</script>
         <span class="n">s1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1280</span><span class="p">,</span>
         <span class="n">huber_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize consistency trainer.</span>
+<span class="w">        </span><span class="sd">"""Initialize consistency trainer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            student: Model to train</span>
 <span class="sd">            config: Training configuration</span>
-<span class="sd">            teacher: Teacher model for distillation (required if mode=&quot;distillation&quot;)</span>
+<span class="sd">            teacher: Teacher model for distillation (required if mode="distillation")</span>
 <span class="sd">            diffusion: D3PM for discrete models</span>
 <span class="sd">            accelerator: Optional accelerator</span>
-<span class="sd">            mode: &quot;training&quot; or &quot;distillation&quot;</span>
+<span class="sd">            mode: "training" or "distillation"</span>
 <span class="sd">            sigma_min: Minimum noise level</span>
 <span class="sd">            sigma_max: Maximum noise level</span>
 <span class="sd">            sigma_data: Data standard deviation</span>
 <span class="sd">            s0: Initial discretization steps</span>
 <span class="sd">            s1: Final discretization steps</span>
 <span class="sd">            huber_c: Pseudo-Huber constant</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">student</span> <span class="o">=</span> <span class="n">student</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span> <span class="o">=</span> <span class="n">teacher</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="o">=</span> <span class="n">diffusion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
 
-        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;distillation&quot;</span> <span class="ow">and</span> <span class="n">teacher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Teacher model required for distillation mode&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"distillation"</span> <span class="ow">and</span> <span class="n">teacher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Teacher model required for distillation mode"</span><span class="p">)</span>
 
         <span class="c1"># Noise schedule parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sigma_min</span> <span class="o">=</span> <span class="n">sigma_min</span>
@@ -681,7 +683,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">Accelerator</span><span class="p">(</span>
                 <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span>
-                <span class="n">log_with</span><span class="o">=</span><span class="s2">&quot;wandb&quot;</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">log_with</span><span class="o">=</span><span class="s2">"wandb"</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">mixed_precision</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">mixed_precision</span><span class="p">,</span>
                 <span class="n">fsdp_plugin</span><span class="o">=</span><span class="n">fsdp_plugin</span><span class="p">,</span>
             <span class="p">)</span>
@@ -726,7 +728,7 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_sigma_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get noise levels for discretization with N steps.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get noise levels for discretization with N steps."""</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="c1"># Karras schedule: sigma_i = (sigma_max^(1/rho) + i/(N-1) * (sigma_min^(1/rho) - sigma_max^(1/rho)))^rho</span>
         <span class="n">rho</span> <span class="o">=</span> <span class="mf">7.0</span>
@@ -738,19 +740,19 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">sigmas</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_c_skip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Skip connection scaling.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Skip connection scaling."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_data</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_c_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Output scaling.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Output scaling."""</span>
         <span class="k">return</span> <span class="n">sigma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_data</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_c_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Input scaling.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Input scaling."""</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigma_data</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_noise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add Gaussian noise to continuous data.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add Gaussian noise to continuous data."""</span>
         <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn_like</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">+</span> <span class="n">noise</span>
 
@@ -761,11 +763,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sigma</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply consistency model with proper scaling.</span>
+<span class="w">        </span><span class="sd">"""Apply consistency model with proper scaling.</span>
 
 <span class="sd">        For discrete models, this returns token predictions.</span>
 <span class="sd">        For continuous models, it returns denoised samples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Discrete model: use timestep-based interface</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -797,10 +799,10 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">batch</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;One step of consistency distillation.</span>
+<span class="w">        </span><span class="sd">"""One step of consistency distillation.</span>
 
 <span class="sd">        Uses teacher to generate targets for student.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -835,7 +837,7 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Teacher prediction (one step of DDIM/DPM)</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">diffusion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># For discrete, get teacher&#39;s denoised prediction</span>
+                <span class="c1"># For discrete, get teacher's denoised prediction</span>
                 <span class="n">teacher_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
                 <span class="n">x_teacher</span> <span class="o">=</span> <span class="n">teacher_logits</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -876,9 +878,9 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-            <span class="s2">&quot;ema_decay&quot;</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"n"</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+            <span class="s2">"ema_decay"</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -888,10 +890,10 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">batch</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;One step of consistency training (no teacher).</span>
+<span class="w">        </span><span class="sd">"""One step of consistency training (no teacher).</span>
 
 <span class="sd">        Uses self-consistency constraint.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -956,9 +958,9 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-            <span class="s2">&quot;ema_decay&quot;</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"n"</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+            <span class="s2">"ema_decay"</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -968,34 +970,34 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">train_loader</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run consistency training loop.</span>
+<span class="w">        </span><span class="sd">"""Run consistency training loop.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            train_loader: DataLoader for training data</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Training history</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">init_trackers</span><span class="p">(</span>
                 <span class="n">project_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_project</span><span class="p">,</span>
                 <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
                 <span class="n">init_kwargs</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;wandb&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;entity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_entity</span><span class="p">,</span>
-                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">run_name</span><span class="p">,</span>
+                    <span class="s2">"wandb"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"entity"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">wandb_entity</span><span class="p">,</span>
+                        <span class="s2">"name"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">run_name</span><span class="p">,</span>
                     <span class="p">}</span>
                 <span class="p">},</span>
             <span class="p">)</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"loss"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"n"</span><span class="p">:</span> <span class="p">[]}</span>
 
         <span class="n">train_loader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 
-        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_steps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Consistency Training&quot;</span><span class="p">)</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_steps</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">"Consistency Training"</span><span class="p">)</span>
         <span class="n">data_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
@@ -1011,7 +1013,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="c1"># Training step</span>
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">accumulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">):</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;distillation&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"distillation"</span><span class="p">:</span>
                     <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step_distillation</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step_training</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
@@ -1021,15 +1023,15 @@ window.runMermaid = runMermaid;</script>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_main_process</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">)</span>
                 <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span>
-                    <span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="n">n</span><span class="o">=</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">],</span>
+                    <span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'loss'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="n">n</span><span class="o">=</span><span class="n">metrics</span><span class="p">[</span><span class="s2">"n"</span><span class="p">],</span>
                 <span class="p">)</span>
-                <span class="n">history</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">])</span>
-                <span class="n">history</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;n&quot;</span><span class="p">])</span>
+                <span class="n">history</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">])</span>
+                <span class="n">history</span><span class="p">[</span><span class="s2">"n"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s2">"n"</span><span class="p">])</span>
 
             <span class="c1"># Checkpointing</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s2">"latest"</span><span class="p">)</span>
 
         <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -1041,18 +1043,18 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="ConsistencyTrainer.save_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.distillation.ConsistencyTrainer.save_checkpoint">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save checkpoint.&quot;&quot;&quot;</span>
-        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;consistency_checkpoint_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"latest"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save checkpoint."""</span>
+        <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"consistency_checkpoint_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pt"</span><span class="p">)</span>
 
         <span class="n">unwrapped</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">unwrap_model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">)</span>
 
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">unwrapped</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;optimizer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;ema&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
-            <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
-            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+            <span class="s2">"model"</span><span class="p">:</span> <span class="n">unwrapped</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"optimizer"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"ema"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">"step"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span><span class="p">,</span>
+            <span class="s2">"config"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
         <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">)</span></div>
@@ -1061,24 +1063,24 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ConsistencyTrainer.load_checkpoint">
 <a class="viewcode-back" href="../../../../api/post_training.html#medlatents.post_training.distillation.ConsistencyTrainer.load_checkpoint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load checkpoint.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Load checkpoint."""</span>
         <span class="c1"># save_checkpoint stores only state_dicts/ints and config.to_dict() (a</span>
         <span class="c1"># primitives dict), so the checkpoint contains no arbitrary Python objects.</span>
         <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;optimizer&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;ema&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;step&quot;</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"model"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"optimizer"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ema</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">"ema"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ConsistencyTrainer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;pseudo_huber_loss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_discretization_schedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_ema_decay_schedule&quot;</span><span class="p">,</span>
+    <span class="s2">"ConsistencyTrainer"</span><span class="p">,</span>
+    <span class="s2">"pseudo_huber_loss"</span><span class="p">,</span>
+    <span class="s2">"get_discretization_schedule"</span><span class="p">,</span>
+    <span class="s2">"get_ema_decay_schedule"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1090,7 +1092,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

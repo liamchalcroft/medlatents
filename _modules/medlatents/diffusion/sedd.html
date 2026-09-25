@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.diffusion.sedd &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.diffusion.sedd &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.diffusion.sedd</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Score Entropy Discrete Diffusion (SEDD) and MDLM objectives.</span>
+<span></span><span class="sd">"""Score Entropy Discrete Diffusion (SEDD) and MDLM objectives.</span>
 
 <span class="sd">SEDD models the probability ratio p(y|x)/p(x) instead of the full distribution,</span>
 <span class="sd">achieving 25-75% perplexity reduction while being theoretically principled.</span>
@@ -481,10 +483,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">variance from the discrete sampling process.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- &quot;Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution&quot; (ICML 2024 Best Paper)</span>
-<span class="sd">- &quot;Simple and Effective Masked Diffusion Language Models&quot; (arXiv:2406.07524)</span>
-<span class="sd">- &quot;Score Entropy Discrete Diffusion&quot; (arXiv:2310.16834)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- "Discrete Diffusion Modeling by Estimating the Ratios of the Data Distribution" (ICML 2024 Best Paper)</span>
+<span class="sd">- "Simple and Effective Masked Diffusion Language Models" (arXiv:2406.07524)</span>
+<span class="sd">- "Score Entropy Discrete Diffusion" (arXiv:2310.16834)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -498,7 +500,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SEDDLoss">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.SEDDLoss">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SEDDLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Score Entropy Discrete Diffusion loss.</span>
+<span class="w">    </span><span class="sd">"""Score Entropy Discrete Diffusion loss.</span>
 
 <span class="sd">    SEDD models the ratio score: s(x) = log(p(y)/p(x)) for all y ≠ x,</span>
 <span class="sd">    instead of modeling the full distribution. This is more efficient</span>
@@ -507,24 +509,24 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    The key insight is that for discrete diffusion, we can decompose:</span>
 <span class="sd">        L_SEDD = E_t,x [sum_{y≠x} q(y|x,t) * (s(y,x) - log(q(x|y,t)/q(y|x,t)))^2]</span>
 
-<span class="sd">    Where s(y,x) = log(p(y)/p(x)) is the ratio score we&#39;re learning.</span>
+<span class="sd">    Where s(y,x) = log(p(y)/p(x)) is the ratio score we're learning.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Lou et al., &quot;Discrete Diffusion Modeling by Estimating the Ratios</span>
-<span class="sd">        of the Data Distribution&quot; (ICML 2024 Best Paper)</span>
+<span class="sd">        Lou et al., "Discrete Diffusion Modeling by Estimating the Ratios</span>
+<span class="sd">        of the Data Distribution" (ICML 2024 Best Paper)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        vocab_size: Number of discrete classes</span>
-<span class="sd">        noise_schedule: Type of noise schedule (&#39;uniform&#39;, &#39;absorbing&#39;)</span>
+<span class="sd">        noise_schedule: Type of noise schedule ('uniform', 'absorbing')</span>
 <span class="sd">        hybrid_coeff: Weight for auxiliary cross-entropy loss (default 0.001)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SEDDLoss.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.SEDDLoss.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+        <span class="n">noise_schedule</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
         <span class="n">hybrid_coeff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -540,7 +542,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">x_t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute transition rates q(y|x,t) for the forward process.</span>
+<span class="w">        </span><span class="sd">"""Compute transition rates q(y|x,t) for the forward process.</span>
 
 <span class="sd">        For uniform noise: q(y|x,t) = beta(t)/K for y ≠ x</span>
 <span class="sd">        For absorbing: q(y|x,t) = beta(t) * (y == mask)</span>
@@ -551,7 +553,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            rates: [batch, seq_len, vocab_size] transition rates</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">device</span>
 
@@ -562,7 +564,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">log_beta_max</span> <span class="o">=</span> <span class="mf">5.0</span>
         <span class="n">beta_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_beta_min</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">log_beta_max</span> <span class="o">-</span> <span class="n">log_beta_min</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
             <span class="c1"># Uniform: equal probability to all other states</span>
             <span class="c1"># Note: beta_t is [batch, 1, 1], we expand it to the full rate tensor</span>
             <span class="n">rates</span> <span class="o">=</span> <span class="n">beta_t</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span>
@@ -571,7 +573,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">x_t_expanded</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">rates</span> <span class="o">=</span> <span class="n">rates</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_t_expanded</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
             <span class="c1"># Absorbing: only transition to mask state</span>
             <span class="n">rates</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
             <span class="c1"># Mask token is last token</span>
@@ -582,7 +584,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">rates</span><span class="p">[</span><span class="n">is_mask</span><span class="p">,</span> <span class="n">mask_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown noise schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown noise schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">noise_schedule</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">rates</span></div>
 
@@ -596,7 +598,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute SEDD loss.</span>
+<span class="w">        </span><span class="sd">"""Compute SEDD loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            score_logits: [batch, seq_len, vocab_size] predicted ratio scores</span>
@@ -607,7 +609,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Scalar SEDD loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Get transition rates</span>
@@ -649,7 +651,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MDLMLoss">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.MDLMLoss">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MDLMLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Masked Diffusion Language Model (MDLM) Rao-Blackwellized objective.</span>
+<span class="w">    </span><span class="sd">"""Masked Diffusion Language Model (MDLM) Rao-Blackwellized objective.</span>
 
 <span class="sd">    MDLM provides a variance-reduced objective for masked diffusion by</span>
 <span class="sd">    analytically marginalizing out the discrete sampling in the ELBO.</span>
@@ -662,14 +664,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    leading to faster and more stable training.</span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">        Sahoo et al., &quot;Simple and Effective Masked Diffusion Language Models&quot;</span>
+<span class="sd">        Sahoo et al., "Simple and Effective Masked Diffusion Language Models"</span>
 <span class="sd">        (arXiv:2406.07524)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        vocab_size: Number of discrete classes</span>
 <span class="sd">        mask_token: Index of mask token (default: vocab_size - 1)</span>
-<span class="sd">        time_reweighting: Type of time reweighting (&#39;uniform&#39;, &#39;importance&#39;, &#39;snr&#39;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        time_reweighting: Type of time reweighting ('uniform', 'importance', 'snr')</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MDLMLoss.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.MDLMLoss.__init__">[docs]</a>
@@ -677,7 +679,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">time_reweighting</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+        <span class="n">time_reweighting</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
@@ -688,30 +690,30 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MDLMLoss.get_time_weights">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.MDLMLoss.get_time_weights">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_time_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get importance weights for different time values.</span>
+<span class="w">        </span><span class="sd">"""Get importance weights for different time values.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            t: Time values [batch] in [0, 1]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            weights: [batch] importance weights</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">&quot;importance&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">"importance"</span><span class="p">:</span>
             <span class="c1"># Weight more at intermediate times where learning is harder</span>
             <span class="c1"># U-shaped: high at t=0 and t=1, low in middle</span>
             <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">&quot;snr&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span> <span class="o">==</span> <span class="s2">"snr"</span><span class="p">:</span>
             <span class="c1"># Weight by signal-to-noise ratio proxy</span>
             <span class="c1"># Higher weight at high noise (low t) where signal is weak</span>
             <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-5</span>
             <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown time reweighting: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown time reweighting: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_reweighting</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MDLMLoss.forward">
@@ -722,7 +724,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_0</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute MDLM Rao-Blackwellized loss.</span>
+<span class="w">        </span><span class="sd">"""Compute MDLM Rao-Blackwellized loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            logits: [batch, seq_len, vocab_size] predicted logits</span>
@@ -731,7 +733,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Scalar MDLM loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Compute mask probability at time t</span>
@@ -773,13 +775,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTimeMDLM">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousTimeMDLM">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousTimeMDLM</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous-time MDLM with proper ELBO derivation.</span>
+<span class="w">    </span><span class="sd">"""Continuous-time MDLM with proper ELBO derivation.</span>
 
 <span class="sd">    Uses continuous-time formulation for tighter bounds and</span>
 <span class="sd">    proper handling of the diffusion process.</span>
 
-<span class="sd">    Reference: Sahoo et al., &quot;Simple and Effective Masked Diffusion Language Models&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Reference: Sahoo et al., "Simple and Effective Masked Diffusion Language Models"</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ContinuousTimeMDLM.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousTimeMDLM.__init__">[docs]</a>
@@ -787,7 +789,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">schedule_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+        <span class="n">schedule_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"linear"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
@@ -798,25 +800,25 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousTimeMDLM.alpha_schedule">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ContinuousTimeMDLM.alpha_schedule">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">alpha_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute alpha(t) = P(not masked at time t).</span>
+<span class="w">        </span><span class="sd">"""Compute alpha(t) = P(not masked at time t).</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            t: Time values [batch] in [0, 1]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            alpha: [batch] probability of being unmasked</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;sqrt&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"sqrt"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ContinuousTimeMDLM.forward">
@@ -827,7 +829,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_0</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute continuous-time MDLM ELBO.</span>
+<span class="w">        </span><span class="sd">"""Compute continuous-time MDLM ELBO.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            logits: [batch, seq_len, vocab_size] predicted logits</span>
@@ -836,7 +838,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Scalar ELBO loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Get mask probability</span>
@@ -868,7 +870,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ScoreEntropyLoss">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ScoreEntropyLoss">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ScoreEntropyLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pure score entropy loss for discrete diffusion.</span>
+<span class="w">    </span><span class="sd">"""Pure score entropy loss for discrete diffusion.</span>
 
 <span class="sd">    Directly minimizes the entropy of the predicted score distribution,</span>
 <span class="sd">    encouraging the model to be confident in its predictions.</span>
@@ -880,7 +882,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        vocab_size: Number of discrete classes</span>
 <span class="sd">        entropy_weight: Weight for entropy regularization</span>
 <span class="sd">        temperature: Temperature for softmax</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ScoreEntropyLoss.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.ScoreEntropyLoss.__init__">[docs]</a>
@@ -904,7 +906,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">targets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute score entropy loss.</span>
+<span class="w">        </span><span class="sd">"""Compute score entropy loss.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            logits: [batch, seq_len, vocab_size] predicted logits</span>
@@ -914,7 +916,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Scalar loss</span>
 <span class="sd">            metrics: Dict with loss components</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Standard cross-entropy loss</span>
         <span class="n">ce_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
             <span class="n">logits</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">),</span>
@@ -931,10 +933,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">ce_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">entropy_weight</span> <span class="o">*</span> <span class="n">mean_entropy</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;loss&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;ce_loss&quot;</span><span class="p">:</span> <span class="n">ce_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;entropy&quot;</span><span class="p">:</span> <span class="n">mean_entropy</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
-            <span class="s2">&quot;perplexity&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ce_loss</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"loss"</span><span class="p">:</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"ce_loss"</span><span class="p">:</span> <span class="n">ce_loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"entropy"</span><span class="p">:</span> <span class="n">mean_entropy</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+            <span class="s2">"perplexity"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ce_loss</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">metrics</span></div>
@@ -943,10 +945,10 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;SEDDLoss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MDLMLoss&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousTimeMDLM&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ScoreEntropyLoss&quot;</span><span class="p">,</span>
+    <span class="s2">"SEDDLoss"</span><span class="p">,</span>
+    <span class="s2">"MDLMLoss"</span><span class="p">,</span>
+    <span class="s2">"ContinuousTimeMDLM"</span><span class="p">,</span>
+    <span class="s2">"ScoreEntropyLoss"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -958,7 +960,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

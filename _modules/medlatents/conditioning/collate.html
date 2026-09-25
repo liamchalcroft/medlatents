@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.conditioning.collate &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.conditioning.collate &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.conditioning.collate</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Collate functions for conditional training data pipelines.</span>
+<span></span><span class="sd">"""Collate functions for conditional training data pipelines.</span>
 
 <span class="sd">Provides utilities for batching conditional training data with support for</span>
 <span class="sd">multiple modalities (tokens, class labels, text, spatial conditioning, etc.).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -491,7 +493,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/conditioning.html#medlatents.conditioning.ConditionalBatchConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditionalBatchConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for conditional batch collation.</span>
+<span class="w">    </span><span class="sd">"""Configuration for conditional batch collation.</span>
 
 <span class="sd">    Specifies the keys in the dataset dicts that correspond to each</span>
 <span class="sd">    conditioning modality.</span>
@@ -507,10 +509,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        segmentation_key: Key for segmentation masks</span>
 <span class="sd">        metadata_key: Key for scanner/acquisition metadata</span>
 <span class="sd">        raw_image_key: Key for raw images (used for REPA alignment)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">tokens_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tokens&quot;</span>
-    <span class="n">class_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;class&quot;</span>
+    <span class="n">tokens_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"tokens"</span>
+    <span class="n">class_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">"class"</span>
     <span class="n">text_embeddings_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">text_pooled_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">text_mask_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -532,7 +534,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">batch</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">ConditionalBatchConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collate function for conditional training data.</span>
+<span class="w">    </span><span class="sd">"""Collate function for conditional training data.</span>
 
 <span class="sd">    Handles variable-length sequences with padding and stacks all</span>
 <span class="sd">    conditioning modalities into a single batch dict.</span>
@@ -543,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dict with batched tensors for all modalities</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">ConditionalBatchConfig</span><span class="p">()</span>
 
@@ -552,40 +554,40 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Stack tokens (with optional padding)</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">tokens_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">tokens_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_stack_or_pad</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pad_token_id</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">max_seq_length</span><span class="p">)</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_stack_or_pad</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">pad_token_id</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">max_seq_length</span><span class="p">)</span>
 
     <span class="c1"># Stack class labels if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">class_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">class_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;class_labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">class_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"class_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">class_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="c1"># Stack text embeddings if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">text_embeddings_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">text_embeddings_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;text_embeddings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_embeddings_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"text_embeddings"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_embeddings_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">text_pooled_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">text_pooled_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;text_pooled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_pooled_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"text_pooled"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_pooled_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">text_mask_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">text_mask_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;text_mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_mask_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"text_mask"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">text_mask_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="c1"># Stack spatial conditioning if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">spatial_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">spatial_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;spatial_condition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">spatial_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"spatial_condition"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">spatial_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">spatial_mask_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">spatial_mask_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;spatial_mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">spatial_mask_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"spatial_mask"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">spatial_mask_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="c1"># Stack segmentation masks if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">segmentation_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">segmentation_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;segmentation_mask&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">segmentation_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"segmentation_mask"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">segmentation_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="c1"># Stack metadata if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">metadata_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">metadata_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">metadata_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"metadata"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">metadata_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="c1"># Stack raw images for REPA if present</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">raw_image_key</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">raw_image_key</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;raw_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">raw_image_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
+        <span class="n">result</span><span class="p">[</span><span class="s2">"raw_image"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">b</span><span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">raw_image_key</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">result</span></div>
 
@@ -596,7 +598,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">pad_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stack tensors with padding for variable lengths.</span>
+<span class="w">    </span><span class="sd">"""Stack tensors with padding for variable lengths.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tensors: List of 1D tensors</span>
@@ -605,7 +607,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Padded batch tensor [batch_size, max_seq_len]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Check if all same length</span>
     <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">lengths</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -637,10 +639,10 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_conditional_collate_fn</span><span class="p">(</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">ConditionalBatchConfig</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a collate function with specific configuration.</span>
+<span class="w">    </span><span class="sd">"""Create a collate function with specific configuration.</span>
 
 <span class="sd">    Usage:</span>
-<span class="sd">        config = ConditionalBatchConfig(tokens_key=&#39;input_ids&#39;, class_key=&#39;label&#39;)</span>
+<span class="sd">        config = ConditionalBatchConfig(tokens_key='input_ids', class_key='label')</span>
 <span class="sd">        collate_fn = create_conditional_collate_fn(config)</span>
 <span class="sd">        dataloader = DataLoader(dataset, collate_fn=collate_fn)</span>
 
@@ -649,7 +651,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Collate function for DataLoader</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">collate_fn</span><span class="p">(</span><span class="n">batch</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">collate_conditional_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
@@ -658,9 +660,9 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ConditionalBatchConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;collate_conditional_batch&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_conditional_collate_fn&quot;</span><span class="p">,</span>
+    <span class="s2">"ConditionalBatchConfig"</span><span class="p">,</span>
+    <span class="s2">"collate_conditional_batch"</span><span class="p">,</span>
+    <span class="s2">"create_conditional_collate_fn"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -672,7 +674,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

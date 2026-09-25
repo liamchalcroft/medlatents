@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.rasterization.s_curve &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.rasterization.s_curve &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.rasterization.s_curve</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;S-curve (serpentine) scan for spatial-to-sequence conversion.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""S-curve (serpentine) scan for spatial-to-sequence conversion."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
@@ -482,7 +484,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SCurve">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.SCurve">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SCurve</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    S-curve (serpentine/boustrophedon) scan: alternating row direction.</span>
 
 <span class="sd">    Traverses rows left-to-right then right-to-left alternately, creating</span>
@@ -500,25 +502,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Row 3: [15, 14, 13, 12] ←</span>
 
 <span class="sd">    Sequence: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SCurve.spatial_to_sequence_2d">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.SCurve.spatial_to_sequence_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_2d</span><span class="p">(</span>
-        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;row&quot;</span>
+        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"row"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"row"</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 2D spatial data to 1D sequence using S-curve scan.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            spatial: [batch, channels, height, width] or [batch, height, width]</span>
-<span class="sd">            order: &#39;row&#39; (horizontal serpentine) or &#39;col&#39; (vertical serpentine)</span>
+<span class="sd">            order: 'row' (horizontal serpentine) or 'col' (vertical serpentine)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, height*width] or [batch, height*width]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;row&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"row"</span><span class="p">:</span>
             <span class="c1"># Horizontal serpentine</span>
             <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
 
@@ -549,22 +551,22 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"row"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"row"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 1D sequence back to 2D spatial data.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            sequence: [batch, channels, height*width] or [batch, height*width]</span>
 <span class="sd">            height: spatial height</span>
 <span class="sd">            width: spatial width</span>
-<span class="sd">            order: &#39;row&#39; or &#39;col&#39;</span>
+<span class="sd">            order: 'row' or 'col'</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: [batch, channels, height, width] or [batch, height, width]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Reverse serpentine by flipping every other row</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;row&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"row"</span><span class="p">:</span>
             <span class="c1"># Reshape to spatial</span>
             <span class="k">if</span> <span class="n">sequence</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">shape</span>
@@ -597,19 +599,19 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.SCurve.spatial_to_sequence_3d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_3d</span><span class="p">(</span>
-        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span>
+        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"D"</span><span class="p">,</span> <span class="s2">"H"</span><span class="p">,</span> <span class="s2">"W"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"D"</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 3D spatial data to 1D sequence using S-curve scan.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            spatial: [batch, channels, depth, height, width] or [batch, D, H, W]</span>
-<span class="sd">            order: which dimension to serpentine (&#39;D&#39;, &#39;H&#39;, or &#39;W&#39;)</span>
+<span class="sd">            order: which dimension to serpentine ('D', 'H', or 'W')</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, D*H*W] or [batch, D*H*W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"D"</span><span class="p">:</span>
             <span class="c1"># Serpentine along depth (flip every other slice)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
@@ -618,7 +620,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">result</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=-</span><span class="mi">3</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"H"</span><span class="p">:</span>
             <span class="c1"># Serpentine along height</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
@@ -627,7 +629,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">result</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=-</span><span class="mi">3</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span> <span class="k">else</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># order == &quot;W&quot;</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># order == "W"</span>
             <span class="c1"># Serpentine along width (standard row serpentine for each slice)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
@@ -645,9 +647,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"D"</span><span class="p">,</span> <span class="s2">"H"</span><span class="p">,</span> <span class="s2">"W"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"D"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 1D sequence back to 3D spatial data.</span>
 
 <span class="sd">        Args:</span>
@@ -657,7 +659,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: [batch, channels, D, H, W] or [batch, D, H, W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Reshape</span>
         <span class="k">if</span> <span class="n">sequence</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">shape</span>
@@ -667,17 +669,17 @@ window.runMermaid = runMermaid;</script>
             <span class="n">spatial</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
 
         <span class="c1"># Reverse serpentine</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"D"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
                 <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">spatial</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">spatial</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"H"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
                 <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># order == &quot;W&quot;</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># order == "W"</span>
             <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
                 <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">spatial</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
@@ -696,7 +698,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

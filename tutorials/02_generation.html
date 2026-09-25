@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 2: Generating Samples &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Tutorial 2: Generating Samples &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -146,10 +146,10 @@ stopping that you compose yourself when you need full control.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteLatentGenerator</span>
 
 <span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteLatentGenerator</span><span class="o">.</span><span class="n">from_checkpoints</span><span class="p">(</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
-    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;checkpoints/model.pt&quot;</span><span class="p">,</span>
-    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">&quot;tokenizer.pt&quot;</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">"checkpoints/model.pt"</span><span class="p">,</span>
+    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">"tokenizer.pt"</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">images</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -209,7 +209,7 @@ distribution stabilizes (KL divergence below a threshold):</p>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">model</span><span class="o">.</span><span class="n">mask_token</span><span class="p">)</span>
 <span class="n">generated</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">initial_tokens</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">mask_token</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">mask_token</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Steps taken: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;steps_taken&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Steps taken: </span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'steps_taken'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -222,7 +222,7 @@ string API on the high-level samplers; for time-dependent schedules use
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">GuidedSampler</span><span class="p">,</span> <span class="n">cosine_guidance</span>
 
 <span class="n">sampler</span> <span class="o">=</span> <span class="n">GuidedSampler</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">guidance_schedule</span><span class="o">=</span><span class="n">cosine_guidance</span><span class="p">,</span> <span class="n">base_scale</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
-<span class="n">guided_logits</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">conditioning</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class_id&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">},</span> <span class="n">progress</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">guided_logits</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">conditioning</span><span class="o">=</span><span class="p">{</span><span class="s2">"class_id"</span><span class="p">:</span> <span class="n">labels</span><span class="p">},</span> <span class="n">progress</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>For flow-matching and diffusion CFG specifically, see
@@ -231,7 +231,7 @@ string API on the high-level samplers; for time-dependent schedules use
 </section>
 <section id="reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading"></a></h2>
-<p>Pass a <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> to samplers that accept one, and seed it for
+<p>Pass a <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> to samplers that accept one, and seed it for
 deterministic output. See <a class="reference internal" href="../token_interface.html"><span class="doc">Token Interface</span></a> for the full determinism
 policy.</p>
 </section>
@@ -256,7 +256,7 @@ policy.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.autoregressive.speculative.decoder &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.autoregressive.speculative.decoder &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,12 +474,12 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.autoregressive.speculative.decoder</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Speculative decoding core: single and multi-draft decoders.</span>
+<span></span><span class="sd">"""Speculative decoding core: single and multi-draft decoders.</span>
 
 <span class="sd">Reference:</span>
-<span class="sd">- Chen et al., &quot;Accelerating Large Language Model Decoding with Speculative Sampling&quot;</span>
+<span class="sd">- Chen et al., "Accelerating Large Language Model Decoding with Speculative Sampling"</span>
 <span class="sd">  (https://arxiv.org/abs/2302.01318)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -494,7 +496,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SpeculativeDecoder">
 <a class="viewcode-back" href="../../../../guides/autoregressive.html#medlatents.autoregressive.SpeculativeDecoder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpeculativeDecoder</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Speculative decoding wrapper for autoregressive models.</span>
 
 <span class="sd">    Uses a smaller draft model to predict multiple tokens ahead,</span>
@@ -508,7 +510,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        temperature: Sampling temperature</span>
 <span class="sd">        top_k: Optional top-k sampling</span>
 <span class="sd">        top_p: Optional nucleus sampling threshold</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SpeculativeDecoder.__init__">
 <a class="viewcode-back" href="../../../../guides/autoregressive.html#medlatents.autoregressive.SpeculativeDecoder.__init__">[docs]</a>
@@ -536,7 +538,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sample a token from logits with optional filtering.</span>
 
 <span class="sd">        Args:</span>
@@ -544,7 +546,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            token: [batch] sampled token indices</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -562,13 +564,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Keep only top k logits.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Keep only top k logits."""</span>
         <span class="n">top_k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">min_values</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
             <span class="n">logits</span> <span class="o">&lt;</span> <span class="n">min_values</span><span class="p">,</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"-inf"</span><span class="p">)),</span>
             <span class="n">logits</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -577,7 +579,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Keep smallest set of tokens with cumulative prob &gt;= p.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Keep smallest set of tokens with cumulative prob &gt;= p."""</span>
         <span class="n">sorted_logits</span><span class="p">,</span> <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">sorted_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">sorted_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">cumulative_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">sorted_probs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -593,7 +595,7 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
             <span class="n">indices_to_remove</span><span class="p">,</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"-inf"</span><span class="p">)),</span>
             <span class="n">logits</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -604,7 +606,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">draft_tokens</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">main_logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Verify draft tokens against main model predictions.</span>
 
 <span class="sd">        Args:</span>
@@ -615,7 +617,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            accepted_mask: [batch, K] boolean mask of accepted tokens</span>
 <span class="sd">            num_accepted: Number of accepted tokens (first rejection point)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="n">draft_tokens</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="n">main_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">main_logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -655,7 +657,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">eos_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate tokens using speculative decoding.</span>
 
 <span class="sd">        Args:</span>
@@ -667,7 +669,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            tokens: [batch, seq_len + generated] generated sequence</span>
 <span class="sd">            metrics: Dict with generation statistics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">initial_tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">tokens</span> <span class="o">=</span> <span class="n">initial_tokens</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
@@ -716,10 +718,10 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">callback</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;total_tokens&quot;</span><span class="p">:</span> <span class="n">total_generated</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">,</span>
-            <span class="s2">&quot;draft_tokens&quot;</span><span class="p">:</span> <span class="n">total_draft_tokens</span><span class="p">,</span>
-            <span class="s2">&quot;accepted_tokens&quot;</span><span class="p">:</span> <span class="n">total_accepted</span><span class="p">,</span>
-            <span class="s2">&quot;acceptance_rate&quot;</span><span class="p">:</span> <span class="n">total_accepted</span> <span class="o">/</span> <span class="n">total_draft_tokens</span> <span class="k">if</span> <span class="n">total_draft_tokens</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"total_tokens"</span><span class="p">:</span> <span class="n">total_generated</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">,</span>
+            <span class="s2">"draft_tokens"</span><span class="p">:</span> <span class="n">total_draft_tokens</span><span class="p">,</span>
+            <span class="s2">"accepted_tokens"</span><span class="p">:</span> <span class="n">total_accepted</span><span class="p">,</span>
+            <span class="s2">"acceptance_rate"</span><span class="p">:</span> <span class="n">total_accepted</span> <span class="o">/</span> <span class="n">total_draft_tokens</span> <span class="k">if</span> <span class="n">total_draft_tokens</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">metrics</span></div>
@@ -731,7 +733,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">context</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate K draft tokens using the draft model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate K draft tokens using the draft model."""</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">draft_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
         <span class="n">current</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
@@ -749,7 +751,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MultiDraftSpeculativeDecoder">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MultiDraftSpeculativeDecoder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MultiDraftSpeculativeDecoder</span><span class="p">(</span><span class="n">SpeculativeDecoder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Speculative decoding with multiple independent draft models.</span>
 
 <span class="sd">    Uses multiple draft models in parallel and selects the best predictions</span>
@@ -761,10 +763,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        vocab_size: Vocabulary size</span>
 <span class="sd">        max_speculation: Maximum tokens to speculate</span>
 <span class="sd">        selection_strategy: How to select from multiple drafts</span>
-<span class="sd">            - &quot;ensemble&quot;: Average draft logits</span>
-<span class="sd">            - &quot;voting&quot;: Majority vote</span>
-<span class="sd">            - &quot;best&quot;: Select draft with lowest perplexity</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            - "ensemble": Average draft logits</span>
+<span class="sd">            - "voting": Majority vote</span>
+<span class="sd">            - "best": Select draft with lowest perplexity</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MultiDraftSpeculativeDecoder.__init__">
 <a class="viewcode-back" href="../../../../api/autoregressive.html#medlatents.autoregressive.MultiDraftSpeculativeDecoder.__init__">[docs]</a>
@@ -774,7 +776,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">draft_models</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">],</span>
         <span class="n">vocab_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">max_speculation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="n">selection_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ensemble&quot;</span><span class="p">,</span>
+        <span class="n">selection_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"ensemble"</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">top_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -798,7 +800,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">context</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate K draft tokens using multiple draft models.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate K draft tokens using multiple draft models."""</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">device</span>
 
@@ -827,8 +829,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">all_draft_tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
         <span class="n">all_draft_logits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select the best draft from multiple models.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">&quot;ensemble&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Select the best draft from multiple models."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">"ensemble"</span><span class="p">:</span>
             <span class="n">avg_logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">all_draft_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">batch_size</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">avg_logits</span><span class="o">.</span><span class="n">shape</span>
             <span class="n">selected_tokens</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">avg_logits</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
@@ -838,14 +840,14 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">return</span> <span class="n">selected_tokens</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">&quot;voting&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">"voting"</span><span class="p">:</span>
             <span class="n">stacked</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">all_draft_tokens</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">selected_tokens</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">stacked</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">selected_tokens</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">&quot;best&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_strategy</span> <span class="o">==</span> <span class="s2">"best"</span><span class="p">:</span>
             <span class="n">best_idx</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">best_perplexity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+            <span class="n">best_perplexity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">logits</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_draft_logits</span><span class="p">):</span>
                 <span class="n">probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -863,8 +865,8 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;SpeculativeDecoder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MultiDraftSpeculativeDecoder&quot;</span><span class="p">,</span>
+    <span class="s2">"SpeculativeDecoder"</span><span class="p">,</span>
+    <span class="s2">"MultiDraftSpeculativeDecoder"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -876,7 +878,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

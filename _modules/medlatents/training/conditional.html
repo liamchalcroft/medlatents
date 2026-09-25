@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.conditional &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.conditional &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,12 +474,12 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.conditional</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Enhanced conditional training support with ConditioningBundle integration.</span>
+<span></span><span class="sd">"""Enhanced conditional training support with ConditioningBundle integration.</span>
 
 <span class="sd">This module provides utilities for training with rich conditioning information,</span>
 <span class="sd">including support for REPA alignment, multiple conditioning modalities, and</span>
 <span class="sd">CFG training.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -490,11 +492,11 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..conditioning.bundle</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConditioningBundle</span><span class="p">,</span> <span class="n">ConditioningConfig</span>
 
 <span class="c1"># Type variable for model outputs</span>
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T"</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditionalModel</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for models that accept ConditioningBundle.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Protocol for models that accept ConditioningBundle."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -502,7 +504,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">bundle</span><span class="p">:</span> <span class="n">ConditioningBundle</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with conditioning bundle.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with conditioning bundle."""</span>
         <span class="o">...</span>
 
 
@@ -510,7 +512,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.ConditionalTrainingConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditionalTrainingConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for conditional training.</span>
+<span class="w">    </span><span class="sd">"""Configuration for conditional training.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        conditioning_config: Model conditioning capabilities</span>
@@ -523,7 +525,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        vecor_weight: Weight for VeCoR loss</span>
 <span class="sd">        use_haste: Whether to use HASTE termination scheduling</span>
 <span class="sd">        haste_termination_step: Step to terminate alignment (for HASTE)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">conditioning_config</span><span class="p">:</span> <span class="n">ConditioningConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -535,7 +537,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">use_repa</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">repa_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="n">repa_timestep_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
-    <span class="n">repa_encoder_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dinov2_vitb14&quot;</span>
+    <span class="n">repa_encoder_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"dinov2_vitb14"</span>
 
     <span class="c1"># VeCoR contrastive loss</span>
     <span class="n">use_vecor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
@@ -545,7 +547,7 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># HASTE termination</span>
     <span class="n">use_haste</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">haste_termination_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">haste_termination_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hard&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span></div>
+    <span class="n">haste_termination_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"hard"</span><span class="p">,</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"linear"</span></div>
 
 
 
@@ -557,7 +559,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">config</span><span class="p">:</span> <span class="n">ConditionalTrainingConfig</span><span class="p">,</span>
     <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">ConditioningBundle</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare a batch for conditional training.</span>
+<span class="w">    </span><span class="sd">"""Prepare a batch for conditional training.</span>
 
 <span class="sd">    Extracts data and conditioning from the batch, creates a ConditioningBundle,</span>
 <span class="sd">    and optionally applies CFG dropout during training.</span>
@@ -570,13 +572,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple of (data_tensor, conditioning_bundle)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Extract data from batch</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="c1"># Dict-style batch</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)))</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"data"</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"tokens"</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)))</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find data in batch dict. Keys: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Could not find data in batch dict. Keys: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">bundle</span> <span class="o">=</span> <span class="n">ConditioningBundle</span><span class="o">.</span><span class="n">from_batch</span><span class="p">(</span>
             <span class="n">batch</span><span class="p">,</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
@@ -585,9 +587,9 @@ window.runMermaid = runMermaid;</script>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="c1"># Tuple-style batch: (data, labels) or (data, labels, ...)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">batch_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
+        <span class="n">batch_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"data"</span><span class="p">:</span> <span class="n">data</span><span class="p">}</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">batch_dict</span><span class="p">[</span><span class="s2">&quot;class_labels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">batch_dict</span><span class="p">[</span><span class="s2">"class_labels"</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">bundle</span> <span class="o">=</span> <span class="n">ConditioningBundle</span><span class="o">.</span><span class="n">from_batch</span><span class="p">(</span>
             <span class="n">batch_dict</span><span class="p">,</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
@@ -612,7 +614,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ConditionalLossWrapper">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.ConditionalLossWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConditionalLossWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper that adds REPA and VeCoR losses to a base loss.</span>
+<span class="w">    </span><span class="sd">"""Wrapper that adds REPA and VeCoR losses to a base loss.</span>
 
 <span class="sd">    This wrapper can be added around any diffusion/flow loss to incorporate</span>
 <span class="sd">    representation alignment (REPA) and velocity contrastive regularization</span>
@@ -627,7 +629,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     frozen_encoder=encoder,</span>
 <span class="sd">        ... )</span>
 <span class="sd">        &gt;&gt;&gt; loss = wrapper(pred, target, hidden_states=hidden, original=x, timesteps=t)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ConditionalLossWrapper.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.ConditionalLossWrapper.__init__">[docs]</a>
@@ -648,15 +650,15 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">use_repa</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">repa_projection</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">frozen_encoder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;REPA requires repa_projection and frozen_encoder to be provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"REPA requires repa_projection and frozen_encoder to be provided"</span><span class="p">)</span>
 
             <span class="c1"># Import REPA loss</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">.repa</span><span class="w"> </span><span class="kn">import</span> <span class="n">REPALoss</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">repa_loss</span> <span class="o">=</span> <span class="n">REPALoss</span><span class="p">(</span>
-                <span class="n">hidden_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">&quot;hidden_dim&quot;</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)),</span>
-                <span class="n">target_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">&quot;target_dim&quot;</span><span class="p">,</span> <span class="mi">768</span><span class="p">)),</span>
-                <span class="n">proj_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">&quot;proj_dim&quot;</span><span class="p">,</span> <span class="mi">256</span><span class="p">)),</span>
+                <span class="n">hidden_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">"hidden_dim"</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)),</span>
+                <span class="n">target_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">"target_dim"</span><span class="p">,</span> <span class="mi">768</span><span class="p">)),</span>
+                <span class="n">proj_dim</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">repa_projection</span><span class="p">,</span> <span class="s2">"proj_dim"</span><span class="p">,</span> <span class="mi">256</span><span class="p">)),</span>
                 <span class="n">timestep_threshold</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">repa_timestep_threshold</span><span class="p">,</span>
                 <span class="n">weight</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">repa_weight</span><span class="p">,</span>
             <span class="p">)</span>
@@ -694,7 +696,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">timesteps</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">base_loss_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute combined loss with optional REPA and VeCoR.</span>
+<span class="w">        </span><span class="sd">"""Compute combined loss with optional REPA and VeCoR.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            pred: Model prediction (velocity, noise, or x0)</span>
@@ -705,13 +707,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            **base_loss_kwargs: Additional args for base loss</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Dict with &#39;total&#39;, &#39;base&#39;, and optional &#39;repa&#39;, &#39;vecor&#39; losses</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            Dict with 'total', 'base', and optional 'repa', 'vecor' losses</span>
+<span class="sd">        """</span>
         <span class="n">losses</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Base denoising loss</span>
         <span class="n">base_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_loss_fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">base_loss_kwargs</span><span class="p">)</span>
-        <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_loss</span>
+        <span class="n">losses</span><span class="p">[</span><span class="s2">"base"</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_loss</span>
         <span class="n">total_loss</span> <span class="o">=</span> <span class="n">base_loss</span>
 
         <span class="c1"># REPA alignment loss</span>
@@ -741,7 +743,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">proj_target</span><span class="p">,</span>
                     <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;repa&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">repa_loss</span>
+                <span class="n">losses</span><span class="p">[</span><span class="s2">"repa"</span><span class="p">]</span> <span class="o">=</span> <span class="n">repa_loss</span>
                 <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">+</span> <span class="n">haste_weight</span> <span class="o">*</span> <span class="n">repa_loss</span>
 
         <span class="c1"># VeCoR contrastive loss</span>
@@ -751,17 +753,17 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">target</span><span class="p">,</span>
                 <span class="n">timesteps</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;vecor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vecor_loss</span>
+            <span class="n">losses</span><span class="p">[</span><span class="s2">"vecor"</span><span class="p">]</span> <span class="o">=</span> <span class="n">vecor_loss</span>
             <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">+</span> <span class="n">vecor_loss</span>
 
-        <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_loss</span>
+        <span class="n">losses</span><span class="p">[</span><span class="s2">"total"</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_loss</span>
         <span class="k">return</span> <span class="n">losses</span></div>
 
 
 <div class="viewcode-block" id="ConditionalLossWrapper.step">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.ConditionalLossWrapper.step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Increment internal step counter (call after each optimizer step).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Increment internal step counter (call after each optimizer step)."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">+=</span> <span class="mi">1</span></div>
 </div>
 
@@ -777,7 +779,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">loss_fn</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="n">ConditionalLossWrapper</span><span class="p">,</span>
     <span class="n">return_hidden</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute loss for conditional diffusion/flow training.</span>
+<span class="w">    </span><span class="sd">"""Compute loss for conditional diffusion/flow training.</span>
 
 <span class="sd">    This is a high-level utility that handles:</span>
 <span class="sd">    1. Sampling noisy data from the noise process</span>
@@ -794,14 +796,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Loss tensor, or (loss, info_dict) if return_hidden=True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Sample noisy data</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">bundle</span><span class="o">.</span><span class="n">timesteps</span>
     <span class="n">noise_output</span> <span class="o">=</span> <span class="n">noise_process</span><span class="o">.</span><span class="n">add_noise</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
 
     <span class="c1"># Forward pass</span>
     <span class="n">model_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;forward_with_bundle&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"forward_with_bundle"</span><span class="p">):</span>
         <span class="c1"># Model natively supports ConditioningBundle</span>
         <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward_with_bundle</span><span class="p">(</span><span class="n">noise_output</span><span class="o">.</span><span class="n">x_t</span><span class="p">,</span> <span class="n">bundle</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[operator]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -821,24 +823,24 @@ window.runMermaid = runMermaid;</script>
             <span class="n">original_data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
             <span class="n">timesteps</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">losses</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">losses</span><span class="p">[</span><span class="s2">"total"</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">return_hidden</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">losses</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">noise_output</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">return_hidden</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
+            <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="p">{</span><span class="s2">"total"</span><span class="p">:</span> <span class="n">loss</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">:</span> <span class="n">loss</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">loss</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ConditionalTrainingConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ConditionalLossWrapper&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ConditionalModel&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;prepare_batch_with_conditioning&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_conditional_loss&quot;</span><span class="p">,</span>
+    <span class="s2">"ConditionalTrainingConfig"</span><span class="p">,</span>
+    <span class="s2">"ConditionalLossWrapper"</span><span class="p">,</span>
+    <span class="s2">"ConditionalModel"</span><span class="p">,</span>
+    <span class="s2">"prepare_batch_with_conditioning"</span><span class="p">,</span>
+    <span class="s2">"compute_conditional_loss"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -850,7 +852,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

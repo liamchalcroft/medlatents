@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.inference.quantization &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.inference.quantization &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.inference.quantization</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Model quantization and pruning for efficient inference.</span>
+<span></span><span class="sd">"""Model quantization and pruning for efficient inference.</span>
 
 <span class="sd">Provides tools for reducing model size and improving inference speed:</span>
 <span class="sd">- Dynamic and static quantization (INT8, INT4)</span>
@@ -484,11 +486,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">runtime memory reduction during generation.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- &quot;GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers&quot;</span>
-<span class="sd">- &quot;LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale&quot;</span>
-<span class="sd">- &quot;SmoothQuant: Accurate and Efficient Post-Training Quantization for LLMs&quot;</span>
-<span class="sd">- &quot;The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks&quot;</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- "GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers"</span>
+<span class="sd">- "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale"</span>
+<span class="sd">- "SmoothQuant: Accurate and Efficient Post-Training Quantization for LLMs"</span>
+<span class="sd">- "The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks"</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -512,29 +514,29 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantizationMethod</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quantization method selection.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Quantization method selection."""</span>
 
-    <span class="n">DYNAMIC</span> <span class="o">=</span> <span class="s2">&quot;dynamic&quot;</span>  <span class="c1"># Dynamic quantization (weights static, activations dynamic)</span>
-    <span class="n">STATIC</span> <span class="o">=</span> <span class="s2">&quot;static&quot;</span>  <span class="c1"># Static quantization (calibrated activation ranges)</span>
-    <span class="n">QAT</span> <span class="o">=</span> <span class="s2">&quot;qat&quot;</span>  <span class="c1"># Quantization-aware training</span>
-    <span class="n">GPTQ</span> <span class="o">=</span> <span class="s2">&quot;gptq&quot;</span>  <span class="c1"># GPTQ-style weight quantization</span>
-    <span class="n">SMOOTHQUANT</span> <span class="o">=</span> <span class="s2">&quot;smoothquant&quot;</span>  <span class="c1"># SmoothQuant for LLM-friendly quantization</span>
+    <span class="n">DYNAMIC</span> <span class="o">=</span> <span class="s2">"dynamic"</span>  <span class="c1"># Dynamic quantization (weights static, activations dynamic)</span>
+    <span class="n">STATIC</span> <span class="o">=</span> <span class="s2">"static"</span>  <span class="c1"># Static quantization (calibrated activation ranges)</span>
+    <span class="n">QAT</span> <span class="o">=</span> <span class="s2">"qat"</span>  <span class="c1"># Quantization-aware training</span>
+    <span class="n">GPTQ</span> <span class="o">=</span> <span class="s2">"gptq"</span>  <span class="c1"># GPTQ-style weight quantization</span>
+    <span class="n">SMOOTHQUANT</span> <span class="o">=</span> <span class="s2">"smoothquant"</span>  <span class="c1"># SmoothQuant for LLM-friendly quantization</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PruningMethod</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pruning method selection.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Pruning method selection."""</span>
 
-    <span class="n">MAGNITUDE</span> <span class="o">=</span> <span class="s2">&quot;magnitude&quot;</span>  <span class="c1"># Prune smallest magnitude weights</span>
-    <span class="n">STRUCTURED</span> <span class="o">=</span> <span class="s2">&quot;structured&quot;</span>  <span class="c1"># Prune entire channels/heads</span>
-    <span class="n">MOVEMENT</span> <span class="o">=</span> <span class="s2">&quot;movement&quot;</span>  <span class="c1"># Movement pruning (gradient-based)</span>
-    <span class="n">WANDA</span> <span class="o">=</span> <span class="s2">&quot;wanda&quot;</span>  <span class="c1"># Weights and Activations (WANDA) pruning</span>
+    <span class="n">MAGNITUDE</span> <span class="o">=</span> <span class="s2">"magnitude"</span>  <span class="c1"># Prune smallest magnitude weights</span>
+    <span class="n">STRUCTURED</span> <span class="o">=</span> <span class="s2">"structured"</span>  <span class="c1"># Prune entire channels/heads</span>
+    <span class="n">MOVEMENT</span> <span class="o">=</span> <span class="s2">"movement"</span>  <span class="c1"># Movement pruning (gradient-based)</span>
+    <span class="n">WANDA</span> <span class="o">=</span> <span class="s2">"wanda"</span>  <span class="c1"># Weights and Activations (WANDA) pruning</span>
 
 
 <div class="viewcode-block" id="QuantizationConfig">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.QuantizationConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantizationConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for model quantization.</span>
+<span class="w">    </span><span class="sd">"""Configuration for model quantization.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        method: Quantization method to use</span>
@@ -545,10 +547,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        modules_to_quantize: List of module types to quantize (None = all supported)</span>
 <span class="sd">        modules_to_skip: List of module names to skip</span>
 <span class="sd">        smoothing_alpha: SmoothQuant smoothing factor (0.5 is typical)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">method</span><span class="p">:</span> <span class="n">QuantizationMethod</span> <span class="o">=</span> <span class="n">QuantizationMethod</span><span class="o">.</span><span class="n">DYNAMIC</span>
-    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">,</span> <span class="s2">&quot;fp16&quot;</span><span class="p">,</span> <span class="s2">&quot;bf16&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">,</span> <span class="s2">"fp16"</span><span class="p">,</span> <span class="s2">"bf16"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span>
     <span class="n">per_channel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">calibration_batches</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
@@ -558,11 +560,11 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="QuantizationConfig.get_quant_dtype">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.QuantizationConfig.get_quant_dtype">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_quant_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get quantization dtype, defaulting to int8 for non-quantized types.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_quant_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get quantization dtype, defaulting to int8 for non-quantized types."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>  <span class="c1"># type: ignore[return-value]</span>
-        <span class="k">return</span> <span class="s2">&quot;int8&quot;</span></div>
+        <span class="k">return</span> <span class="s2">"int8"</span></div>
 </div>
 
 
@@ -571,21 +573,21 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PruningConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PruningConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for model pruning.</span>
+<span class="w">    </span><span class="sd">"""Configuration for model pruning.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        method: Pruning method to use</span>
 <span class="sd">        sparsity: Target sparsity ratio (0.0 to 1.0)</span>
 <span class="sd">        structured_dim: Dimension for structured pruning (0=output, 1=input)</span>
-<span class="sd">        granularity: Pruning granularity (&#39;element&#39;, &#39;row&#39;, &#39;column&#39;)</span>
+<span class="sd">        granularity: Pruning granularity ('element', 'row', 'column')</span>
 <span class="sd">        iterative_steps: Number of iterative pruning steps</span>
 <span class="sd">        importance_scores: Pre-computed importance scores (for custom pruning)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">method</span><span class="p">:</span> <span class="n">PruningMethod</span> <span class="o">=</span> <span class="n">PruningMethod</span><span class="o">.</span><span class="n">MAGNITUDE</span>
     <span class="n">sparsity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
     <span class="n">structured_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">granularity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;element&quot;</span>
+    <span class="n">granularity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"element"</span><span class="p">,</span> <span class="s2">"row"</span><span class="p">,</span> <span class="s2">"column"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"element"</span>
     <span class="n">iterative_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">importance_scores</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -598,12 +600,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_scale_zero_point</span><span class="p">(</span>
     <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span><span class="p">,</span>
     <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">per_channel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">channel_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute quantization scale and zero point.</span>
+<span class="w">    </span><span class="sd">"""Compute quantization scale and zero point.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tensor: Tensor to quantize</span>
@@ -615,8 +617,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Returns:</span>
 <span class="sd">        scale: Quantization scale factor(s)</span>
 <span class="sd">        zero_point: Zero point(s) for asymmetric quantization</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">qmin</span><span class="p">,</span> <span class="n">qmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">128</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int8&quot;</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">qmin</span><span class="p">,</span> <span class="n">qmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">128</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">"int8"</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">per_channel</span><span class="p">:</span>
         <span class="c1"># Reduce all dimensions except channel_dim</span>
@@ -645,9 +647,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">scale</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">zero_point</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quantize a tensor to the specified dtype.</span>
+<span class="w">    </span><span class="sd">"""Quantize a tensor to the specified dtype.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tensor: Input tensor</span>
@@ -657,12 +659,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Quantized tensor</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">qmin</span><span class="p">,</span> <span class="n">qmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">128</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int8&quot;</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">qmin</span><span class="p">,</span> <span class="n">qmax</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">128</span><span class="p">,</span> <span class="mi">127</span><span class="p">)</span> <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">"int8"</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
     <span class="n">quantized</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tensor</span> <span class="o">/</span> <span class="n">scale</span> <span class="o">+</span> <span class="n">zero_point</span><span class="p">)</span>
     <span class="n">quantized</span> <span class="o">=</span> <span class="n">quantized</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">qmin</span><span class="p">,</span> <span class="n">qmax</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int8&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="o">==</span> <span class="s2">"int8"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">quantized</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># INT4 stored in INT8 container</span>
@@ -674,7 +676,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">scale</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">zero_point</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dequantize a tensor back to float.</span>
+<span class="w">    </span><span class="sd">"""Dequantize a tensor back to float.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        quantized: Quantized tensor</span>
@@ -683,16 +685,16 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dequantized float tensor</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">quantized</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="o">-</span> <span class="n">zero_point</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantizedLinear</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quantized linear layer with INT8 weights.</span>
+<span class="w">    </span><span class="sd">"""Quantized linear layer with INT8 weights.</span>
 
 <span class="sd">    Stores weights in INT8 format and dequantizes during forward pass.</span>
 <span class="sd">    For true INT8 computation, use hardware-specific backends (cuBLAS, TensorRT).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Type hints for buffers</span>
     <span class="n">weight_quantized</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
@@ -705,7 +707,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">in_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">out_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span><span class="p">,</span>
         <span class="n">per_channel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -716,32 +718,32 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Quantized weight storage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
-            <span class="s2">&quot;weight_quantized&quot;</span><span class="p">,</span>
+            <span class="s2">"weight_quantized"</span><span class="p">,</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int8</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
-            <span class="s2">&quot;weight_scale&quot;</span><span class="p">,</span>
+            <span class="s2">"weight_scale"</span><span class="p">,</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">out_features</span> <span class="k">if</span> <span class="n">per_channel</span> <span class="k">else</span> <span class="mi">1</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span>
-            <span class="s2">&quot;weight_zero_point&quot;</span><span class="p">,</span>
+            <span class="s2">"weight_zero_point"</span><span class="p">,</span>
             <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span> <span class="k">if</span> <span class="n">per_channel</span> <span class="k">else</span> <span class="mi">1</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"bias"</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"bias"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_float</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">linear</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span>
-        <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;int4&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"int4"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span><span class="p">,</span>
         <span class="n">per_channel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuantizedLinear&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create quantized linear from a float linear layer.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"QuantizedLinear"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create quantized linear from a float linear layer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            linear: Source float linear layer</span>
@@ -751,7 +753,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Quantized linear layer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">q_linear</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">in_features</span><span class="o">=</span><span class="n">linear</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span>
             <span class="n">out_features</span><span class="o">=</span><span class="n">linear</span><span class="o">.</span><span class="n">out_features</span><span class="p">,</span>
@@ -790,12 +792,12 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">q_linear</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with weight dequantization.</span>
+<span class="w">        </span><span class="sd">"""Forward pass with weight dequantization.</span>
 
-<span class="sd">        Note: This performs dequantize-then-compute, which doesn&#39;t give</span>
+<span class="sd">        Note: This performs dequantize-then-compute, which doesn't give</span>
 <span class="sd">        speedup on most hardware. For actual INT8 speedup, export to</span>
 <span class="sd">        ONNX/TensorRT or use torch.ao.quantization.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Dequantize weights</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">per_channel</span><span class="p">:</span>
             <span class="n">weight</span> <span class="o">=</span> <span class="n">dequantize_tensor</span><span class="p">(</span>
@@ -814,8 +816,8 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;in_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2">, out_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_features</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">, dtype=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">quant_dtype</span><span class="si">}</span><span class="s2">, per_channel=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">per_channel</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"in_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2">, out_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_features</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">, dtype=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">quant_dtype</span><span class="si">}</span><span class="s2">, per_channel=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">per_channel</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 
@@ -827,7 +829,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ModelQuantizer">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.ModelQuantizer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelQuantizer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Quantize PyTorch models for efficient inference.</span>
+<span class="w">    </span><span class="sd">"""Quantize PyTorch models for efficient inference.</span>
 
 <span class="sd">    Supports:</span>
 <span class="sd">    - Dynamic quantization (quick, no calibration needed)</span>
@@ -835,18 +837,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    - SmoothQuant for transformer-friendly quantization</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        quantizer = ModelQuantizer(config=QuantizationConfig(method=&quot;dynamic&quot;))</span>
+<span class="sd">        quantizer = ModelQuantizer(config=QuantizationConfig(method="dynamic"))</span>
 <span class="sd">        quantized_model = quantizer.quantize(model)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ModelQuantizer.__init__">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.ModelQuantizer.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">QuantizationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize quantizer.</span>
+<span class="w">        </span><span class="sd">"""Initialize quantizer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            config: Quantization configuration</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">QuantizationConfig</span><span class="p">()</span></div>
 
 
@@ -857,7 +859,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Quantize a model.</span>
+<span class="w">        </span><span class="sd">"""Quantize a model.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model to quantize</span>
@@ -865,27 +867,27 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Quantized model</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">QuantizationMethod</span><span class="o">.</span><span class="n">DYNAMIC</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_quantize</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">QuantizationMethod</span><span class="o">.</span><span class="n">STATIC</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">calibration_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Static quantization requires calibration_data&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Static quantization requires calibration_data"</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_static_quantize</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">calibration_data</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="n">QuantizationMethod</span><span class="o">.</span><span class="n">SMOOTHQUANT</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">calibration_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;SmoothQuant requires calibration_data&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"SmoothQuant requires calibration_data"</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smoothquant</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">calibration_data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported quantization method: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported quantization method: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_dynamic_quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply dynamic quantization to linear layers.</span>
+<span class="w">        </span><span class="sd">"""Apply dynamic quantization to linear layers.</span>
 
 <span class="sd">        Dynamic quantization quantizes weights statically and activations</span>
 <span class="sd">        dynamically at runtime. No calibration data needed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
@@ -900,7 +902,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_replace_module</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">q_linear</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applied dynamic </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_quant_dtype</span><span class="p">()</span><span class="si">}</span><span class="s2"> quantization&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Applied dynamic </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_quant_dtype</span><span class="p">()</span><span class="si">}</span><span class="s2"> quantization"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_static_quantize</span><span class="p">(</span>
@@ -908,12 +910,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply static quantization with calibration.</span>
+<span class="w">        </span><span class="sd">"""Apply static quantization with calibration.</span>
 
 <span class="sd">        Static quantization uses calibration data to determine optimal</span>
 <span class="sd">        activation quantization ranges. More accurate than dynamic but</span>
 <span class="sd">        requires representative data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="c1"># Collect activation statistics</span>
@@ -924,13 +926,13 @@ window.runMermaid = runMermaid;</script>
             <span class="k">def</span><span class="w"> </span><span class="nf">hook</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">activation_stats</span><span class="p">:</span>
-                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">output</span><span class="o">.</span><span class="n">max</span><span class="p">()}</span>
+                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"min"</span><span class="p">:</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="s2">"max"</span><span class="p">:</span> <span class="n">output</span><span class="o">.</span><span class="n">max</span><span class="p">()}</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;min&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
-                            <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;min&quot;</span><span class="p">],</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">"min"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span>
+                            <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">"min"</span><span class="p">],</span> <span class="n">output</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
                         <span class="p">)</span>
-                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
-                            <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;max&quot;</span><span class="p">],</span> <span class="n">output</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+                        <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">"max"</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+                            <span class="n">activation_stats</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">"max"</span><span class="p">],</span> <span class="n">output</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
                         <span class="p">)</span>
 
             <span class="k">return</span> <span class="n">hook</span>
@@ -970,8 +972,8 @@ window.runMermaid = runMermaid;</script>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_replace_module</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">q_linear</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Applied static </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_quant_dtype</span><span class="p">()</span><span class="si">}</span><span class="s2"> quantization &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;with </span><span class="si">{</span><span class="n">num_batches</span><span class="si">}</span><span class="s2"> calibration batches&quot;</span>
+            <span class="sa">f</span><span class="s2">"Applied static </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_quant_dtype</span><span class="p">()</span><span class="si">}</span><span class="s2"> quantization "</span>
+            <span class="sa">f</span><span class="s2">"with </span><span class="si">{</span><span class="n">num_batches</span><span class="si">}</span><span class="s2"> calibration batches"</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">model</span>
 
@@ -980,14 +982,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply SmoothQuant quantization.</span>
+<span class="w">        </span><span class="sd">"""Apply SmoothQuant quantization.</span>
 
 <span class="sd">        SmoothQuant migrates quantization difficulty from activations to</span>
 <span class="sd">        weights by applying a mathematically equivalent transformation,</span>
 <span class="sd">        making quantization more accurate for transformer models.</span>
 
 <span class="sd">        Reference: https://arxiv.org/abs/2211.10438</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">smoothing_alpha</span>
 
@@ -1040,7 +1042,7 @@ window.runMermaid = runMermaid;</script>
                         <span class="nb">min</span><span class="o">=</span><span class="mf">1e-5</span>
                     <span class="p">)</span>
 
-                    <span class="c1"># Apply smoothing: W&#39; = W * s, X&#39; = X / s</span>
+                    <span class="c1"># Apply smoothing: W' = W * s, X' = X / s</span>
                     <span class="c1"># We only modify weights here; activations are scaled at runtime</span>
                     <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">smooth_scale</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 
@@ -1053,11 +1055,11 @@ window.runMermaid = runMermaid;</script>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_replace_module</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">q_linear</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Applied SmoothQuant with alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Applied SmoothQuant with alpha=</span><span class="si">{</span><span class="n">alpha</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_should_quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a module should be quantized.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if a module should be quantized."""</span>
         <span class="c1"># Skip specified modules</span>
         <span class="k">for</span> <span class="n">skip_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">modules_to_skip</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">skip_name</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
@@ -1071,8 +1073,8 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replace_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_module</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace a module in the model by name.&quot;&quot;&quot;</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Replace a module in the model by name."""</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="n">model</span>
         <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
@@ -1090,7 +1092,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">method</span><span class="p">:</span> <span class="n">PruningMethod</span><span class="p">,</span>
     <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute importance scores for weights.</span>
+<span class="w">    </span><span class="sd">"""Compute importance scores for weights.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        module: Module to compute scores for</span>
@@ -1099,9 +1101,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Importance scores with same shape as module weights</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Currently only Linear layers are supported for pruning&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Currently only Linear layers are supported for pruning"</span><span class="p">)</span>
 
     <span class="n">weight</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span>
 
@@ -1112,7 +1114,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="n">PruningMethod</span><span class="o">.</span><span class="n">WANDA</span><span class="p">:</span>
         <span class="c1"># WANDA: Weight magnitude * activation magnitude</span>
         <span class="k">if</span> <span class="n">calibration_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;WANDA requires calibration data, falling back to magnitude&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"WANDA requires calibration data, falling back to magnitude"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">weight</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
 
         <span class="c1"># Collect activation norms</span>
@@ -1130,7 +1132,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">calibration_data</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                    <span class="c1"># Can&#39;t easily forward through just this module</span>
+                    <span class="c1"># Can't easily forward through just this module</span>
                     <span class="k">break</span>
                 <span class="n">module</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">act_norms</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">:</span>  <span class="c1"># Limit samples</span>
@@ -1153,9 +1155,9 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_pruning_mask</span><span class="p">(</span>
     <span class="n">importance</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">sparsity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">granularity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;element&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;element&quot;</span><span class="p">,</span>
+    <span class="n">granularity</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"element"</span><span class="p">,</span> <span class="s2">"row"</span><span class="p">,</span> <span class="s2">"column"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"element"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a binary mask for pruning.</span>
+<span class="w">    </span><span class="sd">"""Create a binary mask for pruning.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        importance: Importance scores</span>
@@ -1164,13 +1166,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Binary mask (1 = keep, 0 = prune)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">&quot;element&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">"element"</span><span class="p">:</span>
         <span class="c1"># Unstructured: prune individual elements</span>
         <span class="n">threshold</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">importance</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">sparsity</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">importance</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
 
-    <span class="k">elif</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">&quot;row&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">"row"</span><span class="p">:</span>
         <span class="c1"># Row-wise: prune entire output neurons</span>
         <span class="n">row_importance</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">importance</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sparsity</span><span class="p">))</span>
@@ -1179,7 +1181,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">mask</span><span class="p">[</span><span class="n">top_indices</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="k">return</span> <span class="n">mask</span>
 
-    <span class="k">elif</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">granularity</span> <span class="o">==</span> <span class="s2">"column"</span><span class="p">:</span>
         <span class="c1"># Column-wise: prune entire input features</span>
         <span class="n">col_importance</span> <span class="o">=</span> <span class="n">importance</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">importance</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sparsity</span><span class="p">))</span>
@@ -1189,16 +1191,16 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">mask</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown granularity: </span><span class="si">{</span><span class="n">granularity</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown granularity: </span><span class="si">{</span><span class="n">granularity</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PrunedLinear</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear layer with sparse weight mask.</span>
+<span class="w">    </span><span class="sd">"""Linear layer with sparse weight mask.</span>
 
 <span class="sd">    Stores a binary mask and applies it during forward pass.</span>
 <span class="sd">    For actual sparse computation speedup, convert to sparse format</span>
 <span class="sd">    or use hardware-specific sparse kernels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Type hints for buffers</span>
     <span class="n">weight</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span>
@@ -1211,25 +1213,25 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_features</span> <span class="o">=</span> <span class="n">linear</span><span class="o">.</span><span class="n">out_features</span>
 
         <span class="c1"># Store original weight and mask</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">mask</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;mask&quot;</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"weight"</span><span class="p">,</span> <span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"mask"</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">linear</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span> <span class="n">linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"bias"</span><span class="p">,</span> <span class="n">linear</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">&quot;bias&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="s2">"bias"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current sparsity ratio.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Current sparsity ratio."""</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;in_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2">, out_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_features</span><span class="si">}</span><span class="s2">, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">, sparsity=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sparsity</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"in_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_features</span><span class="si">}</span><span class="s2">, out_features=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_features</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"bias=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">, sparsity=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sparsity</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
 
@@ -1241,7 +1243,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ModelPruner">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.ModelPruner">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelPruner</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prune PyTorch models to reduce size and computation.</span>
+<span class="w">    </span><span class="sd">"""Prune PyTorch models to reduce size and computation.</span>
 
 <span class="sd">    Supports:</span>
 <span class="sd">    - Magnitude-based pruning (unstructured and structured)</span>
@@ -1251,16 +1253,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Example:</span>
 <span class="sd">        pruner = ModelPruner(config=PruningConfig(sparsity=0.5))</span>
 <span class="sd">        pruned_model = pruner.prune(model)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ModelPruner.__init__">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.ModelPruner.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">PruningConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize pruner.</span>
+<span class="w">        </span><span class="sd">"""Initialize pruner.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            config: Pruning configuration</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">PruningConfig</span><span class="p">()</span></div>
 
 
@@ -1271,7 +1273,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prune a model.</span>
+<span class="w">        </span><span class="sd">"""Prune a model.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model to prune</span>
@@ -1279,7 +1281,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Pruned model</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iterative_steps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1293,7 +1295,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply one-shot pruning.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Apply one-shot pruning."""</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
                 <span class="c1"># Compute importance scores</span>
@@ -1318,8 +1320,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">total_params</span><span class="p">,</span> <span class="n">pruned_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_count_parameters</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
         <span class="n">actual_sparsity</span> <span class="o">=</span> <span class="n">pruned_params</span> <span class="o">/</span> <span class="n">total_params</span> <span class="k">if</span> <span class="n">total_params</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Pruned model: </span><span class="si">{</span><span class="n">pruned_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> params &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">actual_sparsity</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> sparsity)&quot;</span>
+            <span class="sa">f</span><span class="s2">"Pruned model: </span><span class="si">{</span><span class="n">pruned_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> params "</span>
+            <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">actual_sparsity</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> sparsity)"</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">model</span>
@@ -1329,7 +1331,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
         <span class="n">calibration_data</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply iterative pruning with gradual sparsity increase.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Apply iterative pruning with gradual sparsity increase."""</span>
         <span class="n">current_sparsity</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">target_sparsity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sparsity</span>
         <span class="n">sparsity_step</span> <span class="o">=</span> <span class="n">target_sparsity</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iterative_steps</span>
@@ -1349,21 +1351,21 @@ window.runMermaid = runMermaid;</script>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_replace_module</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pruned</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Iterative pruning step </span><span class="si">{</span><span class="n">step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iterative_steps</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">current_sparsity</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Iterative pruning step </span><span class="si">{</span><span class="n">step</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">iterative_steps</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">current_sparsity</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">model</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replace_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_module</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace a module in the model by name.&quot;&quot;&quot;</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">"""Replace a module in the model by name."""</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
         <span class="n">parent</span> <span class="o">=</span> <span class="n">model</span>
         <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_module</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_count_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Count total and pruned parameters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Count total and pruned parameters."""</span>
         <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">pruned</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1391,7 +1393,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">head_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prune specific attention heads from a model.</span>
+<span class="w">    </span><span class="sd">"""Prune specific attention heads from a model.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model containing attention layers</span>
@@ -1401,14 +1403,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Model with pruned heads (zeroed out)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">layer_idx</span><span class="p">,</span> <span class="n">heads</span> <span class="ow">in</span> <span class="n">heads_to_prune</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># Find attention module for this layer</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
-            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;blocks.</span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;layers.</span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
-                <span class="n">attn</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;attn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;self_attn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">"blocks.</span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"layers.</span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">attn</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">"attn"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">"self_attn"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">attn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">continue</span>
 
@@ -1418,7 +1420,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="n">head_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">head_dim</span>
 
                     <span class="c1"># Zero Q, K, V projections for this head</span>
-                    <span class="n">qkv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">&quot;qkv&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="n">qkv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">"qkv"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">qkv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="c1"># Combined QKV projection</span>
                         <span class="n">hidden</span> <span class="o">=</span> <span class="n">num_heads</span> <span class="o">*</span> <span class="n">head_dim</span>
@@ -1427,9 +1429,9 @@ window.runMermaid = runMermaid;</script>
                         <span class="n">qkv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hidden</span> <span class="o">+</span> <span class="n">start</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">hidden</span> <span class="o">+</span> <span class="n">end</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># V</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="c1"># Separate projections</span>
-                        <span class="n">q_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">&quot;q_proj&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                        <span class="n">k_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">&quot;k_proj&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                        <span class="n">v_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">&quot;v_proj&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">q_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">"q_proj"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">k_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">"k_proj"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">v_proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">"v_proj"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">q_proj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="n">q_proj</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
                         <span class="k">if</span> <span class="n">k_proj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1437,7 +1439,7 @@ window.runMermaid = runMermaid;</script>
                         <span class="k">if</span> <span class="n">v_proj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="n">v_proj</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
 
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pruned heads </span><span class="si">{</span><span class="n">heads</span><span class="si">}</span><span class="s2"> from layer </span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pruned heads </span><span class="si">{</span><span class="n">heads</span><span class="si">}</span><span class="s2"> from layer </span><span class="si">{</span><span class="n">layer_idx</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">break</span>
 
     <span class="k">return</span> <span class="n">model</span></div>
@@ -1450,7 +1452,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">num_layers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute importance scores for attention heads.</span>
+<span class="w">    </span><span class="sd">"""Compute importance scores for attention heads.</span>
 
 <span class="sd">    Uses gradient-based importance: heads with larger gradients are more important.</span>
 
@@ -1462,28 +1464,28 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Importance scores [num_layers, num_heads]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">importance</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_layers</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">)</span>
 
     <span class="c1"># This is a simplified version - full implementation would track</span>
     <span class="c1"># attention patterns and output contributions</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-        <span class="s2">&quot;Head importance computation is approximate. &quot;</span>
-        <span class="s2">&quot;For best results, use task-specific importance metrics.&quot;</span>
+        <span class="s2">"Head importance computation is approximate. "</span>
+        <span class="s2">"For best results, use task-specific importance metrics."</span>
     <span class="p">)</span>
 
     <span class="c1"># Use attention output norms as a proxy for importance</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
-        <span class="n">attn</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">&quot;attn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">attn</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s2">"attn"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">attn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">&quot;proj&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">proj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attn</span><span class="p">,</span> <span class="s2">"proj"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">proj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">continue</span>
 
         <span class="c1"># Get layer index from name</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_layers</span><span class="p">):</span>
-            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.&quot;</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">."</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
                 <span class="c1"># Use projection weight norms per head</span>
                 <span class="n">weight</span> <span class="o">=</span> <span class="n">proj</span><span class="o">.</span><span class="n">weight</span>
                 <span class="n">head_dim_calc</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">num_heads</span>
@@ -1510,7 +1512,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">opset_version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
     <span class="n">dynamic_axes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export model to ONNX format for deployment.</span>
+<span class="w">    </span><span class="sd">"""Export model to ONNX format for deployment.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to export</span>
@@ -1518,13 +1520,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        output_path: Output file path (.onnx)</span>
 <span class="sd">        opset_version: ONNX opset version</span>
 <span class="sd">        dynamic_axes: Dynamic axis specification</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">dynamic_axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dynamic_axes</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;sequence_length&quot;</span><span class="p">},</span>
-            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;sequence_length&quot;</span><span class="p">},</span>
+            <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">"batch_size"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"sequence_length"</span><span class="p">},</span>
+            <span class="s2">"output"</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">"batch_size"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"sequence_length"</span><span class="p">},</span>
         <span class="p">}</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sample_input</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -1534,7 +1536,7 @@ window.runMermaid = runMermaid;</script>
             <span class="nb">tuple</span><span class="p">(</span><span class="n">sample_input</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
             <span class="n">output_path</span><span class="p">,</span>
             <span class="n">input_names</span><span class="o">=</span><span class="n">input_names</span><span class="p">,</span>
-            <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span>
+            <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"output"</span><span class="p">],</span>
             <span class="n">dynamic_axes</span><span class="o">=</span><span class="n">dynamic_axes</span><span class="p">,</span>
             <span class="n">opset_version</span><span class="o">=</span><span class="n">opset_version</span><span class="p">,</span>
             <span class="n">do_constant_folding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -1544,28 +1546,28 @@ window.runMermaid = runMermaid;</script>
             <span class="n">model</span><span class="p">,</span>
             <span class="p">(</span><span class="n">sample_input</span><span class="p">,),</span>  <span class="c1"># Wrap in tuple for ONNX export</span>
             <span class="n">output_path</span><span class="p">,</span>
-            <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">],</span>
-            <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">],</span>
+            <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"input"</span><span class="p">],</span>
+            <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"output"</span><span class="p">],</span>
             <span class="n">dynamic_axes</span><span class="o">=</span><span class="n">dynamic_axes</span><span class="p">,</span>
             <span class="n">opset_version</span><span class="o">=</span><span class="n">opset_version</span><span class="p">,</span>
             <span class="n">do_constant_folding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exported model to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Exported model to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="estimate_model_size">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.estimate_model_size">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">estimate_model_size</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate model size in different formats.</span>
+<span class="w">    </span><span class="sd">"""Estimate model size in different formats.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to analyze</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Dict with size estimates in MB</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">param_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
     <span class="n">buffer_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">buffers</span><span class="p">())</span>
 
@@ -1586,42 +1588,42 @@ window.runMermaid = runMermaid;</script>
             <span class="n">pruned_zeros</span> <span class="o">+=</span> <span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;fp32_mb&quot;</span><span class="p">:</span> <span class="n">fp32_size</span><span class="p">,</span>
-        <span class="s2">&quot;fp16_mb&quot;</span><span class="p">:</span> <span class="n">fp16_size</span><span class="p">,</span>
-        <span class="s2">&quot;int8_mb&quot;</span><span class="p">:</span> <span class="n">int8_size</span><span class="p">,</span>
-        <span class="s2">&quot;int4_mb&quot;</span><span class="p">:</span> <span class="n">int4_size</span><span class="p">,</span>
-        <span class="s2">&quot;param_count&quot;</span><span class="p">:</span> <span class="n">param_count</span><span class="p">,</span>
-        <span class="s2">&quot;buffer_count&quot;</span><span class="p">:</span> <span class="n">buffer_count</span><span class="p">,</span>
-        <span class="s2">&quot;quantized_params&quot;</span><span class="p">:</span> <span class="n">quantized_params</span><span class="p">,</span>
-        <span class="s2">&quot;pruned_zeros&quot;</span><span class="p">:</span> <span class="n">pruned_zeros</span><span class="p">,</span>
+        <span class="s2">"fp32_mb"</span><span class="p">:</span> <span class="n">fp32_size</span><span class="p">,</span>
+        <span class="s2">"fp16_mb"</span><span class="p">:</span> <span class="n">fp16_size</span><span class="p">,</span>
+        <span class="s2">"int8_mb"</span><span class="p">:</span> <span class="n">int8_size</span><span class="p">,</span>
+        <span class="s2">"int4_mb"</span><span class="p">:</span> <span class="n">int4_size</span><span class="p">,</span>
+        <span class="s2">"param_count"</span><span class="p">:</span> <span class="n">param_count</span><span class="p">,</span>
+        <span class="s2">"buffer_count"</span><span class="p">:</span> <span class="n">buffer_count</span><span class="p">,</span>
+        <span class="s2">"quantized_params"</span><span class="p">:</span> <span class="n">quantized_params</span><span class="p">,</span>
+        <span class="s2">"pruned_zeros"</span><span class="p">:</span> <span class="n">pruned_zeros</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># Enums</span>
-    <span class="s2">&quot;QuantizationMethod&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PruningMethod&quot;</span><span class="p">,</span>
+    <span class="s2">"QuantizationMethod"</span><span class="p">,</span>
+    <span class="s2">"PruningMethod"</span><span class="p">,</span>
     <span class="c1"># Configs</span>
-    <span class="s2">&quot;QuantizationConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PruningConfig&quot;</span><span class="p">,</span>
+    <span class="s2">"QuantizationConfig"</span><span class="p">,</span>
+    <span class="s2">"PruningConfig"</span><span class="p">,</span>
     <span class="c1"># Quantization</span>
-    <span class="s2">&quot;ModelQuantizer&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;QuantizedLinear&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_scale_zero_point&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;quantize_tensor&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;dequantize_tensor&quot;</span><span class="p">,</span>
+    <span class="s2">"ModelQuantizer"</span><span class="p">,</span>
+    <span class="s2">"QuantizedLinear"</span><span class="p">,</span>
+    <span class="s2">"compute_scale_zero_point"</span><span class="p">,</span>
+    <span class="s2">"quantize_tensor"</span><span class="p">,</span>
+    <span class="s2">"dequantize_tensor"</span><span class="p">,</span>
     <span class="c1"># Pruning</span>
-    <span class="s2">&quot;ModelPruner&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PrunedLinear&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_importance_scores&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_pruning_mask&quot;</span><span class="p">,</span>
+    <span class="s2">"ModelPruner"</span><span class="p">,</span>
+    <span class="s2">"PrunedLinear"</span><span class="p">,</span>
+    <span class="s2">"compute_importance_scores"</span><span class="p">,</span>
+    <span class="s2">"create_pruning_mask"</span><span class="p">,</span>
     <span class="c1"># Head pruning</span>
-    <span class="s2">&quot;prune_attention_heads&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_head_importance&quot;</span><span class="p">,</span>
+    <span class="s2">"prune_attention_heads"</span><span class="p">,</span>
+    <span class="s2">"compute_head_importance"</span><span class="p">,</span>
     <span class="c1"># Export</span>
-    <span class="s2">&quot;export_to_onnx&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;estimate_model_size&quot;</span><span class="p">,</span>
+    <span class="s2">"export_to_onnx"</span><span class="p">,</span>
+    <span class="s2">"estimate_model_size"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1633,7 +1635,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

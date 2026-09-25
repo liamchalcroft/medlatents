@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.networks.diffusion_transformer &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.networks.diffusion_transformer &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.networks.diffusion_transformer</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Diffusion Transformer backbones for discrete and continuous latents.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Diffusion Transformer backbones for discrete and continuous latents."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -493,14 +495,14 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">shift</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply adaptive layer norm modulation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Apply adaptive layer norm modulation."""</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">scale</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">shift</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DiscreteSequenceEmbedder">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteSequenceEmbedder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteSequenceEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projects discrete token indices to embeddings.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Projects discrete token indices to embeddings."""</span>
 
 <div class="viewcode-block" id="DiscreteSequenceEmbedder.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteSequenceEmbedder.__init__">[docs]</a>
@@ -518,12 +520,12 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="c1"># Validate token values are within vocab range (fail-fast on invalid inputs)</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Token values must be in [0, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2">), &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;got range [</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span>
+                <span class="sa">f</span><span class="s2">"Token values must be in [0, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="si">}</span><span class="s2">), "</span>
+                <span class="sa">f</span><span class="s2">"got range [</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">}</span><span class="s2">]"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_embedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 </div>
@@ -533,7 +535,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousSequenceEmbedder">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousSequenceEmbedder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousSequenceEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Projects continuous latent codes to the transformer hidden size.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Projects continuous latent codes to the transformer hidden size."""</span>
 
 <div class="viewcode-block" id="ContinuousSequenceEmbedder.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousSequenceEmbedder.__init__">[docs]</a>
@@ -553,14 +555,14 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Expected input with shape [batch, seq_len, channels], got </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Expected input with shape [batch, seq_len, channels], got </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_length</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected feature dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected feature dimension </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 </div>
@@ -570,7 +572,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="TimestepEmbedder">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimestepEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embeds scalar timesteps into vector representations.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Embeds scalar timesteps into vector representations."""</span>
 
 <div class="viewcode-block" id="TimestepEmbedder.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder.__init__">[docs]</a>
@@ -588,7 +590,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.TimestepEmbedder.timestep_embedding">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">timestep_embedding</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">max_period</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create sinusoidal timestep embeddings.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Create sinusoidal timestep embeddings."""</span>
         <span class="n">half</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">freqs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
             <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">max_period</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">half</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">half</span>
@@ -612,7 +614,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="LabelEmbedder">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LabelEmbedder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embeds class labels with support for classifier-free guidance.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Embeds class labels with support for classifier-free guidance."""</span>
 
 <div class="viewcode-block" id="LabelEmbedder.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder.__init__">[docs]</a>
@@ -627,7 +629,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="LabelEmbedder.token_drop">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.LabelEmbedder.token_drop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">token_drop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">force_drop_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Drop labels to enable classifier-free guidance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Drop labels to enable classifier-free guidance."""</span>
         <span class="k">if</span> <span class="n">force_drop_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">drop_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">labels</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_prob</span>
         <span class="k">else</span><span class="p">:</span>
@@ -649,10 +651,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTAttention">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTAttention">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiTAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Attention block with RoPE for DiT.</span>
+<span class="w">    </span><span class="sd">"""Attention block with RoPE for DiT.</span>
 
 <span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiTAttention.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTAttention.__init__">[docs]</a>
@@ -701,10 +703,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTBlock">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlock">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiTBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DiT block with adaptive layer norm zero (adaLN-Zero) conditioning.</span>
+<span class="w">    </span><span class="sd">"""DiT block with adaptive layer norm zero (adaLN-Zero) conditioning.</span>
 
 <span class="sd">    Supports QK LayerNorm for training stability (arXiv:2312.16903).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiTBlock.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlock.__init__">[docs]</a>
@@ -742,10 +744,10 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTCrossAttention">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiTCrossAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cross-attention module for DiT with optional QK-norm.</span>
+<span class="w">    </span><span class="sd">"""Cross-attention module for DiT with optional QK-norm.</span>
 
 <span class="sd">    Attends to conditioning context (e.g., text embeddings) from the main sequence.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiTCrossAttention.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention.__init__">[docs]</a>
@@ -769,7 +771,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTCrossAttention.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTCrossAttention.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Query tensor [batch, seq_len, hidden_size]</span>
 <span class="sd">            context: Key/value context [batch, context_len, context_dim]</span>
@@ -777,7 +779,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Attended tensor [batch, seq_len, hidden_size]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">context_len</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -792,12 +794,12 @@ window.runMermaid = runMermaid;</script>
             <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_norm</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 
         <span class="c1"># Prepare attention mask for scaled_dot_product_attention</span>
-        <span class="c1"># PyTorch expects: True = mask out (don&#39;t attend), so we invert</span>
+        <span class="c1"># PyTorch expects: True = mask out (don't attend), so we invert</span>
         <span class="n">attn_mask</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">context_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># context_mask: [B, context_len], True = attend</span>
             <span class="c1"># Need: [B, 1, 1, context_len] for broadcasting</span>
-            <span class="n">attn_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">context_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># True = don&#39;t attend</span>
+            <span class="n">attn_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">context_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># True = don't attend</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="n">attn_mask</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -809,7 +811,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTBlockWithCrossAttention">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiTBlockWithCrossAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DiT block with self-attention, cross-attention, and adaLN-Zero conditioning.</span>
+<span class="w">    </span><span class="sd">"""DiT block with self-attention, cross-attention, and adaLN-Zero conditioning.</span>
 
 <span class="sd">    This extends the standard DiTBlock with an optional cross-attention sublayer</span>
 <span class="sd">    between self-attention and MLP, enabling conditioning on sequences like text</span>
@@ -831,7 +833,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        num_heads: Number of attention heads</span>
 <span class="sd">        mlp_ratio: MLP hidden dimension multiplier</span>
 <span class="sd">        qk_norm: Whether to apply QK LayerNorm for stability</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiTBlockWithCrossAttention.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention.__init__">[docs]</a>
@@ -879,7 +881,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiTBlockWithCrossAttention.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiTBlockWithCrossAttention.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Forward pass with optional cross-attention.</span>
 
 <span class="sd">        Args:</span>
@@ -891,7 +893,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Output tensor [batch, seq_len, hidden_size]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get all modulation parameters</span>
         <span class="n">modulation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaLN_modulation</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="p">(</span>
@@ -930,7 +932,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MMDiTBlock">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MMDiTBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-Modal DiT block with joint attention over image and text tokens.</span>
+<span class="w">    </span><span class="sd">"""Multi-Modal DiT block with joint attention over image and text tokens.</span>
 
 <span class="sd">    Inspired by SD3/FLUX architecture where image and text tokens are concatenated</span>
 <span class="sd">    and processed jointly through self-attention, enabling bidirectional attention</span>
@@ -952,7 +954,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        num_heads: Number of attention heads</span>
 <span class="sd">        mlp_ratio: MLP hidden dimension multiplier</span>
 <span class="sd">        qk_norm: Whether to apply QK LayerNorm</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MMDiTBlock.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock.__init__">[docs]</a>
@@ -1009,7 +1011,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MMDiTBlock.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.MMDiTBlock.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">freqs_cis</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">context_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Forward pass with joint multi-modal attention.</span>
 
 <span class="sd">        Args:</span>
@@ -1021,7 +1023,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Output image tokens [batch, img_seq_len, hidden_size]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Fall back to standard DiT block behavior (self-attn only on image)</span>
             <span class="n">shift_msa</span><span class="p">,</span> <span class="n">scale_msa</span><span class="p">,</span> <span class="n">gate_msa</span><span class="p">,</span> <span class="n">shift_mlp</span><span class="p">,</span> <span class="n">scale_mlp</span><span class="p">,</span> <span class="n">gate_mlp</span> <span class="o">=</span> <span class="p">(</span>
@@ -1079,7 +1081,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">gate_mlp_img</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp_img</span><span class="p">(</span>
             <span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">norm2_img</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">shift_mlp_img</span><span class="p">,</span> <span class="n">scale_mlp_img</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="c1"># Note: We don&#39;t return modified context, but it&#39;s updated for potential future use</span>
+        <span class="c1"># Note: We don't return modified context, but it's updated for potential future use</span>
         <span class="c1"># context = context + gate_mlp_txt.unsqueeze(1) * self.mlp_txt(</span>
         <span class="c1">#     modulate(self.norm2_txt(context), shift_mlp_txt, scale_mlp_txt)</span>
         <span class="c1"># )</span>
@@ -1092,7 +1094,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="FinalLayer">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.FinalLayer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FinalLayer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The final layer of DiT.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""The final layer of DiT."""</span>
 
 <div class="viewcode-block" id="FinalLayer.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.FinalLayer.__init__">[docs]</a>
@@ -1118,7 +1120,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteDiT">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteDiT</span><span class="p">(</span><span class="n">DiscreteTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Diffusion Transformer with adaptive conditioning for discrete flows.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Diffusion Transformer with adaptive conditioning for discrete flows."""</span>
 
 <div class="viewcode-block" id="DiscreteDiT.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.__init__">[docs]</a>
@@ -1188,7 +1190,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteDiT.initialize_weights">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.initialize_weights">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize weights following DiT paper with zero-init for adaLN and final layer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize weights following DiT paper with zero-init for adaLN and final layer."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
 
         <span class="c1"># Zero-initialize adaLN modulation layers (ensures identity at initialization)</span>
@@ -1204,13 +1206,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteDiT.forward">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through DiT.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass through DiT."""</span>
         <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match "</span>
+                    <span class="sa">f</span><span class="s2">"model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
@@ -1221,7 +1223,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model requires class labels but none provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Model requires class labels but none provided"</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1239,19 +1241,19 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteDiT.forward_with_cfg">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.DiscreteDiT.forward_with_cfg">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cfg_scale</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with classifier-free guidance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Forward pass with classifier-free guidance."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model was trained without classifier-free guidance&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Model was trained without classifier-free guidance"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x and t must have twice the batch size of y&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x and t must have twice the batch size of y"</span><span class="p">)</span>
 
         <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match "</span>
+                    <span class="sa">f</span><span class="s2">"model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
@@ -1293,47 +1295,47 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_XL</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">}</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"depth"</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">24</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_L</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"depth"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_B</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">768</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"depth"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">768</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_S</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"depth"</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">ContinuousDiT_Nano</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"depth"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">_build_continuous_dit</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="n">ContinuousDiT_models</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;ContinuousDiT-XL&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_XL</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousDiT-L&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_L</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousDiT-B&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_B</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousDiT-S&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_S</span><span class="p">,</span>
-    <span class="s2">&quot;ContinuousDiT-Nano&quot;</span><span class="p">:</span> <span class="n">ContinuousDiT_Nano</span><span class="p">,</span>
+    <span class="s2">"ContinuousDiT-XL"</span><span class="p">:</span> <span class="n">ContinuousDiT_XL</span><span class="p">,</span>
+    <span class="s2">"ContinuousDiT-L"</span><span class="p">:</span> <span class="n">ContinuousDiT_L</span><span class="p">,</span>
+    <span class="s2">"ContinuousDiT-B"</span><span class="p">:</span> <span class="n">ContinuousDiT_B</span><span class="p">,</span>
+    <span class="s2">"ContinuousDiT-S"</span><span class="p">:</span> <span class="n">ContinuousDiT_S</span><span class="p">,</span>
+    <span class="s2">"ContinuousDiT-Nano"</span><span class="p">:</span> <span class="n">ContinuousDiT_Nano</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="c1"># Model size configurations (discrete)</span>
-<span class="n">DiscreteDiT_models</span> <span class="o">=</span> <span class="n">create_model_variants</span><span class="p">(</span><span class="n">DiscreteDiT</span><span class="p">,</span> <span class="s2">&quot;DiscreteDiT&quot;</span><span class="p">)</span>
+<span class="n">DiscreteDiT_models</span> <span class="o">=</span> <span class="n">create_model_variants</span><span class="p">(</span><span class="n">DiscreteDiT</span><span class="p">,</span> <span class="s2">"DiscreteDiT"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ContinuousDiT">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousDiT</span><span class="p">(</span><span class="n">ContinuousTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Diffusion Transformer tailored for continuous latent vectors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Diffusion Transformer tailored for continuous latent vectors."""</span>
 
 <div class="viewcode-block" id="ContinuousDiT.__init__">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.__init__">[docs]</a>
@@ -1401,7 +1403,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ContinuousDiT.initialize_weights">
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.initialize_weights">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize weights following DiT paper with zero-init for adaLN and final layer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize weights following DiT paper with zero-init for adaLN and final layer."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span>
 
         <span class="c1"># Zero-initialize adaLN modulation layers (ensures identity at initialization)</span>
@@ -1419,7 +1421,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">seq_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
@@ -1436,7 +1438,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model requires class labels but none provided&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Model requires class labels but none provided"</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_embedder</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">y</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1461,10 +1463,10 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/networks.html#medlatents.networks.ContinuousDiT.forward_with_cfg">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward_with_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cfg_scale</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_free_guidance</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model was trained without classifier-free guidance&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Model was trained without classifier-free guidance"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">t</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;x and t must have twice the batch size of y&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x and t must have twice the batch size of y"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_update_rope</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1498,7 +1500,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

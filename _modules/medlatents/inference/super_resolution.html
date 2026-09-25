@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.inference.super_resolution &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.inference.super_resolution &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.inference.super_resolution</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Super-resolution utilities for discrete latent models.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Super-resolution utilities for discrete latent models."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -505,22 +507,22 @@ window.runMermaid = runMermaid;</script>
     <span class="n">volume</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">target_slices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
-    <span class="n">interpolation_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;trilinear&quot;</span><span class="p">,</span>
-    <span class="n">rasterization_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"diffusion"</span><span class="p">,</span> <span class="s2">"bayesian_flow"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"maskgit"</span><span class="p">,</span>
+    <span class="n">interpolation_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"trilinear"</span><span class="p">,</span>
+    <span class="n">rasterization_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"hilbert"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Super-resolve volume slices: upsample + inpaint interpolated slices.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Super-resolve volume slices: upsample + inpaint interpolated slices."""</span>
     <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="o">*</span><span class="n">spatial_dims</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">shape</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spatial_dims</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;super_resolve_slices requires 3D volume [batch, channels, D, H, W]&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"super_resolve_slices requires 3D volume [batch, channels, D, H, W]"</span><span class="p">)</span>
 
     <span class="n">original_slices</span> <span class="o">=</span> <span class="n">spatial_dims</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
     <span class="n">upsampling_factor</span> <span class="o">=</span> <span class="n">target_slices</span> <span class="o">/</span> <span class="n">original_slices</span>
 
     <span class="k">if</span> <span class="n">target_slices</span> <span class="o">&lt;=</span> <span class="n">original_slices</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;target_slices (</span><span class="si">{</span><span class="n">target_slices</span><span class="si">}</span><span class="s2">) must be &gt; original (</span><span class="si">{</span><span class="n">original_slices</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"target_slices (</span><span class="si">{</span><span class="n">target_slices</span><span class="si">}</span><span class="s2">) must be &gt; original (</span><span class="si">{</span><span class="n">original_slices</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 
     <span class="c1"># Step 1: Interpolate to target resolution</span>
     <span class="n">interpolated</span> <span class="o">=</span> <span class="n">reslice_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">target_slices</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">interpolation_mode</span><span class="p">)</span>
@@ -535,7 +537,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">mask_shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">interpolated</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
         <span class="nb">tuple</span><span class="p">(</span><span class="n">mask_shape</span><span class="p">),</span>
-        <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;slice&quot;</span><span class="p">,</span>
+        <span class="n">mask_type</span><span class="o">=</span><span class="s2">"slice"</span><span class="p">,</span>
         <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
         <span class="n">stride</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
         <span class="n">start_offset</span><span class="o">=</span><span class="n">start_offset</span><span class="p">,</span>
@@ -577,16 +579,16 @@ window.runMermaid = runMermaid;</script>
     <span class="n">tokenizer</span><span class="p">,</span>  <span class="c1"># DiscreteTokenizer</span>
     <span class="n">volume</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">target_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
-    <span class="n">interpolation_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;trilinear&quot;</span><span class="p">,</span>
-    <span class="n">rasterization_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;hilbert&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"diffusion"</span><span class="p">,</span> <span class="s2">"bayesian_flow"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"maskgit"</span><span class="p">,</span>
+    <span class="n">interpolation_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"trilinear"</span><span class="p">,</span>
+    <span class="n">rasterization_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"hilbert"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Super-resolve volume with anisotropic resolution.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Super-resolve volume with anisotropic resolution."""</span>
     <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="o">*</span><span class="n">spatial_dims</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">shape</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spatial_dims</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;anisotropic_super_resolution requires 3D volume&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"anisotropic_super_resolution requires 3D volume"</span><span class="p">)</span>
 
     <span class="c1"># Compute upsampling factors per axis</span>
     <span class="n">upsampling_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">spatial_dims</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
@@ -601,7 +603,7 @@ window.runMermaid = runMermaid;</script>
     <span class="c1"># Use slice masking for axis with highest upsampling</span>
     <span class="n">step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">max_factor</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
-        <span class="n">target_shape</span><span class="p">,</span> <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;slice&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis_with_max</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">start_offset</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">target_shape</span><span class="p">,</span> <span class="n">mask_type</span><span class="o">=</span><span class="s2">"slice"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis_with_max</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">start_offset</span><span class="o">=</span><span class="mi">1</span>
     <span class="p">)</span>
 
     <span class="c1"># Inpaint interpolated regions</span>
@@ -628,10 +630,10 @@ window.runMermaid = runMermaid;</script>
     <span class="n">target_slices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">num_stages</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"diffusion"</span><span class="p">,</span> <span class="s2">"bayesian_flow"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"maskgit"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Progressive super-resolution: upsample in multiple stages.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Progressive super-resolution: upsample in multiple stages."""</span>
     <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="o">*</span><span class="n">spatial_dims</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">original_slices</span> <span class="o">=</span> <span class="n">spatial_dims</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
 
@@ -651,7 +653,7 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># Intermediate stage</span>
             <span class="n">stage_target</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_slices</span> <span class="o">*</span> <span class="n">stage_factor</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stage </span><span class="si">{</span><span class="n">stage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_stages</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">current_slices</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">stage_target</span><span class="si">}</span><span class="s2"> slices&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Stage </span><span class="si">{</span><span class="n">stage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_stages</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">current_slices</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">stage_target</span><span class="si">}</span><span class="s2"> slices"</span><span class="p">)</span>
 
         <span class="c1"># Super-resolve this stage</span>
         <span class="n">current_volume</span> <span class="o">=</span> <span class="n">super_resolve_slices</span><span class="p">(</span>
@@ -679,7 +681,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">rasterization_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal: Inpaint volume with spatial mask.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Internal: Inpaint volume with spatial mask."""</span>
     <span class="n">device</span> <span class="o">=</span> <span class="n">volume</span><span class="o">.</span><span class="n">device</span>
 
     <span class="c1"># Tokenize</span>
@@ -691,18 +693,18 @@ window.runMermaid = runMermaid;</script>
     <span class="n">seq_mask</span> <span class="o">=</span> <span class="n">seq_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
     <span class="c1"># Select inpainting method</span>
-    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;autoreg&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"autoreg"</span><span class="p">:</span>
         <span class="n">inpainted_tokens</span> <span class="o">=</span> <span class="n">inpaint_autoregressive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">seq_mask</span><span class="p">,</span> <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"maskgit"</span><span class="p">:</span>
         <span class="n">inpainted_tokens</span> <span class="o">=</span> <span class="n">inpaint_maskgit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">seq_mask</span><span class="p">,</span> <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;flow&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"flow"</span><span class="p">:</span>
         <span class="n">inpainted_tokens</span> <span class="o">=</span> <span class="n">inpaint_flow_matching</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">seq_mask</span><span class="p">,</span> <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;diffusion&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"diffusion"</span><span class="p">:</span>
         <span class="n">inpainted_tokens</span> <span class="o">=</span> <span class="n">inpaint_diffusion_repaint</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">seq_mask</span><span class="p">,</span> <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">"bayesian_flow"</span><span class="p">:</span>
         <span class="n">inpainted_tokens</span> <span class="o">=</span> <span class="n">inpaint_bayesian_flow</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">seq_mask</span><span class="p">,</span> <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown model_type: </span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Decode</span>
     <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
@@ -719,12 +721,12 @@ window.runMermaid = runMermaid;</script>
     <span class="n">volume</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">target_slices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"maskgit"</span><span class="p">,</span>
     <span class="o">**</span><span class="n">inpaint_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare model-based super-resolution with interpolation baseline.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Compare model-based super-resolution with interpolation baseline."""</span>
     <span class="c1"># Baseline: interpolation only</span>
-    <span class="n">interpolated</span> <span class="o">=</span> <span class="n">reslice_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">target_slices</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;trilinear&quot;</span><span class="p">)</span>
+    <span class="n">interpolated</span> <span class="o">=</span> <span class="n">reslice_volume</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">target_slices</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"trilinear"</span><span class="p">)</span>
 
     <span class="c1"># Model-based enhancement</span>
     <span class="n">enhanced</span> <span class="o">=</span> <span class="n">super_resolve_slices</span><span class="p">(</span>
@@ -749,7 +751,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

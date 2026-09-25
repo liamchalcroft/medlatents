@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.rasterization.raster_scan &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.rasterization.raster_scan &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.rasterization.raster_scan</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Standard raster scan for spatial-to-sequence conversion.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Standard raster scan for spatial-to-sequence conversion."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
@@ -482,7 +484,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="RasterScan">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.RasterScan">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RasterScan</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Standard raster scan ordering: row-by-row (or slice-by-slice for 3D).</span>
 
 <span class="sd">    Simple and fast. Consecutive tokens in the sequence may be spatially</span>
@@ -493,25 +495,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         [2, 3]]</span>
 
 <span class="sd">    Sequence: [0, 1, 2, 3]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="RasterScan.spatial_to_sequence_2d">
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.RasterScan.spatial_to_sequence_2d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_2d</span><span class="p">(</span>
-        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;row&quot;</span>
+        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"row"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"row"</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 2D spatial data to 1D sequence using raster scan.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            spatial: [batch, channels, height, width] or [batch, height, width]</span>
-<span class="sd">            order: &#39;row&#39; (row-major) or &#39;col&#39; (column-major)</span>
+<span class="sd">            order: 'row' (row-major) or 'col' (column-major)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, height*width] or [batch, height*width]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;row&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"row"</span><span class="p">:</span>
             <span class="c1"># Flatten row-by-row (standard)</span>
             <span class="k">return</span> <span class="n">spatial</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">start_dim</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -526,21 +528,21 @@ window.runMermaid = runMermaid;</script>
         <span class="n">sequence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"row"</span><span class="p">,</span> <span class="s2">"col"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"row"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 1D sequence back to 2D spatial data.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            sequence: [batch, channels, height*width] or [batch, height*width]</span>
 <span class="sd">            height: spatial height</span>
 <span class="sd">            width: spatial width</span>
-<span class="sd">            order: &#39;row&#39; or &#39;col&#39;</span>
+<span class="sd">            order: 'row' or 'col'</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: [batch, channels, height, width] or [batch, height, width]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;col&quot;</span><span class="p">:</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"col"</span><span class="p">:</span>
             <span class="c1"># For col-major, data was stored as (width, height), so reshape accordingly</span>
             <span class="k">if</span> <span class="n">sequence</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">shape</span>
@@ -563,26 +565,26 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/rasterization.html#medlatents.rasterization.RasterScan.spatial_to_sequence_3d">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">spatial_to_sequence_3d</span><span class="p">(</span>
-        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DHW&quot;</span><span class="p">,</span> <span class="s2">&quot;WHD&quot;</span><span class="p">,</span> <span class="s2">&quot;HWD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DHW&quot;</span>
+        <span class="n">spatial</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"DHW"</span><span class="p">,</span> <span class="s2">"WHD"</span><span class="p">,</span> <span class="s2">"HWD"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"DHW"</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 3D spatial data to 1D sequence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            spatial: [batch, channels, depth, height, width] or [batch, D, H, W]</span>
-<span class="sd">            order: dimension ordering (&#39;DHW&#39; = slice-by-slice, etc.)</span>
+<span class="sd">            order: dimension ordering ('DHW' = slice-by-slice, etc.)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            sequence: [batch, channels, D*H*W] or [batch, D*H*W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Reorder dimensions if needed</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;WHD&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"WHD"</span><span class="p">:</span>
             <span class="n">spatial</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span>
                 <span class="k">else</span> <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;HWD&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"HWD"</span><span class="p">:</span>
             <span class="n">spatial</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span>
@@ -601,9 +603,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DHW&quot;</span><span class="p">,</span> <span class="s2">&quot;WHD&quot;</span><span class="p">,</span> <span class="s2">&quot;HWD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DHW&quot;</span><span class="p">,</span>
+        <span class="n">order</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"DHW"</span><span class="p">,</span> <span class="s2">"WHD"</span><span class="p">,</span> <span class="s2">"HWD"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"DHW"</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert 1D sequence back to 3D spatial data.</span>
 
 <span class="sd">        Args:</span>
@@ -613,7 +615,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            spatial: [batch, channels, D, H, W] or [batch, D, H, W]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">sequence</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">shape</span>
             <span class="n">spatial</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
@@ -622,13 +624,13 @@ window.runMermaid = runMermaid;</script>
             <span class="n">spatial</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
 
         <span class="c1"># Reverse permutation</span>
-        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;WHD&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"WHD"</span><span class="p">:</span>
             <span class="n">spatial</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span>
                 <span class="k">else</span> <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;HWD&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">"HWD"</span><span class="p">:</span>
             <span class="n">spatial</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">spatial</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">spatial</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span>
@@ -648,7 +650,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

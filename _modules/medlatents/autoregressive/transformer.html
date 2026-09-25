@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.autoregressive.transformer &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.autoregressive.transformer &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.autoregressive.transformer</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Autoregressive transformer for discrete latent sequence modeling.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Autoregressive transformer for discrete latent sequence modeling."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -491,18 +493,18 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_allocate_cuda_baseline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allocate a tiny temporary CUDA tensor so baseline memory is deterministic.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Allocate a tiny temporary CUDA tensor so baseline memory is deterministic."""</span>
     <span class="k">global</span> <span class="n">_CUDA_BASELINE_TENSOR</span>
     <span class="k">if</span> <span class="n">_CUDA_BASELINE_TENSOR</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
         <span class="k">return</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">_CUDA_BASELINE_TENSOR</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">_CUDA_BASELINE_TENSOR</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">_CUDA_BASELINE_TENSOR</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_release_cuda_baseline</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Release temporary baseline tensor after first model construction.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Release temporary baseline tensor after first model construction."""</span>
     <span class="k">global</span> <span class="n">_CUDA_BASELINE_TENSOR</span>
     <span class="k">if</span> <span class="n">_CUDA_BASELINE_TENSOR</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
@@ -512,24 +514,24 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_CanonicalCudaTensor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tensor subclass that normalizes CUDA device display to `torch.device(&#39;cuda&#39;)`.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Tensor subclass that normalizes CUDA device display to `torch.device('cuda')`."""</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">:</span>
         <span class="n">device</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">device</span>
-        <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">device</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_torch_compiling</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return whether the current execution is inside torch.compile graph capture.&quot;&quot;&quot;</span>
-    <span class="n">compiler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">&quot;compiler&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">compiler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="s2">&quot;is_compiling&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return whether the current execution is inside torch.compile graph capture."""</span>
+    <span class="n">compiler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">"compiler"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">compiler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="s2">"is_compiling"</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">compiler</span><span class="o">.</span><span class="n">is_compiling</span><span class="p">())</span>
 
-    <span class="n">dynamo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">&quot;_dynamo&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">dynamo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dynamo</span><span class="p">,</span> <span class="s2">&quot;is_compiling&quot;</span><span class="p">):</span>
+    <span class="n">dynamo</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">"_dynamo"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dynamo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dynamo</span><span class="p">,</span> <span class="s2">"is_compiling"</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">dynamo</span><span class="o">.</span><span class="n">is_compiling</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="kc">False</span>
@@ -538,9 +540,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AutoregressiveTransformer">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AutoregressiveTransformer</span><span class="p">(</span><span class="n">DiscreteTransformer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Autoregressive transformer with RoPE for sequence generation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AutoregressiveTransformer.__init__">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer.__init__">[docs]</a>
@@ -563,7 +565,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="n">hidden_size</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">num_heads</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;hidden_size </span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2"> must be divisible by 2 * num_heads </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2"> for RoPE&quot;</span>
+                <span class="sa">f</span><span class="s2">"hidden_size </span><span class="si">{</span><span class="n">hidden_size</span><span class="si">}</span><span class="s2"> must be divisible by 2 * num_heads </span><span class="si">{</span><span class="n">num_heads</span><span class="si">}</span><span class="s2"> for RoPE"</span>
             <span class="p">)</span>
 
         <span class="n">extended_vocab</span><span class="p">,</span> <span class="n">resolved_special</span> <span class="o">=</span> <span class="n">resolve_special_tokens</span><span class="p">(</span>
@@ -613,28 +615,28 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="AutoregressiveTransformer.initialize_weights">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer.initialize_weights">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">initialize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize weights following GPT-2 style initialization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize weights following GPT-2 style initialization."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">init_weights</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AutoregressiveTransformer.forward">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer.forward">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq vocab&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass through the autoregressive transformer.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq vocab"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Forward pass through the autoregressive transformer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input token indices [batch_size, seq_len]</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            logits: Output logits [batch_size, seq_len, vocab_size]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Update rotary cache if needed</span>
         <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">seq_len</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Input sequence length </span><span class="si">{</span><span class="n">seq_len</span><span class="si">}</span><span class="s2"> does not match "</span>
+                    <span class="sa">f</span><span class="s2">"model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="c1"># Rotary cache is deterministic; only grow it to avoid shrinking</span>
             <span class="c1"># serialized checkpoints when batches are shorter than configured.</span>
@@ -670,7 +672,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">past_kv_cache</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward pass with KV-cache for efficient autoregressive generation.</span>
+<span class="w">        </span><span class="sd">"""Forward pass with KV-cache for efficient autoregressive generation.</span>
 
 <span class="sd">        This method enables O(N) per-token generation instead of O(N²) by caching</span>
 <span class="sd">        the key-value pairs from previous positions.</span>
@@ -685,12 +687,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            logits: Output logits [batch_size, seq_len, vocab_size]</span>
 <span class="sd">            new_kv_cache: Updated KV cache for all blocks</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Determine position offset for RoPE</span>
         <span class="k">if</span> <span class="n">past_kv_cache</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">past_kv_cache</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">past_kv_cache</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Get past sequence length from first block&#39;s cache</span>
+            <span class="c1"># Get past sequence length from first block's cache</span>
             <span class="n">past_len</span> <span class="o">=</span> <span class="n">past_kv_cache</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">start_pos</span> <span class="o">=</span> <span class="n">past_len</span>
         <span class="k">else</span><span class="p">:</span>
@@ -706,8 +708,8 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">total_len</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_dynamic_seq_length</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Total sequence length </span><span class="si">{</span><span class="n">total_len</span><span class="si">}</span><span class="s2"> exceeds &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Total sequence length </span><span class="si">{</span><span class="n">total_len</span><span class="si">}</span><span class="s2"> exceeds "</span>
+                    <span class="sa">f</span><span class="s2">"model sequence length </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq_len_cached</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_rotary_cache</span><span class="p">(</span><span class="n">total_len</span><span class="p">)</span>
 
@@ -732,14 +734,14 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.autoregressive.AutoregressiveTransformer.generate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">prompt</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch prompt_len&quot;</span><span class="p">],</span>
+        <span class="n">prompt</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch prompt_len"</span><span class="p">],</span>
         <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">eos_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">generator</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch total_len&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Autoregressive generation with KV-cache, top-k filtering and temperature.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch total_len"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Autoregressive generation with KV-cache, top-k filtering and temperature.</span>
 
 <span class="sd">        Uses KV-cache for O(N²) total complexity instead of O(N³).</span>
 
@@ -756,9 +758,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If temperature &lt;= 0 or prompt length &gt;= max_length.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">temperature</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;temperature must be &gt; 0, got </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"temperature must be &gt; 0, got </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">prompt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
             <span class="c1"># Nothing to generate, just return the prompt</span>
@@ -782,7 +784,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">forbidden_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span>
                     <span class="p">)</span>
-                    <span class="n">forbidden_mask</span><span class="p">[</span><span class="n">forbidden_tokens</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+                    <span class="n">forbidden_mask</span><span class="p">[</span><span class="n">forbidden_tokens</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
 
             <span class="c1"># Prefill: process entire prompt to build initial cache</span>
             <span class="n">logits</span><span class="p">,</span> <span class="n">kv_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_with_cache</span><span class="p">(</span><span class="n">output</span><span class="p">[:,</span> <span class="p">:</span><span class="n">prompt_len</span><span class="p">])</span>
@@ -802,7 +804,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">v</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
                     <span class="n">logits</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
                         <span class="n">logits</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">[:,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
-                        <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)),</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)),</span>
                         <span class="n">logits</span><span class="p">,</span>
                     <span class="p">)</span>
 
@@ -835,7 +837,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="c1"># Model size configurations</span>
-<span class="n">Autoreg_models</span> <span class="o">=</span> <span class="n">create_model_variants</span><span class="p">(</span><span class="n">AutoregressiveTransformer</span><span class="p">,</span> <span class="s2">&quot;Autoreg&quot;</span><span class="p">)</span>
+<span class="n">Autoreg_models</span> <span class="o">=</span> <span class="n">create_model_variants</span><span class="p">(</span><span class="n">AutoregressiveTransformer</span><span class="p">,</span> <span class="s2">"Autoreg"</span><span class="p">)</span>
 
 <span class="n">_allocate_cuda_baseline</span><span class="p">()</span>
 </pre></div>
@@ -848,7 +850,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

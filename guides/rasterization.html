@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rasterization Guide &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Rasterization Guide &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,10 +14,12 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -567,7 +569,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 <span class="n">rasterizer</span> <span class="o">=</span> <span class="n">RasterScan</span><span class="p">(</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-    <span class="n">order</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span>  <span class="c1"># Options: row, column</span>
+    <span class="n">order</span><span class="o">=</span><span class="s1">'row'</span><span class="p">,</span>  <span class="c1"># Options: row, column</span>
 <span class="p">)</span>
 
 <span class="c1"># For 3D volumes</span>
@@ -575,7 +577,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
     <span class="n">depth</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
     <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-    <span class="n">order</span><span class="o">=</span><span class="s1">&#39;slice&#39;</span><span class="p">,</span>  <span class="c1"># Options: slice, row, column</span>
+    <span class="n">order</span><span class="o">=</span><span class="s1">'slice'</span><span class="p">,</span>  <span class="c1"># Options: slice, row, column</span>
 <span class="p">)</span>
 
 <span class="c1"># Convert image to sequence</span>
@@ -655,8 +657,8 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 <span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 
 <span class="c1"># Quick functions for common cases</span>
-<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterize_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;zorder&#39;</span><span class="p">)</span>
-<span class="n">image</span> <span class="o">=</span> <span class="n">unrasterize_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;zorder&#39;</span><span class="p">)</span>
+<span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterize_2d</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'zorder'</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">unrasterize_2d</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'zorder'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Properties</strong>:</p>
@@ -731,7 +733,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 
 <span class="c1"># Training</span>
 <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span>  <span class="c1"># [B, C, H, W] image tokens</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">'tokens'</span><span class="p">]</span>  <span class="c1"># [B, C, H, W] image tokens</span>
 
     <span class="c1"># Rasterize each channel</span>
     <span class="n">sequences</span> <span class="o">=</span> <span class="p">[]</span>
@@ -755,7 +757,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.rasterization</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZOrderCurve</span>
 
 <span class="c1"># Tokenize image to discrete codes</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">VQTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;path/to/vq&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">VQTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">'path/to/vq'</span><span class="p">)</span>
 <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>  <span class="c1"># [1, H//p, W//p] where p is patch size</span>
 
 <span class="c1"># Rasterize</span>
@@ -887,7 +889,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 <h3>Tile-Based Approach<a class="headerlink" href="#tile-based-approach" title="Link to this heading"></a></h3>
 <p>For very large images, process in tiles:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">process_tiles</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process image in tiles with overlap.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Process image in tiles with overlap."""</span>
     <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">rasterizer</span> <span class="o">=</span> <span class="n">HilbertCurve</span><span class="p">(</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">tile_size</span><span class="p">)</span>
 
@@ -915,7 +917,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 
 <span class="c1"># Now rasterization is just indexing (fast)</span>
 <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">])</span>
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">rasterizer</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">'image'</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
@@ -964,7 +966,7 @@ Rasterization converts spatial data to sequences while preserving locality:</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

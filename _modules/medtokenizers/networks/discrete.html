@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medtokenizers.networks.discrete &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medtokenizers.networks.discrete &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medtokenizers.networks.discrete</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Discrete latent space tokenizers (VQ-VAE, FSQ, RESFSQ, LFQ).</span>
+<span></span><span class="sd">"""Discrete latent space tokenizers (VQ-VAE, FSQ, RESFSQ, LFQ).</span>
 
 <span class="sd">This module implements tokenizers that map images to discrete latent codes</span>
 <span class="sd">from a finite vocabulary. These are ideal for autoregressive models and</span>
@@ -482,7 +484,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">---------------------------------</span>
 <span class="sd">Discrete tokenizers (this module):</span>
 <span class="sd">- Produce integer codes from finite vocabulary K</span>
-<span class="sd">- Output: indices ∈ {0, 1, ..., K-1}^(H&#39;×W&#39;×D&#39;)</span>
+<span class="sd">- Output: indices ∈ {0, 1, ..., K-1}^(H'×W'×D')</span>
 <span class="sd">- Suitable for: transformers, autoregressive models, LLMs</span>
 
 <span class="sd">Continuous tokenizers (see continuous.py):</span>
@@ -530,7 +532,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                                    v</span>
 <span class="sd">                               Indices (discrete codes)</span>
 <span class="sd">```</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -559,13 +561,13 @@ window.runMermaid = runMermaid;</script>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="n">QuantizerType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;VQ&quot;</span><span class="p">,</span> <span class="s2">&quot;FSQ&quot;</span><span class="p">,</span> <span class="s2">&quot;LFQ&quot;</span><span class="p">,</span> <span class="s2">&quot;RESFSQ&quot;</span><span class="p">]</span>
+<span class="n">QuantizerType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"VQ"</span><span class="p">,</span> <span class="s2">"FSQ"</span><span class="p">,</span> <span class="s2">"LFQ"</span><span class="p">,</span> <span class="s2">"RESFSQ"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="DiscreteTokenizer">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DiscreteTokenizer</span><span class="p">(</span><span class="n">BaseTokenizer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Discrete latent tokenizer for medical imaging.</span>
+<span class="w">    </span><span class="sd">"""Discrete latent tokenizer for medical imaging.</span>
 
 <span class="sd">    This tokenizer learns discrete latent representations using various</span>
 <span class="sd">    quantization methods, enabling the use of language models and</span>
@@ -625,7 +627,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        dropout: Dropout probability</span>
 <span class="sd">        resolution: Input spatial resolution</span>
 <span class="sd">        spatial_compression: Total downsampling factor</span>
-<span class="sd">        quantizer: Quantization method (&quot;VQ&quot;, &quot;FSQ&quot;, &quot;LFQ&quot;, &quot;RESFSQ&quot;)</span>
+<span class="sd">        quantizer: Quantization method ("VQ", "FSQ", "LFQ", "RESFSQ")</span>
 <span class="sd">        num_embeddings: Codebook size for VQ (default: 1024)</span>
 <span class="sd">        beta: Commitment loss weight for VQ (default: 0.25)</span>
 <span class="sd">        use_norm: Normalize VQ embeddings (cosine similarity)</span>
@@ -647,7 +649,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ...     out_channels=1,</span>
 <span class="sd">        ...     z_channels=128,</span>
 <span class="sd">        ...     embedding_dim=6,</span>
-<span class="sd">        ...     quantizer=&#39;FSQ&#39;,</span>
+<span class="sd">        ...     quantizer='FSQ',</span>
 <span class="sd">        ...     levels=[8, 5, 5, 5],  # 1000 codes</span>
 <span class="sd">        ...     spatial_compression=8,</span>
 <span class="sd">        ... )</span>
@@ -660,15 +662,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &gt;&gt;&gt; # Training forward pass</span>
 <span class="sd">        &gt;&gt;&gt; output = model(volume)</span>
-<span class="sd">        &gt;&gt;&gt; recon_loss = F.l1_loss(output[&#39;reconstructions&#39;], volume)</span>
-<span class="sd">        &gt;&gt;&gt; quant_loss = output[&#39;quant_loss&#39;].mean()</span>
+<span class="sd">        &gt;&gt;&gt; recon_loss = F.l1_loss(output['reconstructions'], volume)</span>
+<span class="sd">        &gt;&gt;&gt; quant_loss = output['quant_loss'].mean()</span>
 <span class="sd">        &gt;&gt;&gt; total_loss = recon_loss + quant_loss</span>
 
 <span class="sd">    References:</span>
-<span class="sd">        van den Oord et al. &quot;Neural Discrete Representation Learning&quot; (VQ-VAE)</span>
-<span class="sd">        Mentzer et al. &quot;Finite Scalar Quantization: VQ-VAE Made Simple&quot; (FSQ)</span>
-<span class="sd">        Yu et al. &quot;Language Model Beats Diffusion&quot; (LFQ in MagViT-2)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        van den Oord et al. "Neural Discrete Representation Learning" (VQ-VAE)</span>
+<span class="sd">        Mentzer et al. "Finite Scalar Quantization: VQ-VAE Made Simple" (FSQ)</span>
+<span class="sd">        Yu et al. "Language Model Beats Diffusion" (LFQ in MagViT-2)</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DiscreteTokenizer.__init__">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.__init__">[docs]</a>
@@ -686,7 +688,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
         <span class="n">spatial_compression</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="n">quantizer</span><span class="p">:</span> <span class="n">QuantizerType</span> <span class="o">=</span> <span class="s2">&quot;RESFSQ&quot;</span><span class="p">,</span>
+        <span class="n">quantizer</span><span class="p">:</span> <span class="n">QuantizerType</span> <span class="o">=</span> <span class="s2">"RESFSQ"</span><span class="p">,</span>
         <span class="n">use_encoder_mid</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">use_output_nonlinearity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">decoder_blocks_per_stage</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -706,51 +708,51 @@ window.runMermaid = runMermaid;</script>
         <span class="n">entropy_loss_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
         <span class="n">commitment_loss_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
         <span class="n">quant_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;DiscreteTokenizer&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"DiscreteTokenizer"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Validate inputs</span>
         <span class="k">if</span> <span class="n">dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dim must be 2 or 3, got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">quantizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VQ&quot;</span><span class="p">,</span> <span class="s2">&quot;FSQ&quot;</span><span class="p">,</span> <span class="s2">&quot;LFQ&quot;</span><span class="p">,</span> <span class="s2">&quot;RESFSQ&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;quantizer must be VQ/FSQ/LFQ/RESFSQ, got </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"dim must be 2 or 3, got </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">quantizer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"VQ"</span><span class="p">,</span> <span class="s2">"FSQ"</span><span class="p">,</span> <span class="s2">"LFQ"</span><span class="p">,</span> <span class="s2">"RESFSQ"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"quantizer must be VQ/FSQ/LFQ/RESFSQ, got </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">decoder_blocks_per_stage</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">decoder_blocks_per_stage</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Store config for serialization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="n">dim</span><span class="p">,</span>
-            <span class="s2">&quot;in_channels&quot;</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
-            <span class="s2">&quot;out_channels&quot;</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
-            <span class="s2">&quot;z_channels&quot;</span><span class="p">:</span> <span class="n">z_channels</span><span class="p">,</span>
-            <span class="s2">&quot;embedding_dim&quot;</span><span class="p">:</span> <span class="n">embedding_dim</span><span class="p">,</span>
-            <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels_mult&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">channels_mult</span><span class="p">),</span>
-            <span class="s2">&quot;num_res_blocks&quot;</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
-            <span class="s2">&quot;attn_resolutions&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn_resolutions</span><span class="p">),</span>
-            <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
-            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
-            <span class="s2">&quot;spatial_compression&quot;</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
-            <span class="s2">&quot;quantizer&quot;</span><span class="p">:</span> <span class="n">quantizer</span><span class="p">,</span>
-            <span class="s2">&quot;use_encoder_mid&quot;</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
-            <span class="s2">&quot;use_output_nonlinearity&quot;</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
-            <span class="s2">&quot;decoder_blocks_per_stage&quot;</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
-            <span class="s2">&quot;num_embeddings&quot;</span><span class="p">:</span> <span class="n">num_embeddings</span><span class="p">,</span>
-            <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="n">beta</span><span class="p">,</span>
-            <span class="s2">&quot;use_norm&quot;</span><span class="p">:</span> <span class="n">use_norm</span><span class="p">,</span>
-            <span class="s2">&quot;use_ema&quot;</span><span class="p">:</span> <span class="n">use_ema</span><span class="p">,</span>
-            <span class="s2">&quot;ema_decay&quot;</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
-            <span class="s2">&quot;levels&quot;</span><span class="p">:</span> <span class="n">levels</span> <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
-            <span class="s2">&quot;num_codebooks&quot;</span><span class="p">:</span> <span class="n">num_codebooks</span><span class="p">,</span>
-            <span class="s2">&quot;codebook_size&quot;</span><span class="p">:</span> <span class="n">codebook_size</span><span class="p">,</span>
-            <span class="s2">&quot;codebook_dim&quot;</span><span class="p">:</span> <span class="n">codebook_dim</span><span class="p">,</span>
-            <span class="s2">&quot;entropy_loss_weight&quot;</span><span class="p">:</span> <span class="n">entropy_loss_weight</span><span class="p">,</span>
-            <span class="s2">&quot;commitment_loss_weight&quot;</span><span class="p">:</span> <span class="n">commitment_loss_weight</span><span class="p">,</span>
-            <span class="s2">&quot;quant_temp&quot;</span><span class="p">:</span> <span class="n">quant_temp</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+            <span class="s2">"dim"</span><span class="p">:</span> <span class="n">dim</span><span class="p">,</span>
+            <span class="s2">"in_channels"</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
+            <span class="s2">"out_channels"</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
+            <span class="s2">"z_channels"</span><span class="p">:</span> <span class="n">z_channels</span><span class="p">,</span>
+            <span class="s2">"embedding_dim"</span><span class="p">:</span> <span class="n">embedding_dim</span><span class="p">,</span>
+            <span class="s2">"channels"</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
+            <span class="s2">"channels_mult"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">channels_mult</span><span class="p">),</span>
+            <span class="s2">"num_res_blocks"</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
+            <span class="s2">"attn_resolutions"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">attn_resolutions</span><span class="p">),</span>
+            <span class="s2">"dropout"</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
+            <span class="s2">"resolution"</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="s2">"spatial_compression"</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
+            <span class="s2">"quantizer"</span><span class="p">:</span> <span class="n">quantizer</span><span class="p">,</span>
+            <span class="s2">"use_encoder_mid"</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
+            <span class="s2">"use_output_nonlinearity"</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
+            <span class="s2">"decoder_blocks_per_stage"</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
+            <span class="s2">"num_embeddings"</span><span class="p">:</span> <span class="n">num_embeddings</span><span class="p">,</span>
+            <span class="s2">"beta"</span><span class="p">:</span> <span class="n">beta</span><span class="p">,</span>
+            <span class="s2">"use_norm"</span><span class="p">:</span> <span class="n">use_norm</span><span class="p">,</span>
+            <span class="s2">"use_ema"</span><span class="p">:</span> <span class="n">use_ema</span><span class="p">,</span>
+            <span class="s2">"ema_decay"</span><span class="p">:</span> <span class="n">ema_decay</span><span class="p">,</span>
+            <span class="s2">"levels"</span><span class="p">:</span> <span class="n">levels</span> <span class="k">if</span> <span class="n">levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+            <span class="s2">"num_codebooks"</span><span class="p">:</span> <span class="n">num_codebooks</span><span class="p">,</span>
+            <span class="s2">"codebook_size"</span><span class="p">:</span> <span class="n">codebook_size</span><span class="p">,</span>
+            <span class="s2">"codebook_dim"</span><span class="p">:</span> <span class="n">codebook_dim</span><span class="p">,</span>
+            <span class="s2">"entropy_loss_weight"</span><span class="p">:</span> <span class="n">entropy_loss_weight</span><span class="p">,</span>
+            <span class="s2">"commitment_loss_weight"</span><span class="p">:</span> <span class="n">commitment_loss_weight</span><span class="p">,</span>
+            <span class="s2">"quant_temp"</span><span class="p">:</span> <span class="n">quant_temp</span><span class="p">,</span>
+            <span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -760,18 +762,18 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Prepare kwargs for encoder/decoder</span>
         <span class="n">layer_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;in_channels&quot;</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
-            <span class="s2">&quot;out_channels&quot;</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels&quot;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
-            <span class="s2">&quot;channels_mult&quot;</span><span class="p">:</span> <span class="n">channels_mult</span><span class="p">,</span>
-            <span class="s2">&quot;num_res_blocks&quot;</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
-            <span class="s2">&quot;attn_resolutions&quot;</span><span class="p">:</span> <span class="n">attn_resolutions</span><span class="p">,</span>
-            <span class="s2">&quot;dropout&quot;</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
-            <span class="s2">&quot;resolution&quot;</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
-            <span class="s2">&quot;spatial_compression&quot;</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
-            <span class="s2">&quot;use_encoder_mid&quot;</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
-            <span class="s2">&quot;use_output_nonlinearity&quot;</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
-            <span class="s2">&quot;decoder_blocks_per_stage&quot;</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
+            <span class="s2">"in_channels"</span><span class="p">:</span> <span class="n">in_channels</span><span class="p">,</span>
+            <span class="s2">"out_channels"</span><span class="p">:</span> <span class="n">out_channels</span><span class="p">,</span>
+            <span class="s2">"channels"</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span>
+            <span class="s2">"channels_mult"</span><span class="p">:</span> <span class="n">channels_mult</span><span class="p">,</span>
+            <span class="s2">"num_res_blocks"</span><span class="p">:</span> <span class="n">num_res_blocks</span><span class="p">,</span>
+            <span class="s2">"attn_resolutions"</span><span class="p">:</span> <span class="n">attn_resolutions</span><span class="p">,</span>
+            <span class="s2">"dropout"</span><span class="p">:</span> <span class="n">dropout</span><span class="p">,</span>
+            <span class="s2">"resolution"</span><span class="p">:</span> <span class="n">resolution</span><span class="p">,</span>
+            <span class="s2">"spatial_compression"</span><span class="p">:</span> <span class="n">spatial_compression</span><span class="p">,</span>
+            <span class="s2">"use_encoder_mid"</span><span class="p">:</span> <span class="n">use_encoder_mid</span><span class="p">,</span>
+            <span class="s2">"use_output_nonlinearity"</span><span class="p">:</span> <span class="n">use_output_nonlinearity</span><span class="p">,</span>
+            <span class="s2">"decoder_blocks_per_stage"</span><span class="p">:</span> <span class="n">decoder_blocks_per_stage</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">layer_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -779,11 +781,11 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># This prevents silent shape mismatches during forward pass</span>
         <span class="k">if</span> <span class="n">resolution</span> <span class="o">%</span> <span class="n">spatial_compression</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2"> is not divisible by &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;spatial_compression=</span><span class="si">{</span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">. Expected latent size would be &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">) but this causes &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;shape mismatch with target. Use compression that divides resolution evenly &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;(powers of 2: 1, 2, 4, 8, 16).&quot;</span>
+                <span class="sa">f</span><span class="s2">"Resolution </span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2"> is not divisible by "</span>
+                <span class="sa">f</span><span class="s2">"spatial_compression=</span><span class="si">{</span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">. Expected latent size would be "</span>
+                <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">resolution</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">spatial_compression</span><span class="si">}</span><span class="s2">) but this causes "</span>
+                <span class="sa">f</span><span class="s2">"shape mismatch with target. Use compression that divides resolution evenly "</span>
+                <span class="sa">f</span><span class="s2">"(powers of 2: 1, 2, 4, 8, 16)."</span>
             <span class="p">)</span>
 
         <span class="c1"># Build encoder and decoder</span>
@@ -816,9 +818,9 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Log model info</span>
         <span class="n">num_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> based on </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">-VAE&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters: </span><span class="si">{</span><span class="n">num_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;z_channels=</span><span class="si">{</span><span class="n">z_channels</span><span class="si">}</span><span class="s2">, embedding_dim=</span><span class="si">{</span><span class="n">embedding_dim</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> based on </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">-VAE"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Parameters: </span><span class="si">{</span><span class="n">num_params</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"z_channels=</span><span class="si">{</span><span class="n">z_channels</span><span class="si">}</span><span class="s2">, embedding_dim=</span><span class="si">{</span><span class="n">embedding_dim</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_build_quantizer</span><span class="p">(</span>
@@ -839,8 +841,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">commitment_loss_weight</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">quant_temp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the appropriate quantizer module.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">&quot;VQ&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Build the appropriate quantizer module."""</span>
+        <span class="k">if</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">"VQ"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">VectorQuantizer</span><span class="p">(</span>
                 <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span>
                 <span class="n">num_embeddings</span><span class="o">=</span><span class="n">num_embeddings</span><span class="p">,</span>
@@ -851,20 +853,20 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">ema_decay</span><span class="o">=</span><span class="n">ema_decay</span><span class="p">,</span>
                 <span class="n">reset_unused_codes</span><span class="o">=</span><span class="n">use_ema</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">&quot;FSQ&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">"FSQ"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">FSQuantizer</span><span class="p">(</span>
                 <span class="n">embedding_dim</span><span class="o">=</span><span class="n">embedding_dim</span><span class="p">,</span>
                 <span class="n">levels</span><span class="o">=</span><span class="n">levels</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">&quot;RESFSQ&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">"RESFSQ"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ResidualFSQuantizer</span><span class="p">(</span>
                 <span class="n">embedding_dim</span><span class="o">=</span><span class="n">embedding_dim</span><span class="p">,</span>
                 <span class="n">levels</span><span class="o">=</span><span class="n">levels</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
                 <span class="n">num_quantizers</span><span class="o">=</span><span class="n">num_codebooks</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">&quot;LFQ&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">quantizer</span> <span class="o">==</span> <span class="s2">"LFQ"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">codebook_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">codebook_dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;LFQ requires codebook_size and codebook_dim&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"LFQ requires codebook_size and codebook_dim"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">LFQuantizer</span><span class="p">(</span>
                 <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span>
                 <span class="n">codebook_size</span><span class="o">=</span><span class="n">codebook_size</span><span class="p">,</span>
@@ -877,16 +879,16 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">entropy_loss</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown quantizer: </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown quantizer: </span><span class="si">{</span><span class="n">quantizer</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DiscreteTokenizer.to">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.to">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DiscreteTokenizer</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move and/or cast the model, keeping the quantizer dtype in sync.</span>
+<span class="w">        </span><span class="sd">"""Move and/or cast the model, keeping the quantizer dtype in sync.</span>
 
 <span class="sd">        The quantizer keeps its own ``dtype`` attribute (used by its numerical</span>
 <span class="sd">        guards). It is updated *only* when a dtype is actually supplied, so a</span>
-<span class="sd">        plain device move such as ``model.to(&quot;cuda&quot;)`` no longer silently resets</span>
+<span class="sd">        plain device move such as ``model.to("cuda")`` no longer silently resets</span>
 <span class="sd">        it to ``float32``. A dtype may be passed either positionally</span>
 <span class="sd">        (``model.to(torch.float16)``) or as the ``dtype`` keyword.</span>
 
@@ -896,8 +898,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            ``self``, after the move/cast has been applied.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dtype&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dtype"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
@@ -911,13 +913,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.encode">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.encode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span>
-        <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch *spatial_indices&quot;</span><span class="p">],</span>
-        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch embedding_dim *spatial_compressed&quot;</span><span class="p">],</span>
-        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span>
+        <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch *spatial_indices"</span><span class="p">],</span>
+        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch embedding_dim *spatial_compressed"</span><span class="p">],</span>
+        <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"..."</span><span class="p">],</span>
     <span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode input to discrete codes.</span>
+<span class="w">        </span><span class="sd">"""Encode input to discrete codes.</span>
 
 <span class="sd">        Passes input through encoder, projects to embedding dimension,</span>
 <span class="sd">        then quantizes to discrete codebook indices.</span>
@@ -925,7 +927,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor of shape ``(B, C, *spatial)`` where:</span>
 <span class="sd">                - B: batch size</span>
-<span class="sd">                - C: number of channels (must match model&#39;s in_channels)</span>
+<span class="sd">                - C: number of channels (must match model's in_channels)</span>
 <span class="sd">                - spatial: (H, W) for 2D or (H, W, D) for 3D</span>
 
 <span class="sd">        Returns:</span>
@@ -937,8 +939,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError: If x is not a floating point tensor</span>
 <span class="sd">            ValueError: If x has wrong shape or contains NaN/Inf</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;in_channels&quot;</span><span class="p">],</span> <span class="s2">&quot;encode&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"in_channels"</span><span class="p">],</span> <span class="s2">"encode"</span><span class="p">)</span>
 
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quant_conv</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
@@ -952,9 +954,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.decode">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.decode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">quant</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch embedding_dim *spatial_compressed&quot;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode from quantized continuous codes.</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">quant</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch embedding_dim *spatial_compressed"</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Decode from quantized continuous codes.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            quant: Quantized codes from encode() (continuous representation).</span>
@@ -966,8 +968,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Raises:</span>
 <span class="sd">            TypeError: If quant is not a floating point tensor</span>
 <span class="sd">            ValueError: If quant has wrong shape or contains NaN/Inf</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="s2">&quot;decode&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">validate_tensor_input</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="s2">"decode"</span><span class="p">)</span>
 
         <span class="n">quant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_quant_conv</span><span class="p">(</span><span class="n">quant</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">quant</span><span class="p">)</span></div>
@@ -977,8 +979,8 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">quant</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">spatial_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch embedding_dim *spatial&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reshape quantized codes to (B, C, *spatial) format.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch embedding_dim *spatial"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Reshape quantized codes to (B, C, *spatial) format.</span>
 
 <span class="sd">        Handles multiple input formats:</span>
 <span class="sd">        - (B, N, C): Flattened spatial with channels last</span>
@@ -996,23 +998,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If spatial_shape is required but not provided</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">quant</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="c1"># Flattened format: (B, N, C) -&gt; (B, C, *spatial)</span>
             <span class="k">if</span> <span class="n">spatial_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;spatial_shape is required when reshaping flattened codes. &quot;</span>
-                    <span class="s2">&quot;This prevents incorrect assumptions about spatial dimensions &quot;</span>
-                    <span class="s2">&quot;for anisotropic volumes (e.g., medical images with non-cubic shapes).&quot;</span>
+                    <span class="s2">"spatial_shape is required when reshaping flattened codes. "</span>
+                    <span class="s2">"This prevents incorrect assumptions about spatial dimensions "</span>
+                    <span class="s2">"for anisotropic volumes (e.g., medical images with non-cubic shapes)."</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">spatial_shape</span>
-                <span class="n">quant</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="s2">&quot;b (h w) c -&gt; b c h w&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+                <span class="n">quant</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="s2">"b (h w) c -&gt; b c h w"</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">spatial_shape</span>
-                <span class="n">quant</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="s2">&quot;b (h w d) c -&gt; b c h w d&quot;</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+                <span class="n">quant</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">quant</span><span class="p">,</span> <span class="s2">"b (h w d) c -&gt; b c h w d"</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># Could be (B, C, H, W) or (B, H, W, C)</span>
             <span class="c1"># Check if channels are in position 1 or -1</span>
@@ -1036,9 +1038,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.forward">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="n">NetworkEval</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Full forward pass: encode -&gt; quantize -&gt; decode.</span>
+<span class="w">        </span><span class="sd">"""Full forward pass: encode -&gt; quantize -&gt; decode.</span>
 
 <span class="sd">        During training, returns dict with all outputs for loss computation.</span>
 <span class="sd">        During evaluation, returns NetworkEval namedtuple.</span>
@@ -1048,25 +1050,25 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Training mode (dict):</span>
-<span class="sd">                - &#39;reconstructions&#39;: Decoded output</span>
-<span class="sd">                - &#39;quant_loss&#39;: Quantization loss</span>
-<span class="sd">                - &#39;quant_info&#39;: Discrete indices</span>
-<span class="sd">                - &#39;latents&#39;: Quantized codes (continuous)</span>
+<span class="sd">                - 'reconstructions': Decoded output</span>
+<span class="sd">                - 'quant_loss': Quantization loss</span>
+<span class="sd">                - 'quant_info': Discrete indices</span>
+<span class="sd">                - 'latents': Quantized codes (continuous)</span>
 
 <span class="sd">            Eval mode (NetworkEval):</span>
 <span class="sd">                - reconstructions: Decoded output</span>
 <span class="sd">                - quant_loss: Quantization loss</span>
 <span class="sd">                - quant_info: Discrete indices</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">indices</span><span class="p">,</span> <span class="n">quant_codes</span><span class="p">,</span> <span class="n">quant_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
         <span class="n">reconstructions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">quant_codes</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span>
-                <span class="s2">&quot;reconstructions&quot;</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
-                <span class="s2">&quot;quant_loss&quot;</span><span class="p">:</span> <span class="n">quant_loss</span><span class="p">,</span>
-                <span class="s2">&quot;quant_info&quot;</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span>
-                <span class="s2">&quot;latents&quot;</span><span class="p">:</span> <span class="n">quant_codes</span><span class="p">,</span>
+                <span class="s2">"reconstructions"</span><span class="p">:</span> <span class="n">reconstructions</span><span class="p">,</span>
+                <span class="s2">"quant_loss"</span><span class="p">:</span> <span class="n">quant_loss</span><span class="p">,</span>
+                <span class="s2">"quant_info"</span><span class="p">:</span> <span class="n">indices</span><span class="p">,</span>
+                <span class="s2">"latents"</span><span class="p">:</span> <span class="n">quant_codes</span><span class="p">,</span>
             <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">NetworkEval</span><span class="p">(</span>
@@ -1079,9 +1081,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.tokenize">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.tokenize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tokenize</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch *spatial_indices&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encode input to discrete token indices.</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch *spatial_indices"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Encode input to discrete token indices.</span>
 
 <span class="sd">        This is the primary encoding method for inference and storage.</span>
 <span class="sd">        Returns integer indices that can be stored efficiently or fed</span>
@@ -1092,7 +1094,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Discrete indices suitable for storage or sequence modeling</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
@@ -1100,10 +1102,10 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.detokenize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">detokenize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">indices</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch *spatial_indices&quot;</span><span class="p">],</span>
+        <span class="n">indices</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch *spatial_indices"</span><span class="p">],</span>
         <span class="n">spatial_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch channels *spatial&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decode from discrete token indices.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch channels *spatial"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Decode from discrete token indices.</span>
 
 <span class="sd">        Inverse of tokenize(). Converts discrete indices back to continuous</span>
 <span class="sd">        output via codebook lookup and decoder. This is the canonical</span>
@@ -1112,9 +1114,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Args:</span>
 <span class="sd">            indices: Discrete indices from tokenize(). Can be:</span>
-<span class="sd">                - Spatial format: (B, H&#39;, W&#39;) for 2D or (B, H&#39;, W&#39;, D&#39;) for 3D</span>
-<span class="sd">                - Flattened format: (B, N) where N = H&#39; * W&#39; [* D&#39;]</span>
-<span class="sd">            spatial_shape: Original latent spatial dimensions (H&#39;, W&#39;) or (H&#39;, W&#39;, D&#39;).</span>
+<span class="sd">                - Spatial format: (B, H', W') for 2D or (B, H', W', D') for 3D</span>
+<span class="sd">                - Flattened format: (B, N) where N = H' * W' [* D']</span>
+<span class="sd">            spatial_shape: Original latent spatial dimensions (H', W') or (H', W', D').</span>
 <span class="sd">                          Required when indices are flattened to avoid incorrect</span>
 <span class="sd">                          cubic assumptions for anisotropic volumes.</span>
 
@@ -1123,7 +1125,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If spatial_shape is required but not provided</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Convert indices to continuous codes (all quantizers implement this)</span>
         <span class="n">quant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantizer</span><span class="o">.</span><span class="n">indices_to_codes</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
 
@@ -1135,7 +1137,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.get_latent_shape">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.get_latent_shape">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_latent_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate discrete index shape for given input shape.</span>
+<span class="w">        </span><span class="sd">"""Calculate discrete index shape for given input shape.</span>
 
 <span class="sd">        Note: Returns shape WITHOUT embedding dimension (just spatial).</span>
 <span class="sd">        For RESFSQ, includes num_quantizers dimension.</span>
@@ -1144,9 +1146,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            input_shape: Input tensor shape (B, C, H, W) or (B, C, H, W, D)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Expected index shape (B, H&#39;, W&#39;) or (B, H&#39;, W&#39;, D&#39;)</span>
+<span class="sd">            Expected index shape (B, H', W') or (B, H', W', D')</span>
 <span class="sd">            where spatial dims are compressed by spatial_compression</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">compression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spatial_compression</span>
 
@@ -1161,11 +1163,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DiscreteTokenizer.get_codebook_size">
 <a class="viewcode-back" href="../../../api/data.html#medlatents.data.DiscreteTokenizer.get_codebook_size">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_codebook_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the total vocabulary size.</span>
+<span class="w">        </span><span class="sd">"""Get the total vocabulary size.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Number of discrete codes in vocabulary</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantizer</span><span class="o">.</span><span class="n">get_codebook_size</span><span class="p">()</span></div>
 
 
@@ -1178,9 +1180,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">roi_size</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">overlap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reconstruction with optional sliding window (overlap must be 0.0).</span>
+<span class="w">        </span><span class="sd">"""Reconstruction with optional sliding window (overlap must be 0.0).</span>
 
-<span class="sd">        Discrete tokenizers don&#39;t support overlapping windows because</span>
+<span class="sd">        Discrete tokenizers don't support overlapping windows because</span>
 <span class="sd">        averaging discrete codes is not meaningful.</span>
 
 <span class="sd">        Args:</span>
@@ -1193,11 +1195,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If overlap &gt; 0.0</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">roi_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">overlap</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Discrete tokenizers require overlap=0.0 (got </span><span class="si">{</span><span class="n">overlap</span><span class="si">}</span><span class="s2">). &quot;</span>
-                <span class="s2">&quot;Use continuous tokenizer for overlapping reconstruction.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Discrete tokenizers require overlap=0.0 (got </span><span class="si">{</span><span class="n">overlap</span><span class="si">}</span><span class="s2">). "</span>
+                <span class="s2">"Use continuous tokenizer for overlapping reconstruction."</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">roi_size</span><span class="o">=</span><span class="n">roi_size</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="n">overlap</span><span class="p">)</span></div>
 </div>
@@ -1212,7 +1214,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

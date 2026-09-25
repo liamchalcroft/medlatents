@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.common.time &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.common.time &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.common.time</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Unified time/timestep management for diffusion and flow models.</span>
+<span></span><span class="sd">"""Unified time/timestep management for diffusion and flow models.</span>
 
 <span class="sd">This module consolidates time-related utilities that were previously</span>
 <span class="sd">duplicated across multiple modules.</span>
@@ -485,7 +487,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">For domain-specific implementations, use:</span>
 <span class="sd">- medlatents.diffusion.schedules for diffusion-specific SNR functions</span>
 <span class="sd">- medlatents.flow_matching.schedulers for flow-matching timestep sampling</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -494,11 +496,11 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
 <span class="n">TimestepSampler</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
-    <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;uniform_shifted&quot;</span><span class="p">,</span>  <span class="c1"># Uniform with eps padding</span>
-    <span class="s2">&quot;u_shaped&quot;</span><span class="p">,</span>  <span class="c1"># Beta-distributed for boundary focus</span>
-    <span class="s2">&quot;logit_normal&quot;</span><span class="p">,</span>  <span class="c1"># Logit-normal for middle focus</span>
-    <span class="s2">&quot;edm&quot;</span><span class="p">,</span>  <span class="c1"># EDM (Karras et al.) lognormal in sigma-space</span>
+    <span class="s2">"uniform"</span><span class="p">,</span>
+    <span class="s2">"uniform_shifted"</span><span class="p">,</span>  <span class="c1"># Uniform with eps padding</span>
+    <span class="s2">"u_shaped"</span><span class="p">,</span>  <span class="c1"># Beta-distributed for boundary focus</span>
+    <span class="s2">"logit_normal"</span><span class="p">,</span>  <span class="c1"># Logit-normal for middle focus</span>
+    <span class="s2">"edm"</span><span class="p">,</span>  <span class="c1"># EDM (Karras et al.) lognormal in sigma-space</span>
 <span class="p">]</span>
 
 <span class="c1"># ============================================================================</span>
@@ -507,14 +509,14 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_timesteps_uniform</span><span class="p">(</span><span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample uniform timesteps in [0, 1].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Sample uniform timesteps in [0, 1]."""</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_timesteps_uniform_shifted</span><span class="p">(</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample uniform timesteps in [eps, 1-eps].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Sample uniform timesteps in [eps, 1-eps]."""</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span>
 
@@ -524,7 +526,7 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_timesteps_u_shaped</span><span class="p">(</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">concentration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sample timesteps using Beta distribution for U-shaped sampling.</span>
 
 <span class="sd">    Focuses on endpoints (early and late timesteps).</span>
@@ -533,7 +535,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        batch_size: Number of samples</span>
 <span class="sd">        concentration: Beta concentration (&gt;1 for U-shape)</span>
 <span class="sd">        device: Torch device</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Beta</span>
 
     <span class="n">beta_dist</span> <span class="o">=</span> <span class="n">Beta</span><span class="p">(</span><span class="n">concentration</span><span class="p">,</span> <span class="n">concentration</span><span class="p">)</span>
@@ -550,7 +552,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sample timesteps using logit-normal distribution.</span>
 
 <span class="sd">    Focuses on middle timesteps.</span>
@@ -560,7 +562,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        mean: Logit-normal mean</span>
 <span class="sd">        std: Logit-normal std</span>
 <span class="sd">        device: Torch device</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Normal</span>
 
     <span class="n">normal_dist</span> <span class="o">=</span> <span class="n">Normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
@@ -577,10 +579,10 @@ window.runMermaid = runMermaid;</script>
     <span class="n">sigma_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">80.0</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sample timesteps using EDM&#39;s lognormal distribution in sigma-space.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Sample timesteps using EDM's lognormal distribution in sigma-space.</span>
 
-<span class="sd">    From &quot;Elucidating the Design Space of Diffusion-Based Generative Models&quot;</span>
+<span class="sd">    From "Elucidating the Design Space of Diffusion-Based Generative Models"</span>
 <span class="sd">    (Karras et al., NeurIPS 2022). This sampling distribution concentrates</span>
 <span class="sd">    more samples at intermediate noise levels where training signal is strongest.</span>
 
@@ -600,7 +602,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Reference:</span>
 <span class="sd">        https://arxiv.org/abs/2206.00364 (Section 5, Training)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Sample log(sigma) from normal distribution</span>
     <span class="n">log_sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">P_std</span> <span class="o">+</span> <span class="n">P_mean</span>
     <span class="n">sigma</span> <span class="o">=</span> <span class="n">log_sigma</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span>
@@ -619,9 +621,9 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_timestep_sampler">
 <a class="viewcode-back" href="../../../api/flow_matching.html#medlatents.flow_matching.get_timestep_sampler">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_timestep_sampler</span><span class="p">(</span>
-    <span class="n">sampler_type</span><span class="p">:</span> <span class="n">TimestepSampler</span> <span class="o">=</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="n">sampler_type</span><span class="p">:</span> <span class="n">TimestepSampler</span> <span class="o">=</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a timestep sampler function.</span>
 
 <span class="sd">    Args:</span>
@@ -630,31 +632,31 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Function that takes (batch_size, device) and returns timesteps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">samplers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;uniform&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_uniform</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="p">),</span>
-        <span class="s2">&quot;uniform_shifted&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_uniform_shifted</span><span class="p">(</span>
-            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">),</span> <span class="n">dev</span>
+        <span class="s2">"uniform"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_uniform</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="p">),</span>
+        <span class="s2">"uniform_shifted"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_uniform_shifted</span><span class="p">(</span>
+            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"eps"</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">),</span> <span class="n">dev</span>
         <span class="p">),</span>
-        <span class="s2">&quot;u_shaped&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_u_shaped</span><span class="p">(</span>
-            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;concentration&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">dev</span>
+        <span class="s2">"u_shaped"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_u_shaped</span><span class="p">(</span>
+            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"concentration"</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">dev</span>
         <span class="p">),</span>
-        <span class="s2">&quot;logit_normal&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_logit_normal</span><span class="p">(</span>
-            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">dev</span>
+        <span class="s2">"logit_normal"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_logit_normal</span><span class="p">(</span>
+            <span class="n">bs</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"std"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">dev</span>
         <span class="p">),</span>
-        <span class="s2">&quot;edm&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_edm</span><span class="p">(</span>
+        <span class="s2">"edm"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">bs</span><span class="p">,</span> <span class="n">dev</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sample_timesteps_edm</span><span class="p">(</span>
             <span class="n">bs</span><span class="p">,</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;P_mean&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">),</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;P_std&quot;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">),</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sigma_min&quot;</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">),</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sigma_max&quot;</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"P_mean"</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"P_std"</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sigma_min"</span><span class="p">,</span> <span class="mf">0.002</span><span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sigma_max"</span><span class="p">,</span> <span class="mf">80.0</span><span class="p">),</span>
             <span class="n">dev</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">sampler_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">samplers</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Unknown sampler_type: </span><span class="si">{</span><span class="n">sampler_type</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">samplers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Unknown sampler_type: </span><span class="si">{</span><span class="n">sampler_type</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">samplers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">samplers</span><span class="p">[</span><span class="n">sampler_type</span><span class="p">]</span></div>
@@ -667,7 +669,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">apply_timestep_shift</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Apply shift to timesteps.</span>
 
 <span class="sd">    Args:</span>
@@ -676,7 +678,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Shifted timesteps clamped to [0, 1]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">shifted</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="n">shift</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">shifted</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 
@@ -691,7 +693,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">concentration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample timesteps with U-shaped distribution (more at t=0 and t=1).</span>
+<span class="w">    </span><span class="sd">"""Sample timesteps with U-shaped distribution (more at t=0 and t=1).</span>
 
 <span class="sd">    Uses Beta(concentration, concentration) distribution where concentration &lt; 1</span>
 <span class="sd">    gives U-shape. Default concentration=0.5 gives the arcsine distribution.</span>
@@ -706,7 +708,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Timesteps of shape [batch_size]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
     <span class="k">if</span> <span class="n">concentration</span> <span class="o">==</span> <span class="mf">0.5</span><span class="p">:</span>
@@ -727,7 +729,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">loc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample timesteps from logit-normal distribution.</span>
+<span class="w">    </span><span class="sd">"""Sample timesteps from logit-normal distribution.</span>
 
 <span class="sd">    Samples concentrate in the middle, which works well empirically for images.</span>
 <span class="sd">    The logit-normal is obtained by passing normal samples through sigmoid.</span>
@@ -740,7 +742,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Timesteps of shape [batch_size]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">normal_samples</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">+</span> <span class="n">loc</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">normal_samples</span><span class="p">)</span>
 
@@ -749,22 +751,22 @@ window.runMermaid = runMermaid;</script>
     <span class="n">strategy</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a flow-matching timestep sampler function by name.</span>
+<span class="w">    </span><span class="sd">"""Get a flow-matching timestep sampler function by name.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        strategy: Sampling strategy (&#39;uniform&#39;, &#39;u_shaped&#39;, &#39;logit_normal&#39;)</span>
+<span class="sd">        strategy: Sampling strategy ('uniform', 'u_shaped', 'logit_normal')</span>
 <span class="sd">        **kwargs: Additional arguments for the sampler</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Function that takes (batch_size, device) and returns timesteps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">samplers</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;uniform&quot;</span><span class="p">:</span> <span class="n">sample_timesteps_uniform_shifted</span><span class="p">,</span>
-        <span class="s2">&quot;u_shaped&quot;</span><span class="p">:</span> <span class="n">sample_timesteps_u_shaped_flow</span><span class="p">,</span>
-        <span class="s2">&quot;logit_normal&quot;</span><span class="p">:</span> <span class="n">sample_timesteps_logit_normal_flow</span><span class="p">,</span>
+        <span class="s2">"uniform"</span><span class="p">:</span> <span class="n">sample_timesteps_uniform_shifted</span><span class="p">,</span>
+        <span class="s2">"u_shaped"</span><span class="p">:</span> <span class="n">sample_timesteps_u_shaped_flow</span><span class="p">,</span>
+        <span class="s2">"logit_normal"</span><span class="p">:</span> <span class="n">sample_timesteps_logit_normal_flow</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">if</span> <span class="n">strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">samplers</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown strategy: </span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">samplers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown strategy: </span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">. Available: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">samplers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">sampler</span> <span class="o">=</span> <span class="n">samplers</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span>
 
@@ -776,19 +778,19 @@ window.runMermaid = runMermaid;</script>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># Timestep sampling</span>
-    <span class="s2">&quot;sample_timesteps_uniform&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_timesteps_uniform_shifted&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_timesteps_u_shaped&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_timesteps_logit_normal&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_timesteps_edm&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_timestep_sampler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TimestepSampler&quot;</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_uniform"</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_uniform_shifted"</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_u_shaped"</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_logit_normal"</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_edm"</span><span class="p">,</span>
+    <span class="s2">"get_timestep_sampler"</span><span class="p">,</span>
+    <span class="s2">"TimestepSampler"</span><span class="p">,</span>
     <span class="c1"># SNR utilities</span>
-    <span class="s2">&quot;apply_timestep_shift&quot;</span><span class="p">,</span>
+    <span class="s2">"apply_timestep_shift"</span><span class="p">,</span>
     <span class="c1"># Flow-matching specific (shared with flow_matching/schedulers.py)</span>
-    <span class="s2">&quot;sample_timesteps_u_shaped_flow&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sample_timesteps_logit_normal_flow&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_timestep_sampler_flow&quot;</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_u_shaped_flow"</span><span class="p">,</span>
+    <span class="s2">"sample_timesteps_logit_normal_flow"</span><span class="p">,</span>
+    <span class="s2">"get_timestep_sampler_flow"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -800,7 +802,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

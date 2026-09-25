@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.inference.kv_cache &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.inference.kv_cache &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,15 +474,15 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.inference.kv_cache</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;KV-cache management with optional quantization for memory-efficient generation.</span>
+<span></span><span class="sd">"""KV-cache management with optional quantization for memory-efficient generation.</span>
 
 <span class="sd">Provides INT8 quantization for KV-cache to reduce memory usage by ~4x during</span>
 <span class="sd">autoregressive generation of long sequences.</span>
 
 <span class="sd">Reference:</span>
-<span class="sd">- &quot;Efficient Memory Management for Large Language Model Serving with PagedAttention&quot;</span>
+<span class="sd">- "Efficient Memory Management for Large Language Model Serving with PagedAttention"</span>
 <span class="sd">- Various KV-cache quantization papers (2023-2024)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -493,17 +495,17 @@ window.runMermaid = runMermaid;</script>
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantizationConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for KV-cache quantization.</span>
+<span class="w">    </span><span class="sd">"""Configuration for KV-cache quantization.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        enabled: Whether to use quantization</span>
 <span class="sd">        dtype: Quantization dtype (int8 or fp16)</span>
 <span class="sd">        per_token: Use per-token quantization (more accurate) vs per-tensor</span>
 <span class="sd">        symmetric: Use symmetric quantization (faster) vs asymmetric (more accurate)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;int8&quot;</span><span class="p">,</span> <span class="s2">&quot;fp16&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;int8&quot;</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"int8"</span><span class="p">,</span> <span class="s2">"fp16"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"int8"</span>
     <span class="n">per_token</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -511,7 +513,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="QuantizedKVCache">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.inference.QuantizedKVCache">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">QuantizedKVCache</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Memory-efficient KV-cache with INT8 quantization.</span>
+<span class="w">    </span><span class="sd">"""Memory-efficient KV-cache with INT8 quantization.</span>
 
 <span class="sd">    Reduces memory usage by ~4x compared to FP32 or ~2x compared to FP16.</span>
 <span class="sd">    Uses per-token symmetric quantization for a good accuracy/speed tradeoff.</span>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                past_kv = cache.get(layer_idx)</span>
 <span class="sd">                output, new_kv = block.forward_with_cache(x, freqs, past_kv)</span>
 <span class="sd">                cache.update(layer_idx, new_kv)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="QuantizedKVCache.__init__">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.inference.QuantizedKVCache.__init__">[docs]</a>
@@ -536,13 +538,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">config</span><span class="p">:</span> <span class="n">QuantizationConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize quantized KV-cache.</span>
+<span class="w">        </span><span class="sd">"""Initialize quantized KV-cache.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            num_layers: Number of transformer layers</span>
 <span class="sd">            config: Quantization configuration</span>
 <span class="sd">            max_length: Optional maximum sequence length (for pre-allocation)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="n">num_layers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">QuantizationConfig</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">max_length</span>
@@ -558,7 +560,7 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Quantize tensor to INT8 with per-token scaling.</span>
+<span class="w">        </span><span class="sd">"""Quantize tensor to INT8 with per-token scaling.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            x: Input tensor [batch, heads, seq_len, head_dim]</span>
@@ -566,11 +568,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            quantized: INT8 tensor</span>
 <span class="sd">            scales: Scale factors for dequantization</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;fp16&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">"fp16"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">half</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
 
         <span class="c1"># INT8 quantization</span>
@@ -594,7 +596,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">scale</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dequantize INT8 tensor back to float.</span>
+<span class="w">        </span><span class="sd">"""Dequantize INT8 tensor back to float.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            quantized: INT8 tensor</span>
@@ -603,11 +605,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dequantized tensor</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">quantized</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;fp16&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">"fp16"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">quantized</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">quantized</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
@@ -615,14 +617,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="QuantizedKVCache.get">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.inference.QuantizedKVCache.get">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get dequantized K/V for a layer.</span>
+<span class="w">        </span><span class="sd">"""Get dequantized K/V for a layer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            layer_idx: Layer index</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            (key, value) tuple or None if cache is empty</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span>
         <span class="n">k_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_scales</span><span class="p">[</span><span class="n">layer_idx</span><span class="p">]</span>
@@ -644,12 +646,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">layer_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">new_kv</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update cache with new K/V, quantizing the new values.</span>
+<span class="w">        </span><span class="sd">"""Update cache with new K/V, quantizing the new values.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            layer_idx: Layer index</span>
 <span class="sd">            new_kv: (key, value) tuple from forward_with_cache</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">new_key</span><span class="p">,</span> <span class="n">new_value</span> <span class="o">=</span> <span class="n">new_kv</span>
 
         <span class="c1"># Quantize new K/V</span>
@@ -669,7 +671,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="QuantizedKVCache.clear">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.inference.QuantizedKVCache.clear">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the cache.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Clear the cache."""</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -680,17 +682,17 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current cached sequence length.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Current cached sequence length."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_length</span>
 
 <div class="viewcode-block" id="QuantizedKVCache.memory_usage">
 <a class="viewcode-back" href="../../../guides/autoregressive.html#medlatents.inference.QuantizedKVCache.memory_usage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">memory_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute current memory usage in MB.</span>
+<span class="w">        </span><span class="sd">"""Compute current memory usage in MB.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with memory breakdown</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">total_bytes</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">scale_bytes</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -709,11 +711,11 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">scale_bytes</span> <span class="o">+=</span> <span class="n">v_scale</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">v_scale</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;total_mb&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">total_bytes</span> <span class="o">+</span> <span class="n">scale_bytes</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="s2">&quot;kv_mb&quot;</span><span class="p">:</span> <span class="n">total_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="s2">&quot;scales_mb&quot;</span><span class="p">:</span> <span class="n">scale_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="s2">&quot;compression_ratio&quot;</span><span class="p">:</span> <span class="mf">4.0</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;int8&quot;</span>
+            <span class="s2">"total_mb"</span><span class="p">:</span> <span class="p">(</span><span class="n">total_bytes</span> <span class="o">+</span> <span class="n">scale_bytes</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="s2">"kv_mb"</span><span class="p">:</span> <span class="n">total_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="s2">"scales_mb"</span><span class="p">:</span> <span class="n">scale_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="s2">"compression_ratio"</span><span class="p">:</span> <span class="mf">4.0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">"int8"</span>
             <span class="k">else</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">}</span></div>
 </div>
@@ -723,14 +725,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PagedKVCache">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PagedKVCache">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PagedKVCache</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Paged KV-cache for efficient memory management with variable-length sequences.</span>
+<span class="w">    </span><span class="sd">"""Paged KV-cache for efficient memory management with variable-length sequences.</span>
 
-<span class="sd">    Inspired by vLLM&#39;s PagedAttention. Allocates memory in fixed-size blocks</span>
+<span class="sd">    Inspired by vLLM's PagedAttention. Allocates memory in fixed-size blocks</span>
 <span class="sd">    to reduce fragmentation and enable efficient batched generation.</span>
 
 <span class="sd">    This is a simplified implementation - full paged attention requires</span>
 <span class="sd">    custom CUDA kernels for optimal performance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PagedKVCache.__init__">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PagedKVCache.__init__">[docs]</a>
@@ -742,9 +744,9 @@ window.runMermaid = runMermaid;</script>
         <span class="n">block_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
         <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cuda"</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize paged KV-cache.</span>
+<span class="w">        </span><span class="sd">"""Initialize paged KV-cache.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            num_layers: Number of transformer layers</span>
@@ -754,7 +756,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            num_blocks: Total blocks in the pool</span>
 <span class="sd">            dtype: Storage dtype</span>
 <span class="sd">            device: Device for storage</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="n">num_layers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">head_dim</span> <span class="o">=</span> <span class="n">head_dim</span>
@@ -786,20 +788,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PagedKVCache.allocate_sequence">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PagedKVCache.allocate_sequence">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">allocate_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">initial_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allocate blocks for a new sequence.</span>
+<span class="w">        </span><span class="sd">"""Allocate blocks for a new sequence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seq_id: Unique sequence identifier</span>
 <span class="sd">            initial_length: Initial sequence length (allocates blocks)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">seq_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sequence </span><span class="si">{</span><span class="n">seq_id</span><span class="si">}</span><span class="s2"> already allocated&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sequence </span><span class="si">{</span><span class="n">seq_id</span><span class="si">}</span><span class="s2"> already allocated"</span><span class="p">)</span>
 
         <span class="n">num_blocks_needed</span> <span class="o">=</span> <span class="p">(</span><span class="n">initial_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_size</span>
 
         <span class="k">if</span> <span class="n">num_blocks_needed</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Not enough blocks: need </span><span class="si">{</span><span class="n">num_blocks_needed</span><span class="si">}</span><span class="s2">, have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"Not enough blocks: need </span><span class="si">{</span><span class="n">num_blocks_needed</span><span class="si">}</span><span class="s2">, have </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="n">allocated</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_blocks_needed</span><span class="p">)]</span>
@@ -810,11 +812,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PagedKVCache.free_sequence">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PagedKVCache.free_sequence">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">free_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Free all blocks for a sequence.</span>
+<span class="w">        </span><span class="sd">"""Free all blocks for a sequence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seq_id: Sequence identifier</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">seq_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -832,14 +834,14 @@ window.runMermaid = runMermaid;</script>
         <span class="n">key</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append new K/V to a sequence&#39;s cache.</span>
+<span class="w">        </span><span class="sd">"""Append new K/V to a sequence's cache.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seq_id: Sequence identifier</span>
 <span class="sd">            layer_idx: Layer index</span>
 <span class="sd">            key: New key tensor [1, num_heads, 1, head_dim] (single token)</span>
 <span class="sd">            value: New value tensor [1, num_heads, 1, head_dim]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">seq_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">allocate_sequence</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)</span>
 
@@ -850,7 +852,7 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Allocate new block if needed</span>
         <span class="k">if</span> <span class="n">block_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">[</span><span class="n">seq_id</span><span class="p">]):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No free blocks available&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"No free blocks available"</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">[</span><span class="n">seq_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
 
         <span class="n">physical_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">[</span><span class="n">seq_id</span><span class="p">][</span><span class="n">block_idx</span><span class="p">]</span>
@@ -869,7 +871,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">seq_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">layer_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get K/V cache for a sequence and layer.</span>
+<span class="w">        </span><span class="sd">"""Get K/V cache for a sequence and layer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seq_id: Sequence identifier</span>
@@ -877,7 +879,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            (key, value) tensors or None if empty</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">seq_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -910,28 +912,28 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PagedKVCache.memory_stats">
 <a class="viewcode-back" href="../../../api/inference.html#medlatents.inference.PagedKVCache.memory_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">memory_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get memory usage statistics.</span>
+<span class="w">        </span><span class="sd">"""Get memory usage statistics.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with memory info</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">total_bytes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_pool</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_pool</span><span class="o">.</span><span class="n">element_size</span><span class="p">()</span>
         <span class="n">used_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;total_mb&quot;</span><span class="p">:</span> <span class="n">total_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="s2">&quot;used_blocks&quot;</span><span class="p">:</span> <span class="n">used_blocks</span><span class="p">,</span>
-            <span class="s2">&quot;free_blocks&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">),</span>
-            <span class="s2">&quot;utilization&quot;</span><span class="p">:</span> <span class="n">used_blocks</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks</span><span class="p">,</span>
+            <span class="s2">"total_mb"</span><span class="p">:</span> <span class="n">total_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="s2">"used_blocks"</span><span class="p">:</span> <span class="n">used_blocks</span><span class="p">,</span>
+            <span class="s2">"free_blocks"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_blocks</span><span class="p">),</span>
+            <span class="s2">"utilization"</span><span class="p">:</span> <span class="n">used_blocks</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_blocks</span><span class="p">,</span>
         <span class="p">}</span></div>
 </div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;QuantizationConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;QuantizedKVCache&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PagedKVCache&quot;</span><span class="p">,</span>
+    <span class="s2">"QuantizationConfig"</span><span class="p">,</span>
+    <span class="s2">"QuantizedKVCache"</span><span class="p">,</span>
+    <span class="s2">"PagedKVCache"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -943,7 +945,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

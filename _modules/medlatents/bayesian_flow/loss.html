@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.loss &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.loss &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.loss</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Loss computation utilities for Bayesian Flow Networks.</span>
+<span></span><span class="sd">"""Loss computation utilities for Bayesian Flow Networks.</span>
 
 <span class="sd">Provides training wrappers that modify loss computation strategies</span>
 <span class="sd">for improved training dynamics.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -487,7 +489,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ResidualLossWrapper">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.ResidualLossWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResidualLossWrapper</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Training wrapper with residual/reconstruction loss weighting.</span>
 
 <span class="sd">    Instead of 50/50 residual/reconstruction loss, uses a configurable</span>
@@ -497,7 +499,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Args:</span>
 <span class="sd">        model: BayesianFlowTransformer</span>
 <span class="sd">        residual_ratio: Fraction of samples using residual loss (default 0.95)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ResidualLossWrapper.__init__">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.ResidualLossWrapper.__init__">[docs]</a>
@@ -518,7 +520,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">x_0</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute weighted loss with residual/reconstruction split.</span>
 
 <span class="sd">        Args:</span>
@@ -527,7 +529,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Reweighted loss value</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Randomly choose loss type</span>
         <span class="n">use_residual</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x_0</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">residual_ratio</span>
 
@@ -550,7 +552,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ResidualLossWrapper&quot;</span><span class="p">,</span>
+    <span class="s2">"ResidualLossWrapper"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -562,7 +564,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

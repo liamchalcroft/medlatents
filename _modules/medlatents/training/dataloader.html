@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.dataloader &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.dataloader &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,14 +474,14 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.dataloader</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;High-performance data loading utilities for training.</span>
+<span></span><span class="sd">"""High-performance data loading utilities for training.</span>
 
 <span class="sd">Provides optimized data loading with:</span>
 <span class="sd">- Async prefetching to GPU</span>
 <span class="sd">- Multi-worker data loading</span>
 <span class="sd">- Memory-mapped dataset support</span>
 <span class="sd">- Automatic batching optimizations</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,7 +503,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.DataLoaderConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DataLoaderConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for high-performance data loading.</span>
+<span class="w">    </span><span class="sd">"""Configuration for high-performance data loading.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        batch_size: Batch size</span>
@@ -511,7 +513,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        persistent_workers: Keep workers alive between epochs</span>
 <span class="sd">        drop_last: Drop incomplete last batch (important for DDP)</span>
 <span class="sd">        shuffle: Shuffle data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span>
     <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Auto-detect</span>
@@ -533,32 +535,32 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AsyncPrefetcher</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Async prefetcher that moves batches to GPU in background thread.</span>
+<span class="w">    </span><span class="sd">"""Async prefetcher that moves batches to GPU in background thread.</span>
 
 <span class="sd">    Overlaps data transfer with computation for better GPU utilization.</span>
 
 <span class="sd">    Usage:</span>
 <span class="sd">        loader = DataLoader(dataset, ...)</span>
-<span class="sd">        prefetcher = AsyncPrefetcher(loader, device=&#39;cuda&#39;)</span>
+<span class="sd">        prefetcher = AsyncPrefetcher(loader, device='cuda')</span>
 
 <span class="sd">        for batch in prefetcher:</span>
 <span class="sd">            # batch is already on GPU</span>
 <span class="sd">            loss = model(batch)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cuda"</span><span class="p">,</span>
         <span class="n">queue_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize async prefetcher.</span>
+<span class="w">        </span><span class="sd">"""Initialize async prefetcher.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            loader: Base DataLoader</span>
 <span class="sd">            device: Target device for batches</span>
 <span class="sd">            queue_size: Number of batches to prefetch</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loader</span> <span class="o">=</span> <span class="n">loader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue_size</span> <span class="o">=</span> <span class="n">queue_size</span>
@@ -568,8 +570,8 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_prefetch_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Background thread that prefetches batches to GPU.&quot;&quot;&quot;</span>
-        <span class="n">stream</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Stream</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+<span class="w">        </span><span class="sd">"""Background thread that prefetches batches to GPU."""</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Stream</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loader</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -595,7 +597,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_to_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively move batch to device.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Recursively move batch to device."""</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -607,7 +609,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">return</span> <span class="n">batch</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over prefetched batches.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterate over prefetched batches."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prefetch_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
@@ -628,29 +630,29 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CUDAPrefetcher</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple CUDA prefetcher using CUDA streams.</span>
+<span class="w">    </span><span class="sd">"""Simple CUDA prefetcher using CUDA streams.</span>
 
 <span class="sd">    Lighter weight than AsyncPrefetcher, uses CUDA streams instead of threads.</span>
 <span class="sd">    Best for GPU-bound workloads where data loading is not the bottleneck.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">loader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
-        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+        <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"cuda"</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize CUDA prefetcher.</span>
+<span class="w">        </span><span class="sd">"""Initialize CUDA prefetcher.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            loader: Base DataLoader</span>
 <span class="sd">            device: Target CUDA device</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loader</span> <span class="o">=</span> <span class="n">loader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Stream</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">Stream</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate with CUDA stream prefetching.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterate with CUDA stream prefetching."""</span>
         <span class="n">loader_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loader</span><span class="p">)</span>
 
         <span class="c1"># Load first batch</span>
@@ -687,7 +689,7 @@ window.runMermaid = runMermaid;</script>
             <span class="k">yield</span> <span class="n">current_batch</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_to_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Move batch to device.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Move batch to device."""</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">batch</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -703,11 +705,11 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MemoryMappedDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dataset backed by memory-mapped numpy array for large datasets.</span>
+<span class="w">    </span><span class="sd">"""Dataset backed by memory-mapped numpy array for large datasets.</span>
 
 <span class="sd">    Avoids loading entire dataset into RAM, enabling training on</span>
 <span class="sd">    datasets larger than available memory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -715,17 +717,17 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span>
         <span class="n">transform</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize memory-mapped dataset.</span>
+<span class="w">        </span><span class="sd">"""Initialize memory-mapped dataset.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            path: Path to .npy file (created with np.save)</span>
 <span class="sd">            dtype: Torch dtype for output tensors</span>
 <span class="sd">            transform: Optional transform to apply</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
         <span class="c1"># Memory-map the file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mmap_mode</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
 
@@ -743,11 +745,11 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ShardedIterableDataset</span><span class="p">(</span><span class="n">IterableDataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterable dataset that shards across distributed workers.</span>
+<span class="w">    </span><span class="sd">"""Iterable dataset that shards across distributed workers.</span>
 
-<span class="sd">    Useful for very large datasets that don&#39;t fit in memory and</span>
+<span class="sd">    Useful for very large datasets that don't fit in memory and</span>
 <span class="sd">    need to be streamed. Automatically handles sharding for DDP.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -757,7 +759,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">world_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rank</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize sharded iterable dataset.</span>
+<span class="w">        </span><span class="sd">"""Initialize sharded iterable dataset.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_paths: List of data file paths</span>
@@ -765,16 +767,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            shuffle_files: Whether to shuffle files each epoch</span>
 <span class="sd">            world_size: Total number of distributed processes (auto-detect if None)</span>
 <span class="sd">            rank: Rank of current process (auto-detect if None)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_paths</span> <span class="o">=</span> <span class="n">file_paths</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">load_fn</span> <span class="o">=</span> <span class="n">load_fn</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shuffle_files</span> <span class="o">=</span> <span class="n">shuffle_files</span>
 
         <span class="c1"># Auto-detect distributed settings</span>
         <span class="k">if</span> <span class="n">world_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">world_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;WORLD_SIZE&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">world_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"WORLD_SIZE"</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">rank</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RANK&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"RANK"</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span> <span class="o">=</span> <span class="n">world_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="n">rank</span>
@@ -818,7 +820,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">prefetch</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span> <span class="o">|</span> <span class="n">AsyncPrefetcher</span> <span class="o">|</span> <span class="n">CUDAPrefetcher</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an optimized DataLoader with optional prefetching.</span>
+<span class="w">    </span><span class="sd">"""Create an optimized DataLoader with optional prefetching.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dataset: PyTorch Dataset</span>
@@ -829,7 +831,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        DataLoader or prefetcher wrapper</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">DataLoaderConfig</span><span class="p">()</span>
 
@@ -845,27 +847,27 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># Create base DataLoader</span>
     <span class="n">loader_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
-        <span class="s2">&quot;shuffle&quot;</span><span class="p">:</span> <span class="n">shuffle</span><span class="p">,</span>
-        <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
-        <span class="s2">&quot;pin_memory&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span>
-        <span class="s2">&quot;drop_last&quot;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">drop_last</span><span class="p">,</span>
+        <span class="s2">"batch_size"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="s2">"shuffle"</span><span class="p">:</span> <span class="n">shuffle</span><span class="p">,</span>
+        <span class="s2">"num_workers"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span>
+        <span class="s2">"pin_memory"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">,</span>
+        <span class="s2">"drop_last"</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">drop_last</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">sampler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">&quot;sampler&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span>
-        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">&quot;shuffle&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">"sampler"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampler</span>
+        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">"shuffle"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">num_workers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">&quot;prefetch_factor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">prefetch_factor</span>
-        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">&quot;persistent_workers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">persistent_workers</span>
+        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">"prefetch_factor"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">prefetch_factor</span>
+        <span class="n">loader_kwargs</span><span class="p">[</span><span class="s2">"persistent_workers"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">persistent_workers</span>
 
     <span class="n">loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="o">**</span><span class="n">loader_kwargs</span><span class="p">)</span>
 
     <span class="c1"># Wrap with prefetcher if requested</span>
     <span class="k">if</span> <span class="n">prefetch</span> <span class="ow">and</span> <span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;cuda&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"cuda"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CUDAPrefetcher</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">loader</span></div>
@@ -879,7 +881,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">pad_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collate function for variable-length sequences.</span>
+<span class="w">    </span><span class="sd">"""Collate function for variable-length sequences.</span>
 
 <span class="sd">    Pads sequences to the maximum length in the batch.</span>
 
@@ -890,7 +892,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Padded batch tensor [batch_size, max_seq_len]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
     <span class="n">target_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
 
@@ -913,13 +915,13 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DataLoaderConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AsyncPrefetcher&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CUDAPrefetcher&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MemoryMappedDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ShardedIterableDataset&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_optimized_dataloader&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;collate_variable_length&quot;</span><span class="p">,</span>
+    <span class="s2">"DataLoaderConfig"</span><span class="p">,</span>
+    <span class="s2">"AsyncPrefetcher"</span><span class="p">,</span>
+    <span class="s2">"CUDAPrefetcher"</span><span class="p">,</span>
+    <span class="s2">"MemoryMappedDataset"</span><span class="p">,</span>
+    <span class="s2">"ShardedIterableDataset"</span><span class="p">,</span>
+    <span class="s2">"create_optimized_dataloader"</span><span class="p">,</span>
+    <span class="s2">"collate_variable_length"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -931,7 +933,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.solvers.exponential &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.solvers.exponential &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -473,7 +475,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.solvers.exponential</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Exponential and stochastic integrators.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Exponential and stochastic integrators."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -486,11 +488,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ExponentialIntegrator">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.ExponentialIntegrator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExponentialIntegrator</span><span class="p">(</span><span class="n">BaseBFNSolver</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponential integrator for BFN dynamics.</span>
+<span class="w">    </span><span class="sd">"""Exponential integrator for BFN dynamics.</span>
 
 <span class="sd">    Uses the matrix exponential for exact integration of the linear part,</span>
 <span class="sd">    which is particularly effective for stiff ODEs.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ExponentialIntegrator.step">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.ExponentialIntegrator.step">[docs]</a>
@@ -524,11 +526,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="StochasticHeun">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.StochasticHeun">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StochasticHeun</span><span class="p">(</span><span class="n">BaseBFNSolver</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stochastic Heun solver for SDE formulation.</span>
+<span class="w">    </span><span class="sd">"""Stochastic Heun solver for SDE formulation.</span>
 
 <span class="sd">    Adds controlled stochasticity during sampling, which can</span>
 <span class="sd">    improve sample diversity and quality.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="StochasticHeun.__init__">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.StochasticHeun.__init__">[docs]</a>
@@ -584,7 +586,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ExponentialIntegrator&quot;</span><span class="p">,</span> <span class="s2">&quot;StochasticHeun&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ExponentialIntegrator"</span><span class="p">,</span> <span class="s2">"StochasticHeun"</span><span class="p">]</span>
 </pre></div>
 
            </div>
@@ -595,7 +597,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.diffusion.schedules &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.diffusion.schedules &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.diffusion.schedules</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Noise schedules for discrete diffusion models.</span>
+<span></span><span class="sd">"""Noise schedules for discrete diffusion models.</span>
 
 <span class="sd">Includes improvements from 2024-2025 literature:</span>
 <span class="sd">- Zero-Terminal SNR correction (WACV 2024)</span>
@@ -480,12 +482,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">- Log-SNR importance sampling</span>
 
 <span class="sd">References:</span>
-<span class="sd">- &quot;Common Diffusion Noise Schedules and Sample Steps are Flawed&quot; (WACV 2024)</span>
-<span class="sd">- &quot;Efficient Diffusion Training via Min-SNR Weighting Strategy&quot;</span>
+<span class="sd">- "Common Diffusion Noise Schedules and Sample Steps are Flawed" (WACV 2024)</span>
+<span class="sd">- "Efficient Diffusion Training via Min-SNR Weighting Strategy"</span>
 
 <span class="sd">Note: Shared SNR utilities (compute_snr, compute_log_snr, min_snr_weighting, enforce_zero_terminal_snr)</span>
 <span class="sd">are imported from common/time.py to avoid duplication.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
@@ -496,13 +498,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_beta_schedule">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.get_beta_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_beta_schedule</span><span class="p">(</span>
-    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span>
+    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">,</span> <span class="s2">"quadratic"</span><span class="p">,</span> <span class="s2">"sigmoid"</span><span class="p">],</span>
     <span class="n">num_timesteps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">beta_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span>
     <span class="n">beta_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
     <span class="n">cosine_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.008</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get noise schedule (beta) for diffusion process.</span>
 
 <span class="sd">    Args:</span>
@@ -514,12 +516,12 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        betas: [num_timesteps] beta values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;linear&quot;</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"linear"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_start</span><span class="p">,</span> <span class="n">beta_end</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>
-        <span class="c1"># Improved cosine schedule from &quot;Improved Denoising Diffusion Probabilistic Models&quot;</span>
+    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"cosine"</span><span class="p">:</span>
+        <span class="c1"># Improved cosine schedule from "Improved Denoising Diffusion Probabilistic Models"</span>
         <span class="n">steps</span> <span class="o">=</span> <span class="n">num_timesteps</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">,</span> <span class="n">steps</span><span class="p">)</span>
         <span class="n">alphas_cumprod</span> <span class="o">=</span> <span class="p">(</span>
@@ -529,16 +531,16 @@ window.runMermaid = runMermaid;</script>
         <span class="n">betas</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">alphas_cumprod</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">alphas_cumprod</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">betas</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"quadratic"</span><span class="p">:</span>
         <span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_start</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">beta_end</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="k">return</span> <span class="n">betas</span>
 
-    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">schedule_type</span> <span class="o">==</span> <span class="s2">"sigmoid"</span><span class="p">:</span>
         <span class="n">betas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">betas</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">beta_end</span> <span class="o">-</span> <span class="n">beta_start</span><span class="p">)</span> <span class="o">+</span> <span class="n">beta_start</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown schedule type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown schedule type: </span><span class="si">{</span><span class="n">schedule_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -547,10 +549,10 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_absorbing_transition_mat</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">absorbing_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get transition matrix for absorbing diffusion (D3PM variant).</span>
 
-<span class="sd">    The absorbing state is a special &quot;mask&quot; state that tokens transition to.</span>
+<span class="sd">    The absorbing state is a special "mask" state that tokens transition to.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes: Number of classes (vocabulary size)</span>
@@ -559,7 +561,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Q_t: [num_classes+1, num_classes+1] transition matrix</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">absorbing_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">absorbing_state</span> <span class="o">=</span> <span class="n">num_classes</span>
 
@@ -582,7 +584,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_uniform_transition_mat">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.get_uniform_transition_mat">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_uniform_transition_mat</span><span class="p">(</span><span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get transition matrix for uniform diffusion (original D3PM).</span>
 
 <span class="sd">    Tokens transition uniformly to all other classes.</span>
@@ -593,7 +595,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Q_t: [num_classes, num_classes] transition matrix</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Diagonal: probability of staying in current state</span>
     <span class="n">Q_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span>
 
@@ -609,10 +611,10 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_discretized_gaussian_transition_mat</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get transition matrix based on discretized Gaussian kernel.</span>
 
-<span class="sd">    This creates a &quot;blurring&quot; effect similar to continuous diffusion.</span>
+<span class="sd">    This creates a "blurring" effect similar to continuous diffusion.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_classes: Number of classes</span>
@@ -621,7 +623,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Q_t: [num_classes, num_classes] transition matrix</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Create Gaussian kernel</span>
     <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
     <span class="n">distances</span> <span class="o">=</span> <span class="p">(</span><span class="n">indices</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">indices</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
@@ -642,9 +644,9 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_transition_matrices</span><span class="p">(</span>
     <span class="n">betas</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;absorbing&quot;</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"absorbing"</span><span class="p">,</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"gaussian"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"absorbing"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute transition matrices for all timesteps.</span>
 
 <span class="sd">    Args:</span>
@@ -656,30 +658,30 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Q_t: [num_timesteps, num_classes, num_classes] single-step transitions</span>
 <span class="sd">        Q_bar_t: [num_timesteps, num_classes, num_classes] cumulative transitions</span>
 <span class="sd">        Q_bar_t_minus_1: [num_timesteps, num_classes, num_classes] cumulative for t-1</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">num_timesteps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">betas</span><span class="p">)</span>
 
     <span class="c1"># Choose transition matrix function</span>
-    <span class="k">if</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_Q_fn</span><span class="p">(</span><span class="n">beta</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">get_absorbing_transition_mat</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
 
         <span class="n">mat_size</span> <span class="o">=</span> <span class="n">num_classes</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="k">elif</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;uniform&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"uniform"</span><span class="p">:</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_Q_fn</span><span class="p">(</span><span class="n">beta</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">get_uniform_transition_mat</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
 
         <span class="n">mat_size</span> <span class="o">=</span> <span class="n">num_classes</span>
-    <span class="k">elif</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"gaussian"</span><span class="p">:</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_Q_fn</span><span class="p">(</span><span class="n">beta</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">get_discretized_gaussian_transition_mat</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
 
         <span class="n">mat_size</span> <span class="o">=</span> <span class="n">num_classes</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown transition type: </span><span class="si">{</span><span class="n">transition_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown transition type: </span><span class="si">{</span><span class="n">transition_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Compute single-step transitions</span>
     <span class="n">Q_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">get_Q_fn</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="n">betas</span><span class="p">])</span>
@@ -711,20 +713,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="enforce_zero_terminal_snr">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.enforce_zero_terminal_snr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">enforce_zero_terminal_snr</span><span class="p">(</span><span class="n">betas</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enforce zero terminal SNR by rescaling alphas_cumprod.</span>
+<span class="w">    </span><span class="sd">"""Enforce zero terminal SNR by rescaling alphas_cumprod.</span>
 
 <span class="sd">    Standard schedules have non-zero SNR at the final timestep,</span>
 <span class="sd">    causing train/inference mismatch. This correction ensures</span>
 <span class="sd">    the schedule ends at pure noise (SNR=0).</span>
 
-<span class="sd">    Reference: &quot;Common Diffusion Noise Schedules and Sample Steps are Flawed&quot; (WACV 2024)</span>
+<span class="sd">    Reference: "Common Diffusion Noise Schedules and Sample Steps are Flawed" (WACV 2024)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        betas: Original beta schedule [timesteps]</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Corrected betas with zero terminal SNR</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">alphas</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">betas</span>
     <span class="n">alphas_cumprod</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -751,7 +753,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="compute_snr">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.compute_snr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_snr</span><span class="p">(</span><span class="n">alphas_cumprod</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Signal-to-Noise Ratio from alphas_cumprod.</span>
+<span class="w">    </span><span class="sd">"""Compute Signal-to-Noise Ratio from alphas_cumprod.</span>
 
 <span class="sd">    SNR(t) = alpha_bar_t / (1 - alpha_bar_t)</span>
 
@@ -760,7 +762,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        SNR values [timesteps]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">alphas_cumprod</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alphas_cumprod</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span></div>
 
 
@@ -768,12 +770,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="compute_log_snr">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.compute_log_snr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_log_snr</span><span class="p">(</span><span class="n">alphas_cumprod</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute log Signal-to-Noise Ratio.</span>
+<span class="w">    </span><span class="sd">"""Compute log Signal-to-Noise Ratio.</span>
 
 <span class="sd">    log_SNR(t) = log(alpha_bar_t) - log(1 - alpha_bar_t)</span>
 
 <span class="sd">    Useful for importance sampling (sample more at log_SNR ≈ 0).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">alphas_cumprod</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">))</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
         <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alphas_cumprod</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -783,12 +785,12 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="min_snr_weighting">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.min_snr_weighting">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">min_snr_weighting</span><span class="p">(</span><span class="n">snr</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Min-SNR weighting for loss.</span>
+<span class="w">    </span><span class="sd">"""Min-SNR weighting for loss.</span>
 
 <span class="sd">    Reweights the loss to emphasize timesteps with lower SNR,</span>
 <span class="sd">    which are harder to denoise.</span>
 
-<span class="sd">    Reference: &quot;Efficient Diffusion Training via Min-SNR Weighting Strategy&quot;</span>
+<span class="sd">    Reference: "Efficient Diffusion Training via Min-SNR Weighting Strategy"</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        snr: SNR values at each timestep</span>
@@ -796,7 +798,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Weight for each timestep</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">snr</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">snr</span><span class="p">,</span> <span class="n">gamma</span><span class="p">))</span> <span class="o">/</span> <span class="n">snr</span></div>
 
 
@@ -804,13 +806,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="get_beta_schedule_with_zero_snr">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.get_beta_schedule_with_zero_snr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_beta_schedule_with_zero_snr</span><span class="p">(</span>
-    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span>
+    <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">,</span> <span class="s2">"quadratic"</span><span class="p">,</span> <span class="s2">"sigmoid"</span><span class="p">],</span>
     <span class="n">num_timesteps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">beta_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span>
     <span class="n">beta_end</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
     <span class="n">cosine_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.008</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get noise schedule with Zero-Terminal SNR correction.</span>
+<span class="w">    </span><span class="sd">"""Get noise schedule with Zero-Terminal SNR correction.</span>
 
 <span class="sd">    This ensures the final timestep has SNR=0 (pure noise),</span>
 <span class="sd">    fixing the train/inference mismatch in standard schedules.</span>
@@ -824,7 +826,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        betas: [num_timesteps] corrected beta values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Get base schedule</span>
     <span class="n">betas</span> <span class="o">=</span> <span class="n">get_beta_schedule</span><span class="p">(</span><span class="n">schedule_type</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">,</span> <span class="n">beta_start</span><span class="p">,</span> <span class="n">beta_end</span><span class="p">,</span> <span class="n">cosine_s</span><span class="p">)</span>
     <span class="c1"># Apply zero terminal SNR correction</span>
@@ -840,7 +842,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">log_snr</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="n">concentration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample timesteps with importance sampling around log_SNR = 0.</span>
+<span class="w">    </span><span class="sd">"""Sample timesteps with importance sampling around log_SNR = 0.</span>
 
 <span class="sd">    The log_SNR = 0 point (where signal and noise are equal) is often</span>
 <span class="sd">    the most important for learning. This samples more timesteps there.</span>
@@ -853,7 +855,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Sampled timestep indices [batch_size]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Importance weights: higher near log_SNR = 0</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">concentration</span> <span class="o">*</span> <span class="n">log_snr</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span> <span class="o">/</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -873,7 +875,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

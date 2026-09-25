@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.configs &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.configs &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.configs</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Shared configuration constants for medlatents models.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Shared configuration constants for medlatents models."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -489,7 +491,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../api/configs.html#medlatents.configs.ModelSize">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelSize</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Standard transformer model size configuration.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Standard transformer model size configuration."""</span>
 
     <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span>
@@ -502,21 +504,21 @@ window.runMermaid = runMermaid;</script>
 <span class="c1"># training scripts; MODEL_SIZES exposes the same specs as dataclasses under the</span>
 <span class="c1"># conventional capitalized names (Nano/S/B/L/XL) for create_model_variants.</span>
 <span class="n">_SIZE_SPECS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;nano&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">192</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
-    <span class="s2">&quot;small&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span>
-    <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">768</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
-    <span class="s2">&quot;large&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span>
-    <span class="s2">&quot;xl&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;hidden_size&quot;</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span> <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
+    <span class="s2">"nano"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">192</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+    <span class="s2">"small"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">384</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span>
+    <span class="s2">"base"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">768</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">12</span><span class="p">},</span>
+    <span class="s2">"large"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">1024</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span>
+    <span class="s2">"xl"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"hidden_size"</span><span class="p">:</span> <span class="mi">1536</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s2">"num_heads"</span><span class="p">:</span> <span class="mi">24</span><span class="p">},</span>
 <span class="p">}</span>
 
 <span class="n">MODEL_CONFIGS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">_SIZE_SPECS</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
-<span class="n">_CAPITALIZED_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nano&quot;</span><span class="p">:</span> <span class="s2">&quot;Nano&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">:</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;xl&quot;</span><span class="p">:</span> <span class="s2">&quot;XL&quot;</span><span class="p">}</span>
+<span class="n">_CAPITALIZED_NAMES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"nano"</span><span class="p">:</span> <span class="s2">"Nano"</span><span class="p">,</span> <span class="s2">"small"</span><span class="p">:</span> <span class="s2">"S"</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">:</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"large"</span><span class="p">:</span> <span class="s2">"L"</span><span class="p">,</span> <span class="s2">"xl"</span><span class="p">:</span> <span class="s2">"XL"</span><span class="p">}</span>
 <span class="n">MODEL_SIZES</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSize</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">_CAPITALIZED_NAMES</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span> <span class="n">ModelSize</span><span class="p">(</span><span class="o">**</span><span class="n">spec</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">_SIZE_SPECS</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="n">MODEL_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;autoreg&quot;</span><span class="p">,</span> <span class="s2">&quot;maskgit&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">,</span> <span class="s2">&quot;d3pm&quot;</span><span class="p">,</span> <span class="s2">&quot;bayesian_flow&quot;</span><span class="p">]</span>
+<span class="n">MODEL_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"autoreg"</span><span class="p">,</span> <span class="s2">"maskgit"</span><span class="p">,</span> <span class="s2">"flow"</span><span class="p">,</span> <span class="s2">"d3pm"</span><span class="p">,</span> <span class="s2">"bayesian_flow"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="create_model_variants">
@@ -527,11 +529,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">sizes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSize</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">default_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate model size variants (Nano/S/B/L/XL) for a model class.</span>
+<span class="w">    </span><span class="sd">"""Generate model size variants (Nano/S/B/L/XL) for a model class.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model_cls: The model class to create variants for</span>
-<span class="sd">        base_name: Base name for the model (e.g., &quot;Autoreg&quot;, &quot;MaskGIT&quot;)</span>
+<span class="sd">        base_name: Base name for the model (e.g., "Autoreg", "MaskGIT")</span>
 <span class="sd">        sizes: Custom size configs, defaults to MODEL_SIZES</span>
 <span class="sd">        **default_kwargs: Default kwargs passed to all variants</span>
 
@@ -539,9 +541,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Dictionary mapping variant names to factory functions</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; variants = create_model_variants(AutoregressiveTransformer, &quot;Autoreg&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; model = variants[&quot;Autoreg-S&quot;](seq_length=1024, vocab_size=512)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &gt;&gt;&gt; variants = create_model_variants(AutoregressiveTransformer, "Autoreg")</span>
+<span class="sd">        &gt;&gt;&gt; model = variants["Autoreg-S"](seq_length=1024, vocab_size=512)</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">sizes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sizes</span> <span class="o">=</span> <span class="n">MODEL_SIZES</span>
 
@@ -557,7 +559,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="o">**</span><span class="n">merged</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="n">variants</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">size_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">factory</span>
+        <span class="n">variants</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">size_name</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">factory</span>
 
     <span class="k">return</span> <span class="n">variants</span></div>
 
@@ -568,18 +570,18 @@ window.runMermaid = runMermaid;</script>
 
 <span class="c1"># Diffusion hyperparameters</span>
 <span class="n">DIFFUSION_CONFIGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;num_timesteps&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-    <span class="s2">&quot;schedule_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>  <span class="c1"># &#39;linear&#39;, &#39;cosine&#39;, &#39;quadratic&#39;, &#39;sigmoid&#39;</span>
-    <span class="s2">&quot;transition_type&quot;</span><span class="p">:</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">,</span>  <span class="c1"># &#39;absorbing&#39;, &#39;uniform&#39;, &#39;gaussian&#39;</span>
-    <span class="s2">&quot;hybrid_loss_coeff&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
-    <span class="s2">&quot;loss_type&quot;</span><span class="p">:</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">,</span>  <span class="c1"># &#39;vb&#39;, &#39;hybrid&#39;, &#39;cross_entropy&#39;</span>
+    <span class="s2">"num_timesteps"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s2">"schedule_type"</span><span class="p">:</span> <span class="s2">"cosine"</span><span class="p">,</span>  <span class="c1"># 'linear', 'cosine', 'quadratic', 'sigmoid'</span>
+    <span class="s2">"transition_type"</span><span class="p">:</span> <span class="s2">"absorbing"</span><span class="p">,</span>  <span class="c1"># 'absorbing', 'uniform', 'gaussian'</span>
+    <span class="s2">"hybrid_loss_coeff"</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+    <span class="s2">"loss_type"</span><span class="p">:</span> <span class="s2">"hybrid"</span><span class="p">,</span>  <span class="c1"># 'vb', 'hybrid', 'cross_entropy'</span>
 <span class="p">}</span>
 
 <span class="n">BAYESIAN_FLOW_CONFIGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;num_steps&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-    <span class="s2">&quot;sigma_schedule&quot;</span><span class="p">:</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>  <span class="c1"># &#39;linear&#39;, &#39;cosine&#39;, &#39;log&#39;</span>
-    <span class="s2">&quot;sigma_min&quot;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
-    <span class="s2">&quot;sigma_max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="s2">"num_steps"</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s2">"sigma_schedule"</span><span class="p">:</span> <span class="s2">"cosine"</span><span class="p">,</span>  <span class="c1"># 'linear', 'cosine', 'log'</span>
+    <span class="s2">"sigma_min"</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
+    <span class="s2">"sigma_max"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1"># Training enhancements</span>
@@ -596,7 +598,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

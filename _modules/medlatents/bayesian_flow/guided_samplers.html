@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.guided_samplers &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.guided_samplers &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,15 +474,15 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.guided_samplers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Conditional sampling methods for Bayesian Flow Networks.</span>
+<span></span><span class="sd">"""Conditional sampling methods for Bayesian Flow Networks.</span>
 
 <span class="sd">Provides score-guided and particle-based samplers for conditional generation</span>
 <span class="sd">tasks like inpainting, where some positions are fixed and others generated.</span>
 
 <span class="sd">References:</span>
-<span class="sd">- Xue et al. &quot;Unifying Bayesian Flow Networks and Diffusion Models through SDEs&quot; (2024)</span>
-<span class="sd">- Wu et al. &quot;Practical and Asymptotically Exact Conditional Sampling in Diffusion Models&quot; (NeurIPS 2023)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Xue et al. "Unifying Bayesian Flow Networks and Diffusion Models through SDEs" (2024)</span>
+<span class="sd">- Wu et al. "Practical and Asymptotically Exact Conditional Sampling in Diffusion Models" (NeurIPS 2023)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -493,7 +495,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ScoreGuidedSampler">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.ScoreGuidedSampler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ScoreGuidedSampler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Score-based conditional generation for BFN using SDE formulation.</span>
 
 <span class="sd">    BFN can be expressed as an SDE, allowing for classifier-free guidance</span>
@@ -507,7 +509,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        model: BayesianFlowTransformer</span>
 <span class="sd">        max_score: Maximum score magnitude for clipping (stability)</span>
 <span class="sd">        score_scale: Scaling factor for guidance strength</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ScoreGuidedSampler.__init__">
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.ScoreGuidedSampler.__init__">[docs]</a>
@@ -526,11 +528,11 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/bayesian_flow.html#medlatents.bayesian_flow.ScoreGuidedSampler.compute_score_function">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_score_function</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq classes&quot;</span><span class="p">],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq classes"</span><span class="p">],</span>
         <span class="n">condition</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">condition_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq classes&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq classes"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute score function: s = grad_xc log p_o(x_c)</span>
 
 <span class="sd">        The gradient of log probability of conditioning data with respect</span>
@@ -543,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            score: Score function values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get log probs for conditioned positions</span>
         <span class="n">log_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
@@ -573,7 +575,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">condition_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sample using SDE formulation with score-based guidance.</span>
 
 <span class="sd">        Args:</span>
@@ -587,7 +589,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            samples: Generated samples [batch, seq]</span>
 <span class="sd">            metrics: Dict with sampling statistics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span>
 
         <span class="c1"># Initialize prior</span>
@@ -636,7 +638,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">samples</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;steps_taken&quot;</span><span class="p">:</span> <span class="n">num_steps</span><span class="p">}</span></div>
+        <span class="k">return</span> <span class="n">samples</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps_taken"</span><span class="p">:</span> <span class="n">num_steps</span><span class="p">}</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_update_with_guidance</span><span class="p">(</span>
@@ -647,7 +649,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">condition_mask</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">score</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update parameters with score guidance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update parameters with score guidance."""</span>
         <span class="c1"># Standard Bayesian update</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">params</span> <span class="o">+</span> <span class="n">y</span>
 
@@ -664,7 +666,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ScoreGuidedSampler&quot;</span><span class="p">,</span>
+    <span class="s2">"ScoreGuidedSampler"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -676,7 +678,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

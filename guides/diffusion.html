@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Diffusion Models Guide &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Diffusion Models Guide &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,10 +14,12 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -548,7 +550,7 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.networks</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteDiT_models</span>
 
 <span class="c1"># Create the neural network backbone</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">&#39;DiscreteDiT-S&#39;</span><span class="p">](</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">'DiscreteDiT-S'</span><span class="p">](</span>
     <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Unconditional</span>
     <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
@@ -558,7 +560,7 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 <span class="n">d3pm</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="o">=</span><span class="s1">&#39;absorbing&#39;</span><span class="p">,</span>  <span class="c1"># Options: absorbing, uniform, gaussian</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s1">'absorbing'</span><span class="p">,</span>  <span class="c1"># Options: absorbing, uniform, gaussian</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -575,7 +577,7 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 <span class="n">d3pm</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="o">=</span><span class="s1">&#39;absorbing&#39;</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s1">'absorbing'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -587,7 +589,7 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 <span class="n">d3pm</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s1">'uniform'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -600,7 +602,7 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 <span class="n">d3pm</span> <span class="o">=</span> <span class="n">D3PM</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s1">'gaussian'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -618,13 +620,13 @@ generation and <strong>continuous</strong> diffusion for latent space modeling.<
 
 <span class="c1"># Training loop</span>
 <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">'tokens'</span><span class="p">])</span>
 
 <span class="c1"># Or use the built-in training</span>
 <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
     <span class="n">dataloader</span><span class="p">,</span>
     <span class="n">num_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">checkpoint_dir</span><span class="o">=</span><span class="s1">&#39;./checkpoints&#39;</span><span class="p">,</span>
+    <span class="n">checkpoint_dir</span><span class="o">=</span><span class="s1">'./checkpoints'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -639,7 +641,7 @@ improved quality:</p>
 <span class="n">d3pm_klass</span> <span class="o">=</span> <span class="n">D3PMKLASS</span><span class="p">(</span>
     <span class="n">num_classes</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">transition_type</span><span class="o">=</span><span class="s1">&#39;absorbing&#39;</span><span class="p">,</span>
+    <span class="n">transition_type</span><span class="o">=</span><span class="s1">'absorbing'</span><span class="p">,</span>
     <span class="n">klass_threshold</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>  <span class="c1"># Confidence threshold for resampling</span>
 <span class="p">)</span>
 
@@ -647,7 +649,7 @@ improved quality:</p>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">d3pm_klass</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>  <span class="c1"># batch_size, seq_len</span>
-    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">'cuda'</span><span class="p">,</span>
     <span class="n">use_klass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -663,7 +665,7 @@ language modeling.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.diffusion</span><span class="w"> </span><span class="kn">import</span> <span class="n">SEDDLoss</span><span class="p">,</span> <span class="n">ContinuousTimeMDLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.networks</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteDiT_models</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">&#39;DiscreteDiT-B&#39;</span><span class="p">](</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DiscreteDiT_models</span><span class="p">[</span><span class="s1">'DiscreteDiT-B'</span><span class="p">](</span>
     <span class="n">vocab_size</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span>
     <span class="n">max_seq_len</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>
 <span class="p">)</span>
@@ -687,7 +689,7 @@ language modeling.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="n">x0</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;tokens&#39;</span><span class="p">]</span>  <span class="c1"># [B, L]</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="s1">'tokens'</span><span class="p">]</span>  <span class="c1"># [B, L]</span>
 
     <span class="c1"># Sample timesteps (continuous time)</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">x0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">x0</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -739,8 +741,8 @@ language modeling.</p>
 
 <span class="n">diffusion</span> <span class="o">=</span> <span class="n">ContinuousGaussianDiffusion</span><span class="p">(</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-    <span class="n">beta_schedule</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span>  <span class="c1"># Options: linear, cosine, sqrt</span>
-    <span class="n">prediction_type</span><span class="o">=</span><span class="s1">&#39;v&#39;</span><span class="p">,</span>  <span class="c1"># Options: epsilon, v, x0</span>
+    <span class="n">beta_schedule</span><span class="o">=</span><span class="s1">'cosine'</span><span class="p">,</span>  <span class="c1"># Options: linear, cosine, sqrt</span>
+    <span class="n">prediction_type</span><span class="o">=</span><span class="s1">'v'</span><span class="p">,</span>  <span class="c1"># Options: epsilon, v, x0</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -756,7 +758,7 @@ language modeling.</p>
 
 <span class="c1"># Get betas with zero terminal SNR</span>
 <span class="n">betas</span> <span class="o">=</span> <span class="n">get_beta_schedule_with_zero_snr</span><span class="p">(</span>
-    <span class="n">schedule</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="s1">'cosine'</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -780,7 +782,7 @@ language modeling.</p>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
     <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
     <span class="n">log_snr</span><span class="o">=</span><span class="n">log_snr</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">'cuda'</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -794,7 +796,7 @@ language modeling.</p>
 <span class="n">samples</span> <span class="o">=</span> <span class="n">d3pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span>
-    <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s1">'cuda'</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># With temperature</span>
@@ -897,13 +899,13 @@ language modeling.</p>
 <h3>Hyperparameters<a class="headerlink" href="#hyperparameters" title="Link to this heading"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recommended settings</span>
 <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;num_timesteps&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>  <span class="c1"># Standard, can reduce for faster sampling</span>
-    <span class="s1">&#39;transition_type&#39;</span><span class="p">:</span> <span class="s1">&#39;absorbing&#39;</span><span class="p">,</span>  <span class="c1"># For discrete tokens</span>
-    <span class="s1">&#39;beta_schedule&#39;</span><span class="p">:</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span>  <span class="c1"># For continuous</span>
-    <span class="s1">&#39;prediction_type&#39;</span><span class="p">:</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span>  <span class="c1"># V-prediction often better</span>
-    <span class="s1">&#39;lr&#39;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
-    <span class="s1">&#39;warmup_steps&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-    <span class="s1">&#39;ema_decay&#39;</span><span class="p">:</span> <span class="mf">0.9999</span><span class="p">,</span>
+    <span class="s1">'num_timesteps'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>  <span class="c1"># Standard, can reduce for faster sampling</span>
+    <span class="s1">'transition_type'</span><span class="p">:</span> <span class="s1">'absorbing'</span><span class="p">,</span>  <span class="c1"># For discrete tokens</span>
+    <span class="s1">'beta_schedule'</span><span class="p">:</span> <span class="s1">'cosine'</span><span class="p">,</span>  <span class="c1"># For continuous</span>
+    <span class="s1">'prediction_type'</span><span class="p">:</span> <span class="s1">'v'</span><span class="p">,</span>  <span class="c1"># V-prediction often better</span>
+    <span class="s1">'lr'</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
+    <span class="s1">'warmup_steps'</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="s1">'ema_decay'</span><span class="p">:</span> <span class="mf">0.9999</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -951,7 +953,7 @@ language modeling.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

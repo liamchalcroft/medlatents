@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.evaluation.classifier_utility &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.evaluation.classifier_utility &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.evaluation.classifier_utility</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Classifier-utility evaluation: TSTR + domain-FID feature extraction.</span>
+<span></span><span class="sd">"""Classifier-utility evaluation: TSTR + domain-FID feature extraction.</span>
 
 <span class="sd">A common downstream check for generative models is whether their samples</span>
 <span class="sd">preserve the *labels* of the training distribution. This module provides</span>
@@ -503,7 +505,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    test_metrics = evaluate_auc(model, test_loader, device=device)</span>
 <span class="sd">    # use the trained backbone as a domain-FID feature extractor:</span>
 <span class="sd">    feats = extract_features(model, test_imgs, device=device)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -519,7 +521,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="build_grayscale_resnet18">
 <a class="viewcode-back" href="../../../api/evaluation.html#medlatents.evaluation.build_grayscale_resnet18">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_grayscale_resnet18</span><span class="p">(</span><span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ResNet-18 with single-channel conv1 + multi-label classification head.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""ResNet-18 with single-channel conv1 + multi-label classification head."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">resnet18</span>
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -547,12 +549,12 @@ window.runMermaid = runMermaid;</script>
     <span class="n">weight_decay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">,</span>
     <span class="n">log_fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">print</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train ``model`` with BCE-with-logits, AdamW, per-epoch val AUC.</span>
+<span class="w">    </span><span class="sd">"""Train ``model`` with BCE-with-logits, AdamW, per-epoch val AUC.</span>
 
-<span class="sd">    Returns ``{&quot;best_val_mean_auc&quot;, &quot;best_state_dict&quot;, &quot;history&quot;: [...]}``.</span>
+<span class="sd">    Returns ``{"best_val_mean_auc", "best_state_dict", "history": [...]}``.</span>
 <span class="sd">    The model is mutated in place; restore best state via</span>
-<span class="sd">    ``model.load_state_dict(returned[&quot;best_state_dict&quot;])`` before evaluation.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    ``model.load_state_dict(returned["best_state_dict"])`` before evaluation.</span>
+<span class="sd">    """</span>
     <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
     <span class="n">optim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="n">weight_decay</span><span class="p">)</span>
 
@@ -581,24 +583,24 @@ window.runMermaid = runMermaid;</script>
         <span class="n">epoch_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
         <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="n">train_loss</span><span class="p">,</span>
-                <span class="s2">&quot;val_mean_auc&quot;</span><span class="p">:</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;mean_auc&quot;</span><span class="p">],</span>
-                <span class="s2">&quot;time_s&quot;</span><span class="p">:</span> <span class="n">epoch_time</span><span class="p">,</span>
+                <span class="s2">"epoch"</span><span class="p">:</span> <span class="n">ep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"train_loss"</span><span class="p">:</span> <span class="n">train_loss</span><span class="p">,</span>
+                <span class="s2">"val_mean_auc"</span><span class="p">:</span> <span class="n">val</span><span class="p">[</span><span class="s2">"mean_auc"</span><span class="p">],</span>
+                <span class="s2">"time_s"</span><span class="p">:</span> <span class="n">epoch_time</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
         <span class="n">log_fn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;  ep </span><span class="si">{</span><span class="n">ep</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">: loss=</span><span class="si">{</span><span class="n">train_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  val_mean_AUC=</span><span class="si">{</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;mean_auc&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (</span><span class="si">{</span><span class="n">epoch_time</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)&quot;</span>
+            <span class="sa">f</span><span class="s2">"  ep </span><span class="si">{</span><span class="n">ep</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">: loss=</span><span class="si">{</span><span class="n">train_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  val_mean_AUC=</span><span class="si">{</span><span class="n">val</span><span class="p">[</span><span class="s1">'mean_auc'</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  (</span><span class="si">{</span><span class="n">epoch_time</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">s)"</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;mean_auc&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">best_val</span><span class="p">:</span>
-            <span class="n">best_val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">&quot;mean_auc&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="s2">"mean_auc"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">best_val</span><span class="p">:</span>
+            <span class="n">best_val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s2">"mean_auc"</span><span class="p">]</span>
             <span class="n">best_state</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;best_val_mean_auc&quot;</span><span class="p">:</span> <span class="n">best_val</span><span class="p">,</span>
-        <span class="s2">&quot;best_state_dict&quot;</span><span class="p">:</span> <span class="n">best_state</span><span class="p">,</span>
-        <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="n">history</span><span class="p">,</span>
+        <span class="s2">"best_val_mean_auc"</span><span class="p">:</span> <span class="n">best_val</span><span class="p">,</span>
+        <span class="s2">"best_state_dict"</span><span class="p">:</span> <span class="n">best_state</span><span class="p">,</span>
+        <span class="s2">"history"</span><span class="p">:</span> <span class="n">history</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
@@ -612,11 +614,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
     <span class="n">class_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-class + mean ROC-AUC over a DataLoader (multi-label).</span>
+<span class="w">    </span><span class="sd">"""Per-class + mean ROC-AUC over a DataLoader (multi-label).</span>
 
 <span class="sd">    Classes for which the loader contains all-positive or all-negative</span>
 <span class="sd">    labels yield NaN AUC and are excluded from the mean.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -631,16 +633,16 @@ window.runMermaid = runMermaid;</script>
     <span class="n">per_class</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ys</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
         <span class="k">if</span> <span class="n">ys</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">ys</span><span class="p">[:,</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ys</span><span class="p">):</span>
-            <span class="n">per_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            <span class="n">per_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">per_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">ys</span><span class="p">[:,</span> <span class="n">c</span><span class="p">],</span> <span class="n">preds</span><span class="p">[:,</span> <span class="n">c</span><span class="p">])))</span>
     <span class="n">valid</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">per_class</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
-    <span class="n">mean_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid</span><span class="p">))</span> <span class="k">if</span> <span class="n">valid</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)</span>
+    <span class="n">mean_auc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">valid</span><span class="p">))</span> <span class="k">if</span> <span class="n">valid</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">named</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">per_class</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">named</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;class_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">per_class</span><span class="p">)}</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;mean_auc&quot;</span><span class="p">:</span> <span class="n">mean_auc</span><span class="p">,</span> <span class="s2">&quot;per_class_auc&quot;</span><span class="p">:</span> <span class="n">named</span><span class="p">}</span></div>
+        <span class="n">named</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">"class_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">per_class</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"mean_auc"</span><span class="p">:</span> <span class="n">mean_auc</span><span class="p">,</span> <span class="s2">"per_class_auc"</span><span class="p">:</span> <span class="n">named</span><span class="p">}</span></div>
 
 
 
@@ -651,7 +653,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract penultimate-layer features by temporarily swapping ``model.fc``.</span>
+<span class="w">    </span><span class="sd">"""Extract penultimate-layer features by temporarily swapping ``model.fc``.</span>
 
 <span class="sd">    Designed for the ResNet-family backbones built by</span>
 <span class="sd">    :func:`build_grayscale_resnet18`; works on any classifier whose final</span>
@@ -660,11 +662,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Use as a domain-relevant alternative to InceptionPool3 for FID --- e.g.</span>
 <span class="sd">    swap ``InceptionPool3FeatureExtractor.extract`` for this in the same FID</span>
-<span class="sd">    pipeline to obtain a &quot;ChestMNIST-FID&quot; rather than a generic</span>
-<span class="sd">    &quot;ImageNet-FID&quot;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;fc&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;model must expose .fc; pass a torchvision-style classifier&quot;</span><span class="p">)</span>
+<span class="sd">    pipeline to obtain a "ChestMNIST-FID" rather than a generic</span>
+<span class="sd">    "ImageNet-FID".</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"fc"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"model must expose .fc; pass a torchvision-style classifier"</span><span class="p">)</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
     <span class="n">fc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fc</span>
     <span class="n">model</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Identity</span><span class="p">()</span>
@@ -685,7 +687,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for penultimate-layer classifier features.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Alias for penultimate-layer classifier features."""</span>
     <span class="k">return</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
 
 
@@ -699,7 +701,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
     <span class="n">ridge</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;FID in a trained classifier&#39;s penultimate feature space.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""FID in a trained classifier's penultimate feature space."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.fid</span><span class="w"> </span><span class="kn">import</span> <span class="n">fid_from_features</span>
 
     <span class="n">real_feats</span> <span class="o">=</span> <span class="n">extract_classifier_features</span><span class="p">(</span>
@@ -711,12 +713,12 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;build_grayscale_resnet18&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;train_classifier&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;evaluate_auc&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;extract_features&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;extract_classifier_features&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;classifier_fid&quot;</span><span class="p">,</span>
+    <span class="s2">"build_grayscale_resnet18"</span><span class="p">,</span>
+    <span class="s2">"train_classifier"</span><span class="p">,</span>
+    <span class="s2">"evaluate_auc"</span><span class="p">,</span>
+    <span class="s2">"extract_features"</span><span class="p">,</span>
+    <span class="s2">"extract_classifier_features"</span><span class="p">,</span>
+    <span class="s2">"classifier_fid"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -728,7 +730,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

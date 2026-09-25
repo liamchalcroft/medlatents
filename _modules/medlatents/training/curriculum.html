@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.curriculum &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.curriculum &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.curriculum</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Curriculum learning strategies for improved training convergence.</span>
+<span></span><span class="sd">"""Curriculum learning strategies for improved training convergence.</span>
 
 <span class="sd">Curriculum learning progressively increases task difficulty during training,</span>
 <span class="sd">leading to faster convergence and better generalization.</span>
@@ -485,10 +487,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">5. Multi-scale curriculum: Progressively increase resolution</span>
 
 <span class="sd">References:</span>
-<span class="sd">- Bengio et al., &quot;Curriculum Learning&quot; (ICML 2009)</span>
-<span class="sd">- Soviany et al., &quot;Curriculum Learning: A Survey&quot; (2022)</span>
-<span class="sd">- Li et al., &quot;Curriculum Learning for Natural Language Understanding&quot; (ACL 2020)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Bengio et al., "Curriculum Learning" (ICML 2009)</span>
+<span class="sd">- Soviany et al., "Curriculum Learning: A Survey" (2022)</span>
+<span class="sd">- Li et al., "Curriculum Learning for Natural Language Understanding" (ACL 2020)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -505,19 +507,19 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CurriculumSchedule</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Schedule types for curriculum progression.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Schedule types for curriculum progression."""</span>
 
-    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">&quot;linear&quot;</span>
-    <span class="n">COSINE</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span>
-    <span class="n">EXPONENTIAL</span> <span class="o">=</span> <span class="s2">&quot;exponential&quot;</span>
-    <span class="n">STEP</span> <span class="o">=</span> <span class="s2">&quot;step&quot;</span>
-    <span class="n">WARMUP_LINEAR</span> <span class="o">=</span> <span class="s2">&quot;warmup_linear&quot;</span>
-    <span class="n">POLYNOMIAL</span> <span class="o">=</span> <span class="s2">&quot;polynomial&quot;</span>
+    <span class="n">LINEAR</span> <span class="o">=</span> <span class="s2">"linear"</span>
+    <span class="n">COSINE</span> <span class="o">=</span> <span class="s2">"cosine"</span>
+    <span class="n">EXPONENTIAL</span> <span class="o">=</span> <span class="s2">"exponential"</span>
+    <span class="n">STEP</span> <span class="o">=</span> <span class="s2">"step"</span>
+    <span class="n">WARMUP_LINEAR</span> <span class="o">=</span> <span class="s2">"warmup_linear"</span>
+    <span class="n">POLYNOMIAL</span> <span class="o">=</span> <span class="s2">"polynomial"</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurriculumConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for curriculum learning.</span>
+<span class="w">    </span><span class="sd">"""Configuration for curriculum learning.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        start_value: Initial curriculum value (e.g., min seq length)</span>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        total_steps: Total steps for curriculum (None = use training steps)</span>
 <span class="sd">        schedule: Schedule type for progression</span>
 <span class="sd">        schedule_power: Power for polynomial schedule</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">start_value</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">end_value</span><span class="p">:</span> <span class="nb">float</span>
@@ -539,7 +541,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CurriculumScheduler">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.CurriculumScheduler">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurriculumScheduler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for curriculum schedulers.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for curriculum schedulers."""</span>
 
 <div class="viewcode-block" id="CurriculumScheduler.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.CurriculumScheduler.__init__">[docs]</a>
@@ -551,14 +553,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CurriculumScheduler.step">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.CurriculumScheduler.step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance curriculum by one step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Advance curriculum by one step."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="CurriculumScheduler.set_step">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.CurriculumScheduler.set_step">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set curriculum to specific step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set curriculum to specific step."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">=</span> <span class="n">step</span></div>
 
 
@@ -566,12 +568,12 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.CurriculumScheduler.get_value">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current curriculum value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current curriculum value."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get progress fraction [0, 1].&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get progress fraction [0, 1]."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">warmup_steps</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
 
@@ -581,7 +583,7 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">effective_step</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">effective_total</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate between start and end values based on progress.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Interpolate between start and end values based on progress."""</span>
         <span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">start_value</span>
         <span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">end_value</span>
 
@@ -618,7 +620,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SequenceLengthCurriculum">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.SequenceLengthCurriculum">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceLengthCurriculum</span><span class="p">(</span><span class="n">CurriculumScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curriculum that progressively increases sequence length.</span>
+<span class="w">    </span><span class="sd">"""Curriculum that progressively increases sequence length.</span>
 
 <span class="sd">    Start training with short sequences for faster iteration,</span>
 <span class="sd">    then increase to full length for learning long-range dependencies.</span>
@@ -628,7 +630,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        max_length: Final sequence length</span>
 <span class="sd">        total_steps: Total training steps</span>
 <span class="sd">        schedule: Progression schedule</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="SequenceLengthCurriculum.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.SequenceLengthCurriculum.__init__">[docs]</a>
@@ -655,7 +657,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SequenceLengthCurriculum.get_value">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.SequenceLengthCurriculum.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current sequence length.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current sequence length."""</span>
         <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">total_steps</span> <span class="ow">or</span> <span class="mi">100000</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_progress</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
@@ -665,7 +667,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="SequenceLengthCurriculum.get_length">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.SequenceLengthCurriculum.get_length">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current sequence length as integer.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current sequence length as integer."""</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span></div>
 
 
@@ -676,7 +678,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">tokens</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">random_start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Truncate batch to current curriculum length.</span>
+<span class="w">        </span><span class="sd">"""Truncate batch to current curriculum length.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            tokens: [batch, seq_len] token tensor</span>
@@ -684,7 +686,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Truncated tokens [batch, curr_length]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">curr_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_length</span><span class="p">()</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">shape</span>
 
@@ -707,7 +709,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingRatioCurriculum">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingRatioCurriculum">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MaskingRatioCurriculum</span><span class="p">(</span><span class="n">CurriculumScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curriculum that decreases masking ratio over training.</span>
+<span class="w">    </span><span class="sd">"""Curriculum that decreases masking ratio over training.</span>
 
 <span class="sd">    For MaskGIT-style training, start with high masking (easier task)</span>
 <span class="sd">    and decrease to lower masking (harder, more context needed).</span>
@@ -716,7 +718,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        start_ratio: Initial masking ratio (e.g., 0.9)</span>
 <span class="sd">        end_ratio: Final masking ratio (e.g., 0.1)</span>
 <span class="sd">        total_steps: Total training steps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="MaskingRatioCurriculum.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingRatioCurriculum.__init__">[docs]</a>
@@ -739,7 +741,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingRatioCurriculum.get_value">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingRatioCurriculum.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current masking ratio.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current masking ratio."""</span>
         <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">total_steps</span> <span class="ow">or</span> <span class="mi">100000</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_progress</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span></div>
@@ -748,7 +750,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="MaskingRatioCurriculum.get_mask_ratio">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.MaskingRatioCurriculum.get_mask_ratio">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mask_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current masking ratio.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current masking ratio."""</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()))</span></div>
 
 
@@ -759,7 +761,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create mask with current curriculum ratio.</span>
+<span class="w">        </span><span class="sd">"""Create mask with current curriculum ratio.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            shape: (batch_size, seq_len)</span>
@@ -767,7 +769,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean mask [batch, seq_len] where True = masked</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mask_ratio</span><span class="p">()</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">shape</span>
 
@@ -782,7 +784,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="NoiseLevelCurriculum">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseLevelCurriculum">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NoiseLevelCurriculum</span><span class="p">(</span><span class="n">CurriculumScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curriculum that adjusts noise level for diffusion training.</span>
+<span class="w">    </span><span class="sd">"""Curriculum that adjusts noise level for diffusion training.</span>
 
 <span class="sd">    For diffusion models, can start with higher noise levels (easier denoising)</span>
 <span class="sd">    and progress to full noise schedule.</span>
@@ -791,7 +793,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        start_t_max: Initial maximum timestep (fraction of full schedule)</span>
 <span class="sd">        end_t_max: Final maximum timestep (1.0 = full schedule)</span>
 <span class="sd">        total_steps: Total training steps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="NoiseLevelCurriculum.__init__">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseLevelCurriculum.__init__">[docs]</a>
@@ -814,7 +816,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="NoiseLevelCurriculum.get_value">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.NoiseLevelCurriculum.get_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current maximum timestep fraction.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current maximum timestep fraction."""</span>
         <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">total_steps</span> <span class="ow">or</span> <span class="mi">100000</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_progress</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span></div>
@@ -828,7 +830,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">num_timesteps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample timesteps with curriculum-limited maximum.</span>
+<span class="w">        </span><span class="sd">"""Sample timesteps with curriculum-limited maximum.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            batch_size: Number of samples</span>
@@ -837,7 +839,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Timesteps [batch_size] in range [0, max_t]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">t_max_frac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
         <span class="n">max_t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_timesteps</span> <span class="o">*</span> <span class="n">t_max_frac</span><span class="p">)</span>
         <span class="n">max_t</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_t</span><span class="p">)</span>  <span class="c1"># At least 1</span>
@@ -848,7 +850,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">TokenDifficultyCurriculum</span><span class="p">(</span><span class="n">CurriculumScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curriculum based on token difficulty/frequency.</span>
+<span class="w">    </span><span class="sd">"""Curriculum based on token difficulty/frequency.</span>
 
 <span class="sd">    Train first on frequent/easy tokens, progressively include</span>
 <span class="sd">    rare/difficult tokens.</span>
@@ -858,7 +860,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        start_coverage: Initial vocabulary coverage (e.g., top 50%)</span>
 <span class="sd">        end_coverage: Final vocabulary coverage (100%)</span>
 <span class="sd">        total_steps: Total training steps</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -884,18 +886,18 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">rank_to_token</span> <span class="o">=</span> <span class="n">sorted_indices</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current vocabulary coverage.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current vocabulary coverage."""</span>
         <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">total_steps</span> <span class="ow">or</span> <span class="mi">100000</span>
         <span class="n">progress</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_progress</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_active_vocab_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current active vocabulary size.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current active vocabulary size."""</span>
         <span class="n">coverage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">*</span> <span class="n">coverage</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_active_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get currently active token IDs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get currently active token IDs."""</span>
         <span class="n">n_active</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_vocab_size</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank_to_token</span><span class="p">[:</span><span class="n">n_active</span><span class="p">]</span>
 
@@ -904,7 +906,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">targets</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">ignore_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter targets to only include active tokens.</span>
+<span class="w">        </span><span class="sd">"""Filter targets to only include active tokens.</span>
 
 <span class="sd">        Tokens not in active vocabulary are set to ignore_index.</span>
 
@@ -914,7 +916,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Filtered targets</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">active_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_active_tokens</span><span class="p">()</span>
         <span class="n">active_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">active_tokens</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
 
@@ -929,7 +931,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MultiScaleCurriculum</span><span class="p">(</span><span class="n">CurriculumScheduler</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curriculum for multi-scale/multi-resolution training.</span>
+<span class="w">    </span><span class="sd">"""Curriculum for multi-scale/multi-resolution training.</span>
 
 <span class="sd">    For image/volume models, start training at low resolution</span>
 <span class="sd">    and progressively increase.</span>
@@ -938,7 +940,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        scales: List of scales (e.g., [0.25, 0.5, 1.0])</span>
 <span class="sd">        steps_per_scale: Steps at each scale, or total_steps / len(scales)</span>
 <span class="sd">        blend_steps: Steps to blend between scales</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -966,22 +968,22 @@ window.runMermaid = runMermaid;</script>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current scale.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current scale."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_scale</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current training scale.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current training scale."""</span>
         <span class="n">scale_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_scale</span>
         <span class="n">scale_idx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">scale_idx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">[</span><span class="n">scale_idx</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_scale_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current scale index.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get current scale index."""</span>
         <span class="n">scale_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_scale</span>
         <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">scale_idx</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scales</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">should_increase_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if it&#39;s time to increase scale.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if it's time to increase scale."""</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">&gt;</span> <span class="mi">0</span>
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_step</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_scale</span> <span class="o">==</span> <span class="mi">0</span>
@@ -990,29 +992,29 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CompositeCurriculum</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine multiple curriculum strategies.</span>
+<span class="w">    </span><span class="sd">"""Combine multiple curriculum strategies.</span>
 
 <span class="sd">    Manages multiple curricula that can be updated together.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        curricula: Dict mapping names to curriculum schedulers</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curricula</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">CurriculumScheduler</span><span class="p">]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curricula</span> <span class="o">=</span> <span class="n">curricula</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Advance all curricula by one step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Advance all curricula by one step."""</span>
         <span class="k">for</span> <span class="n">curriculum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">curricula</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">curriculum</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">set_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set all curricula to specific step.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set all curricula to specific step."""</span>
         <span class="k">for</span> <span class="n">curriculum</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">curricula</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">curriculum</span><span class="o">.</span><span class="n">set_step</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all current curriculum values.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get all current curriculum values."""</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">curricula</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurriculumScheduler</span><span class="p">:</span>
@@ -1023,13 +1025,13 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CurriculumDataLoader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DataLoader wrapper that applies curriculum to batches.</span>
+<span class="w">    </span><span class="sd">"""DataLoader wrapper that applies curriculum to batches.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dataloader: Base dataloader</span>
 <span class="sd">        curriculum: Curriculum scheduler (e.g., SequenceLengthCurriculum)</span>
 <span class="sd">        apply_fn: Function to apply curriculum to batch</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -1042,10 +1044,10 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">apply_fn</span> <span class="o">=</span> <span class="n">apply_fn</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_apply</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_default_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">curriculum</span><span class="p">:</span> <span class="n">CurriculumScheduler</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default application: truncate sequence length.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Default application: truncate sequence length."""</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">curriculum</span><span class="p">,</span> <span class="n">SequenceLengthCurriculum</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;tokens&quot;</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
-                <span class="n">batch</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">curriculum</span><span class="o">.</span><span class="n">truncate_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">&quot;tokens&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"tokens"</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>
+                <span class="n">batch</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">]</span> <span class="o">=</span> <span class="n">curriculum</span><span class="o">.</span><span class="n">truncate_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s2">"tokens"</span><span class="p">])</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
                 <span class="n">batch</span> <span class="o">=</span> <span class="n">curriculum</span><span class="o">.</span><span class="n">truncate_batch</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">batch</span>
@@ -1062,62 +1064,62 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="create_curriculum_from_config">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.create_curriculum_from_config">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_curriculum_from_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CurriculumScheduler</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create curriculum from configuration dict.</span>
+<span class="w">    </span><span class="sd">"""Create curriculum from configuration dict.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config: Dict with curriculum type and parameters</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Configured curriculum scheduler</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">curriculum_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;sequence_length&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">curriculum_type</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="s2">"sequence_length"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">&quot;sequence_length&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">"sequence_length"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SequenceLengthCurriculum</span><span class="p">(</span>
-            <span class="n">min_length</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;min_length&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
-            <span class="n">max_length</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_steps&quot;</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
-            <span class="n">schedule</span><span class="o">=</span><span class="n">CurriculumSchedule</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schedule&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">)),</span>
+            <span class="n">min_length</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"min_length"</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+            <span class="n">max_length</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_length"</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"total_steps"</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
+            <span class="n">schedule</span><span class="o">=</span><span class="n">CurriculumSchedule</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schedule"</span><span class="p">,</span> <span class="s2">"linear"</span><span class="p">)),</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">&quot;masking_ratio&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">"masking_ratio"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">MaskingRatioCurriculum</span><span class="p">(</span>
-            <span class="n">start_ratio</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_ratio&quot;</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span>
-            <span class="n">end_ratio</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_ratio&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
-            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_steps&quot;</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
-            <span class="n">schedule</span><span class="o">=</span><span class="n">CurriculumSchedule</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schedule&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">)),</span>
+            <span class="n">start_ratio</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"start_ratio"</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span>
+            <span class="n">end_ratio</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"end_ratio"</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"total_steps"</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
+            <span class="n">schedule</span><span class="o">=</span><span class="n">CurriculumSchedule</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schedule"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">)),</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">&quot;noise_level&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">"noise_level"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">NoiseLevelCurriculum</span><span class="p">(</span>
-            <span class="n">start_t_max</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start_t_max&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
-            <span class="n">end_t_max</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;end_t_max&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_steps&quot;</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
+            <span class="n">start_t_max</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"start_t_max"</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+            <span class="n">end_t_max</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"end_t_max"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"total_steps"</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
         <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">&quot;multi_scale&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">curriculum_type</span> <span class="o">==</span> <span class="s2">"multi_scale"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">MultiScaleCurriculum</span><span class="p">(</span>
-            <span class="n">scales</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scales&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span>
-            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_steps&quot;</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
+            <span class="n">scales</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scales"</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span>
+            <span class="n">total_steps</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"total_steps"</span><span class="p">,</span> <span class="mi">100000</span><span class="p">),</span>
         <span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown curriculum type: </span><span class="si">{</span><span class="n">curriculum_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown curriculum type: </span><span class="si">{</span><span class="n">curriculum_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;CurriculumSchedule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CurriculumConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CurriculumScheduler&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SequenceLengthCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MaskingRatioCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NoiseLevelCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TokenDifficultyCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MultiScaleCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CompositeCurriculum&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CurriculumDataLoader&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;create_curriculum_from_config&quot;</span><span class="p">,</span>
+    <span class="s2">"CurriculumSchedule"</span><span class="p">,</span>
+    <span class="s2">"CurriculumConfig"</span><span class="p">,</span>
+    <span class="s2">"CurriculumScheduler"</span><span class="p">,</span>
+    <span class="s2">"SequenceLengthCurriculum"</span><span class="p">,</span>
+    <span class="s2">"MaskingRatioCurriculum"</span><span class="p">,</span>
+    <span class="s2">"NoiseLevelCurriculum"</span><span class="p">,</span>
+    <span class="s2">"TokenDifficultyCurriculum"</span><span class="p">,</span>
+    <span class="s2">"MultiScaleCurriculum"</span><span class="p">,</span>
+    <span class="s2">"CompositeCurriculum"</span><span class="p">,</span>
+    <span class="s2">"CurriculumDataLoader"</span><span class="p">,</span>
+    <span class="s2">"create_curriculum_from_config"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -1129,7 +1131,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

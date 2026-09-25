@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.solvers.dpm &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.solvers.dpm &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -473,11 +475,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.solvers.dpm</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;DPM-Solver variants: second and third-order multistep solvers.</span>
+<span></span><span class="sd">"""DPM-Solver variants: second and third-order multistep solvers.</span>
 
-<span class="sd">Reference: Lu et al., &quot;DPM-Solver: A Fast ODE Solver for Diffusion Probabilistic</span>
-<span class="sd">Model Sampling&quot; (NeurIPS 2022)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Reference: Lu et al., "DPM-Solver: A Fast ODE Solver for Diffusion Probabilistic</span>
+<span class="sd">Model Sampling" (NeurIPS 2022)</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -490,13 +492,13 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DPMSolver2">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.DPMSolver2">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DPMSolver2</span><span class="p">(</span><span class="n">BaseBFNSolver</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DPM-Solver-2: Second-order multistep solver.</span>
+<span class="w">    </span><span class="sd">"""DPM-Solver-2: Second-order multistep solver.</span>
 
 <span class="sd">    Uses information from previous steps for efficiency:</span>
 <span class="sd">        params_{t+dt} = params_t + dt/2 * (3*f_t - f_{t-dt})</span>
 
 <span class="sd">    Achieves high quality with very few steps (~10-20).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DPMSolver2.__init__">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.DPMSolver2.__init__">[docs]</a>
@@ -563,11 +565,11 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DPMSolver3">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.DPMSolver3">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DPMSolver3</span><span class="p">(</span><span class="n">BaseBFNSolver</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;DPM-Solver-3: Third-order multistep solver.</span>
+<span class="w">    </span><span class="sd">"""DPM-Solver-3: Third-order multistep solver.</span>
 
 <span class="sd">    Uses three previous evaluations for even higher accuracy.</span>
 <span class="sd">    Can achieve excellent quality with just 10 steps.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DPMSolver3.__init__">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.DPMSolver3.__init__">[docs]</a>
@@ -646,7 +648,7 @@ window.runMermaid = runMermaid;</script>
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DPMSolver2&quot;</span><span class="p">,</span> <span class="s2">&quot;DPMSolver3&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"DPMSolver2"</span><span class="p">,</span> <span class="s2">"DPMSolver3"</span><span class="p">]</span>
 </pre></div>
 
            </div>
@@ -657,7 +659,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

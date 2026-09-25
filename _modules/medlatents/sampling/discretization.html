@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.sampling.discretization &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.sampling.discretization &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,16 +474,16 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.sampling.discretization</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Straight-through estimators for discrete latent variables.</span>
+<span></span><span class="sd">"""Straight-through estimators for discrete latent variables.</span>
 
 <span class="sd">Provides improved gradient estimators for sampling discrete tokens:</span>
 <span class="sd">- Decoupled ST-Gumbel-Softmax: Different temperatures for forward/backward passes</span>
 <span class="sd">- ReinMax: Second-order accurate straight-through estimator</span>
 
 <span class="sd">References:</span>
-<span class="sd">- &quot;Improving Discrete Optimisation Via Decoupled Straight-Through Gumbel-Softmax&quot; (arXiv:2410.13331)</span>
-<span class="sd">- &quot;Bridging Discrete and Backpropagation: Straight-Through Estimators&quot; (NeurIPS 2023)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- "Improving Discrete Optimisation Via Decoupled Straight-Through Gumbel-Softmax" (arXiv:2410.13331)</span>
+<span class="sd">- "Bridging Discrete and Backpropagation: Straight-Through Estimators" (NeurIPS 2023)</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
@@ -491,21 +493,21 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DecoupledSTGumbelSoftmax">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DecoupledSTGumbelSoftmax">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DecoupledSTGumbelSoftmax</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Decoupled Straight-Through Gumbel-Softmax estimator.</span>
 
 <span class="sd">    Uses different temperatures for forward (sampling) and backward (gradient) passes.</span>
 <span class="sd">    This provides better gradient estimates while maintaining sharp samples.</span>
 
-<span class="sd">    Reference: &quot;Improving Discrete Optimisation Via Decoupled Straight-Through</span>
-<span class="sd">                Gumbel-Softmax&quot; (arXiv:2410.13331)</span>
+<span class="sd">    Reference: "Improving Discrete Optimisation Via Decoupled Straight-Through</span>
+<span class="sd">                Gumbel-Softmax" (arXiv:2410.13331)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        forward_temp: Temperature for forward pass (sampling)</span>
 <span class="sd">        backward_temp: Temperature for backward pass (gradients)</span>
 <span class="sd">        hard: If True, use straight-through estimator</span>
 <span class="sd">        dim: Dimension to softmax over</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DecoupledSTGumbelSoftmax.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DecoupledSTGumbelSoftmax.__init__">[docs]</a>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="DecoupledSTGumbelSoftmax.forward">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.DecoupledSTGumbelSoftmax.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply decoupled ST-Gumbel-Softmax.</span>
 
 <span class="sd">        Args:</span>
@@ -534,7 +536,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            samples: [batch, seq_len, vocab_size] one-hot if hard=True, else soft samples</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Sample Gumbel noise (use eps=1e-6 for fp16 stability)</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-6</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
@@ -569,17 +571,17 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ReinMax">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.ReinMax">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReinMax</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ReinMax: Second-order accurate straight-through estimator.</span>
 
 <span class="sd">    Provides better gradient estimates than standard ST-Gumbel.</span>
 
-<span class="sd">    Reference: &quot;Bridging Discrete and Backpropagation: Straight-Through...=&quot; (NeurIPS 2023)</span>
+<span class="sd">    Reference: "Bridging Discrete and Backpropagation: Straight-Through...=" (NeurIPS 2023)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        temperature: Sampling temperature</span>
 <span class="sd">        dim: Dimension to softmax over</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ReinMax.__init__">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.ReinMax.__init__">[docs]</a>
@@ -592,7 +594,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="ReinMax.forward">
 <a class="viewcode-back" href="../../../api/sampling.html#medlatents.sampling.ReinMax.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logits</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply ReinMax estimator.</span>
 
 <span class="sd">        Args:</span>
@@ -600,7 +602,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            samples: [batch, seq_len, vocab_size]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Sample Gumbel noise (use eps=1e-6 for fp16 stability)</span>
         <span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-6</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span>
@@ -631,8 +633,8 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DecoupledSTGumbelSoftmax&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ReinMax&quot;</span><span class="p">,</span>
+    <span class="s2">"DecoupledSTGumbelSoftmax"</span><span class="p">,</span>
+    <span class="s2">"ReinMax"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -644,7 +646,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Token Interface &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Token Interface &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/documentation_options.js?v=a58bc63e"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -248,7 +248,7 @@ autoregressive and MaskGIT models. Do not pad D3PM or flow inputs unless
 <li><p><strong>Training</strong> – set a seed and enable deterministic ops (the training scripts
 expose <code class="docutils literal notranslate"><span class="pre">--seed</span></code> and <code class="docutils literal notranslate"><span class="pre">--deterministic</span></code>; the latter disables TF32 and cuDNN
 benchmarking).</p></li>
-<li><p><strong>Sampling</strong> – pass a <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> where supported; otherwise set
+<li><p><strong>Sampling</strong> – pass a <a class="reference external" href="https://docs.pytorch.org/docs/stable/generated/torch.Generator.html#torch.Generator" title="(in PyTorch v2.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Generator</span></code></a> where supported; otherwise set
 <code class="docutils literal notranslate"><span class="pre">torch.manual_seed</span></code> and avoid data-dependent nondeterminism.</p></li>
 <li><p><strong>Dataloaders</strong> – pass <code class="docutils literal notranslate"><span class="pre">seed</span></code> to
 <a class="reference internal" href="api/data.html#medlatents.data.get_tokenized_dataloaders" title="medlatents.data.get_tokenized_dataloaders"><code class="xref py py-func docutils literal notranslate"><span class="pre">medlatents.data.get_tokenized_dataloaders()</span></code></a> or
@@ -278,7 +278,7 @@ data problems early rather than let them corrupt a long training run.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

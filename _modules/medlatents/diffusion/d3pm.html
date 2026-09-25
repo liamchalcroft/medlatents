@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.diffusion.d3pm &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.diffusion.d3pm &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,11 +474,11 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.diffusion.d3pm</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;D3PM: Discrete Denoising Diffusion Probabilistic Models.</span>
+<span></span><span class="sd">"""D3PM: Discrete Denoising Diffusion Probabilistic Models.</span>
 
-<span class="sd">Based on &quot;Structured Denoising Diffusion Models in Discrete State-Spaces&quot;</span>
+<span class="sd">Based on "Structured Denoising Diffusion Models in Discrete State-Spaces"</span>
 <span class="sd">https://arxiv.org/abs/2107.03006</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -493,8 +495,8 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_torch_compile</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get torch.compile if available (PyTorch 2.0+), else return None.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">&quot;compile&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Get torch.compile if available (PyTorch 2.0+), else return None."""</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">torch</span><span class="p">,</span> <span class="s2">"compile"</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">compile</span>
     <span class="k">return</span> <span class="kc">None</span>
 
@@ -502,14 +504,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="D3PM">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PM">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">D3PM</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Discrete Denoising Diffusion Probabilistic Model.</span>
 
 <span class="sd">    Supports multiple transition types:</span>
 <span class="sd">    - absorbing: Transitions to a mask state (like masked language modeling)</span>
 <span class="sd">    - uniform: Uniform transitions to all classes (original D3PM)</span>
 <span class="sd">    - gaussian: Discretized Gaussian transitions (smooth blurring)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="D3PM.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PM.__init__">[docs]</a>
@@ -517,8 +519,8 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">num_timesteps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-        <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span><span class="p">,</span>
-        <span class="n">transition_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;absorbing&quot;</span><span class="p">,</span> <span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">,</span>
+        <span class="n">schedule_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"cosine"</span><span class="p">,</span> <span class="s2">"quadratic"</span><span class="p">,</span> <span class="s2">"sigmoid"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"cosine"</span><span class="p">,</span>
+        <span class="n">transition_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"absorbing"</span><span class="p">,</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="s2">"gaussian"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"absorbing"</span><span class="p">,</span>
         <span class="n">hybrid_loss_coeff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
@@ -526,7 +528,7 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_timesteps</span> <span class="o">=</span> <span class="n">num_timesteps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">=</span> <span class="n">transition_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_loss_coeff</span> <span class="o">=</span> <span class="n">hybrid_loss_coeff</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span> <span class="ow">or</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
 
         <span class="n">betas</span> <span class="o">=</span> <span class="n">get_beta_schedule</span><span class="p">(</span><span class="n">schedule_type</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="p">)</span>
 
@@ -534,7 +536,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">alphas_cumprod</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># For absorbing diffusion, track the mask token</span>
-        <span class="k">if</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span> <span class="o">=</span> <span class="n">num_classes</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span> <span class="o">=</span> <span class="n">num_classes</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
@@ -544,15 +546,15 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Use matrix-free path for absorbing transitions to avoid O(K^2) memory.</span>
         <span class="c1"># Absorbing transitions have closed-form structure that only needs the</span>
         <span class="c1"># scalar beta/alpha schedules, not full (K+1)x(K+1) matrices.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_matrix_free</span> <span class="o">=</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_matrix_free</span> <span class="o">=</span> <span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix_free</span><span class="p">:</span>
             <span class="n">alphas_cumprod_prev</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alphas_cumprod</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="p">(</span><span class="s2">&quot;betas&quot;</span><span class="p">,</span> <span class="n">betas</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;alphas&quot;</span><span class="p">,</span> <span class="n">alphas</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;alphas_cumprod&quot;</span><span class="p">,</span> <span class="n">alphas_cumprod</span><span class="p">),</span>
-                <span class="p">(</span><span class="s2">&quot;alphas_cumprod_prev&quot;</span><span class="p">,</span> <span class="n">alphas_cumprod_prev</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"betas"</span><span class="p">,</span> <span class="n">betas</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"alphas"</span><span class="p">,</span> <span class="n">alphas</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"alphas_cumprod"</span><span class="p">,</span> <span class="n">alphas_cumprod</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"alphas_cumprod_prev"</span><span class="p">,</span> <span class="n">alphas_cumprod_prev</span><span class="p">),</span>
             <span class="p">]:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Q_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q_bar_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q_bar_t_minus_1</span> <span class="o">=</span> <span class="kc">None</span>
@@ -579,26 +581,26 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PM.compile_sampling">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compile_sampling</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;reduce-overhead&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"reduce-overhead"</span><span class="p">,</span>
         <span class="n">fullgraph</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">dynamic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compile the sampling step using torch.compile for faster inference.</span>
 
 <span class="sd">        Requires PyTorch 2.0+. On older versions, this is a no-op.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mode: Compilation mode. Options:</span>
-<span class="sd">                - &quot;default&quot;: Good balance of compile time and runtime</span>
-<span class="sd">                - &quot;reduce-overhead&quot;: Minimize overhead, best for small models</span>
-<span class="sd">                - &quot;max-autotune&quot;: Maximum optimization, longer compile time</span>
+<span class="sd">                - "default": Good balance of compile time and runtime</span>
+<span class="sd">                - "reduce-overhead": Minimize overhead, best for small models</span>
+<span class="sd">                - "max-autotune": Maximum optimization, longer compile time</span>
 <span class="sd">            fullgraph: If True, require the entire function to be captured as a single graph</span>
 <span class="sd">            dynamic: If True, enable dynamic shape support (recommended for variable batch/seq)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if compilation was successful, False if torch.compile unavailable</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">torch_compile</span> <span class="o">=</span> <span class="n">_get_torch_compile</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">torch_compile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -613,7 +615,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
             <span class="n">effective_num_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Compiled inner loop of p_sample - the heavy computation.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Compiled inner loop of p_sample - the heavy computation."""</span>
             <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span>
 
             <span class="c1"># Predict clean tokens distribution</span>
@@ -635,7 +637,7 @@ window.runMermaid = runMermaid;</script>
             <span class="n">q_posterior_all</span> <span class="o">=</span> <span class="n">unnorm_posterior</span> <span class="o">/</span> <span class="n">Z</span>
 
             <span class="c1"># Marginalize</span>
-            <span class="n">p_tm1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bli,blij-&gt;blj&quot;</span><span class="p">,</span> <span class="n">p_x0</span><span class="p">,</span> <span class="n">q_posterior_all</span><span class="p">)</span>
+            <span class="n">p_tm1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"bli,blij-&gt;blj"</span><span class="p">,</span> <span class="n">p_x0</span><span class="p">,</span> <span class="n">q_posterior_all</span><span class="p">)</span>
 
             <span class="c1"># Apply temperature scaling if needed</span>
             <span class="k">if</span> <span class="n">temperature</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
@@ -652,34 +654,34 @@ window.runMermaid = runMermaid;</script>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_model_vocab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">model_vocab</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;vocab_size&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">model_vocab</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">"vocab_size"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model_vocab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">model_vocab</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
                 <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="s2">&quot;For absorbing transitions, set the model output vocab to &quot;</span>
-                    <span class="s2">&quot;num_classes + 1 (mask token). For DiscreteDiT, use masked=True &quot;</span>
-                    <span class="s2">&quot;with base vocab_size.&quot;</span>
+                    <span class="s2">"For absorbing transitions, set the model output vocab to "</span>
+                    <span class="s2">"num_classes + 1 (mask token). For DiscreteDiT, use masked=True "</span>
+                    <span class="s2">"with base vocab_size."</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">hint</span> <span class="o">=</span> <span class="s2">&quot;Set the model output vocab to match num_classes.&quot;</span>
+                <span class="n">hint</span> <span class="o">=</span> <span class="s2">"Set the model output vocab to match num_classes."</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;D3PM model vocab mismatch: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;model.vocab_size=</span><span class="si">{</span><span class="n">model_vocab</span><span class="si">}</span><span class="s2">, &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;effective_num_classes=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span><span class="si">}</span><span class="s2">. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">"D3PM model vocab mismatch: "</span>
+                <span class="sa">f</span><span class="s2">"model.vocab_size=</span><span class="si">{</span><span class="n">model_vocab</span><span class="si">}</span><span class="s2">, "</span>
+                <span class="sa">f</span><span class="s2">"effective_num_classes=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span><span class="si">}</span><span class="s2">. "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
 <div class="viewcode-block" id="D3PM.q_sample">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PM.q_sample">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">q_sample</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
         <span class="n">noise</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sample from q(x_t | x_0) - the forward diffusion process.</span>
 
 <span class="sd">        Args:</span>
@@ -689,7 +691,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            x_t: Noisy data at timestep t</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix_free</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_sample_absorbing</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
@@ -702,7 +704,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">Q_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q_bar_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>  <span class="c1"># [B, C, C]</span>
 
         <span class="c1"># Apply transition: x_t_onehot = x_0_onehot @ Q_bar^T</span>
-        <span class="n">x_t_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;blc,bcd-&gt;bld&quot;</span><span class="p">,</span> <span class="n">x_0_onehot</span><span class="p">,</span> <span class="n">Q_bar</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
+        <span class="n">x_t_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"blc,bcd-&gt;bld"</span><span class="p">,</span> <span class="n">x_0_onehot</span><span class="p">,</span> <span class="n">Q_bar</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
 
         <span class="c1"># Sample from categorical distribution</span>
         <span class="n">x_t_probs</span> <span class="o">=</span> <span class="n">x_t_probs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span><span class="p">)</span>  <span class="c1"># [B*L, C]</span>
@@ -714,14 +716,14 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_q_sample_absorbing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Forward diffusion for absorbing transitions (matrix-free).</span>
+        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Forward diffusion for absorbing transitions (matrix-free).</span>
 
 <span class="sd">        Each token independently stays with prob alpha_bar_t or absorbs to</span>
 <span class="sd">        mask with prob 1 - alpha_bar_t.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">alpha_bar_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_cumprod</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># [B, 1]</span>
         <span class="n">keep</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand_like</span><span class="p">(</span><span class="n">x_0</span><span class="o">.</span><span class="n">float</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">alpha_bar_t</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">keep</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span><span class="p">)</span>
@@ -730,14 +732,14 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PM.q_posterior">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">q_posterior</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq num_classes&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the posterior distribution q(x_{t-1} | x_t, x_0).</span>
+        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq num_classes"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Compute the posterior distribution q(x_{t-1} | x_t, x_0).</span>
 
 <span class="sd">        This computes the true posterior for the reverse process, which is used</span>
-<span class="sd">        for training. The posterior is computed using Bayes&#39; rule:</span>
+<span class="sd">        for training. The posterior is computed using Bayes' rule:</span>
 
 <span class="sd">        q(x_{t-1} | x_t, x_0) ∝ q(x_t | x_{t-1}) · q(x_{t-1} | x_0)</span>
 
@@ -752,7 +754,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Normalized posterior probabilities [batch, seq_len, num_classes]</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix_free</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_posterior_absorbing</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
 
@@ -767,7 +769,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="c1"># Step 1: Compute q(x_{t-1} | x_0) for all possible x_{t-1}</span>
         <span class="c1"># This gives us the prior distribution over x_{t-1} given the clean data</span>
-        <span class="n">q_tm1_given_0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;blc,bcd-&gt;bld&quot;</span><span class="p">,</span> <span class="n">x_0_onehot</span><span class="p">,</span> <span class="n">Q_bar_t_minus_1</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
+        <span class="n">q_tm1_given_0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"blc,bcd-&gt;bld"</span><span class="p">,</span> <span class="n">x_0_onehot</span><span class="p">,</span> <span class="n">Q_bar_t_minus_1</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
 
         <span class="c1"># Step 2: Compute q(x_t | x_{t-1}) for all possible x_{t-1}</span>
         <span class="c1"># We need to extract the column corresponding to the observed x_t</span>
@@ -780,7 +782,7 @@ window.runMermaid = runMermaid;</script>
             <span class="o">-</span><span class="mi">1</span>
         <span class="p">)</span>  <span class="c1"># [B, L, C]</span>
 
-        <span class="c1"># Step 3: Apply Bayes&#39; rule (multiply and normalize)</span>
+        <span class="c1"># Step 3: Apply Bayes' rule (multiply and normalize)</span>
         <span class="c1"># q(x_{t-1} | x_t, x_0) ∝ q(x_t | x_{t-1}) · q(x_{t-1} | x_0)</span>
         <span class="n">posterior</span> <span class="o">=</span> <span class="n">q_t_given_tm1</span> <span class="o">*</span> <span class="n">q_tm1_given_0</span>
         <span class="n">posterior</span> <span class="o">=</span> <span class="n">posterior</span> <span class="o">/</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="n">EPS_PROB</span><span class="p">)</span>
@@ -790,17 +792,17 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_q_posterior_absorbing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq num_classes&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Posterior q(x_{t-1} | x_t, x_0) for absorbing transitions (matrix-free).</span>
+        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Float</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq num_classes"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Posterior q(x_{t-1} | x_t, x_0) for absorbing transitions (matrix-free).</span>
 
 <span class="sd">        For absorbing diffusion the posterior has closed form:</span>
 <span class="sd">        - If x_t != MASK: x_{t-1} = x_t with certainty (token survived).</span>
 <span class="sd">        - If x_t == MASK: x_{t-1} = x_0 with prob ∝ β_t·ᾱ_{t-1},</span>
 <span class="sd">                          x_{t-1} = MASK with prob ∝ 1 - ᾱ_{t-1}.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">shape</span>
         <span class="n">beta_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">betas</span><span class="p">[</span><span class="n">t</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># [B, 1]</span>
         <span class="n">alpha_bar_tm1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphas_cumprod_prev</span><span class="p">[</span><span class="n">t</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># [B, 1]</span>
@@ -829,12 +831,12 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">p_sample</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">],</span>
+        <span class="n">x_t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">],</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sample from p(x_{t-1} | x_t) - the learned reverse process.</span>
 
 <span class="sd">        Uses vectorized marginalization over all x_0 values simultaneously.</span>
@@ -849,7 +851,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            x_{t-1}: Sample at timestep t-1</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_model_vocab</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="c1"># Get model logits</span>
@@ -880,7 +882,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">Q_bar_t_minus_1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inner computation for p_sample - can be compiled via compile_sampling().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Inner computation for p_sample - can be compiled via compile_sampling()."""</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="c1"># Predict clean tokens distribution</span>
@@ -911,8 +913,8 @@ window.runMermaid = runMermaid;</script>
         <span class="n">q_posterior_all</span> <span class="o">=</span> <span class="n">unnorm_posterior</span> <span class="o">/</span> <span class="n">Z</span>  <span class="c1"># [B, L, C_x0, C_tm1]</span>
 
         <span class="c1"># Marginalize: p(x_{t-1}=j) = sum_i p(x_0=i) * q(x_{t-1}=j | x_t, x_0=i)</span>
-        <span class="c1"># = einsum(&#39;bli,blij-&gt;blj&#39;, p_x0, q_posterior_all)</span>
-        <span class="n">p_tm1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;bli,blij-&gt;blj&quot;</span><span class="p">,</span> <span class="n">p_x0</span><span class="p">,</span> <span class="n">q_posterior_all</span><span class="p">)</span>
+        <span class="c1"># = einsum('bli,blij-&gt;blj', p_x0, q_posterior_all)</span>
+        <span class="n">p_tm1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"bli,blij-&gt;blj"</span><span class="p">,</span> <span class="n">p_x0</span><span class="p">,</span> <span class="n">q_posterior_all</span><span class="p">)</span>
 
         <span class="c1"># Sample from the marginalized distribution</span>
         <span class="c1"># (temperature already applied to logits before softmax — do NOT apply again)</span>
@@ -927,7 +929,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverse sampling step for absorbing transitions (matrix-free).</span>
+<span class="w">        </span><span class="sd">"""Reverse sampling step for absorbing transitions (matrix-free).</span>
 
 <span class="sd">        For unmasked positions x_{t-1} = x_t deterministically.</span>
 <span class="sd">        For masked positions:</span>
@@ -935,7 +937,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">          p(x_{t-1}=MASK | x_t=MASK) = (1-ᾱ_{t-1}) / (1-ᾱ_t)</span>
 
 <span class="sd">        Memory: O(B·L·K) instead of O(B·L·K²).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">B</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">x_t</span><span class="o">.</span><span class="n">shape</span>
 
         <span class="n">beta_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">betas</span><span class="p">[</span><span class="n">t</span><span class="p">][:,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># [B, 1]</span>
@@ -975,12 +977,12 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_loss</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">],</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;vb&quot;</span><span class="p">,</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">,</span> <span class="s2">&quot;cross_entropy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">,</span>
+        <span class="n">x_0</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">],</span>
+        <span class="n">t</span><span class="p">:</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"vb"</span><span class="p">,</span> <span class="s2">"hybrid"</span><span class="p">,</span> <span class="s2">"cross_entropy"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"hybrid"</span><span class="p">,</span>
         <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute training loss.</span>
 
 <span class="sd">        Args:</span>
@@ -992,7 +994,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            loss: Scalar loss</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_model_vocab</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="n">x_0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1006,16 +1008,16 @@ window.runMermaid = runMermaid;</script>
         <span class="c1"># Get model prediction</span>
         <span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
 
-        <span class="k">if</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;cross_entropy&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"cross_entropy"</span><span class="p">:</span>
             <span class="c1"># Simple cross-entropy loss predicting x_0</span>
             <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">effective_num_classes</span><span class="p">),</span> <span class="n">x_0</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 
-        <span class="k">elif</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;vb&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"vb"</span><span class="p">:</span>
             <span class="c1"># Variational bound: KL(q(x_{t-1}|x_t,x_0) || p(x_{t-1}|x_t))</span>
             <span class="n">q_posterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_posterior</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>  <span class="c1"># [B, L, C]</span>
-            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">q_posterior</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;batchmean&quot;</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">q_posterior</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"batchmean"</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">loss_type</span> <span class="o">==</span> <span class="s2">"hybrid"</span><span class="p">:</span>
             <span class="c1"># Hybrid loss: weighted combination of VB and simple prediction</span>
             <span class="c1"># Cross-entropy component</span>
             <span class="n">ce_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span>
@@ -1024,12 +1026,12 @@ window.runMermaid = runMermaid;</script>
 
             <span class="c1"># VB component (simplified)</span>
             <span class="n">q_posterior</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_posterior</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-            <span class="n">vb_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">q_posterior</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;batchmean&quot;</span><span class="p">)</span>
+            <span class="n">vb_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">q_posterior</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">"batchmean"</span><span class="p">)</span>
 
             <span class="n">loss</span> <span class="o">=</span> <span class="n">ce_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_loss_coeff</span> <span class="o">*</span> <span class="n">vb_loss</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown loss type: </span><span class="si">{</span><span class="n">loss_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown loss type: </span><span class="si">{</span><span class="n">loss_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">loss</span></div>
 
@@ -1039,8 +1041,8 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">&quot;batch seq&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="s2">"batch seq"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate samples using the reverse diffusion process.</span>
 
 <span class="sd">        Args:</span>
@@ -1051,7 +1053,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            x_0: Generated samples</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span> <span class="o">=</span> <span class="n">shape</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span>
 
@@ -1061,7 +1063,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Start from pure noise</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
                 <span class="c1"># Start from all mask tokens (mask_token is guaranteed set when transition_type == absorbing)</span>
                 <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_token</span>  <span class="c1"># type: ignore[assignment]</span>
                 <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">mask_token</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
@@ -1085,20 +1087,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="D3PMKLASS">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PMKLASS">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">D3PMKLASS</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    KL-Adaptive Stability Sampling (KLASS) for D3PM/discrete diffusion.</span>
 
 <span class="sd">    Dynamically stops sampling when predictions stabilize, rather than using</span>
 <span class="sd">    all timesteps. Can significantly speed up inference.</span>
 
-<span class="sd">    Reference: &quot;KL-Guided Fast Inference in Masked Diffusion Models&quot; (arXiv:2511.05664)</span>
+<span class="sd">    Reference: "KL-Guided Fast Inference in Masked Diffusion Models" (arXiv:2511.05664)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        d3pm: Base D3PM instance</span>
 <span class="sd">        kl_threshold: Stop when KL divergence falls below this threshold</span>
 <span class="sd">        min_steps: Minimum number of steps before early stopping</span>
 <span class="sd">        window_size: Number of steps to average KL over</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="D3PMKLASS.__init__">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PMKLASS.__init__">[docs]</a>
@@ -1120,14 +1122,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="D3PMKLASS.reset">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PMKLASS.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset state for a new sampling run.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Reset state for a new sampling run."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kl_history_tensors</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="D3PMKLASS.should_stop">
 <a class="viewcode-back" href="../../../api/diffusion.html#medlatents.diffusion.D3PMKLASS.should_stop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">should_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kl_divergence</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determine if generation should stop based on KL divergence.</span>
 
 <span class="sd">        Uses tensor operations to avoid GPU-&gt;CPU sync in the hot sampling loop.</span>
@@ -1139,14 +1141,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if generation should stop, False otherwise</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">steps_taken</span> <span class="o">=</span> <span class="n">max_steps</span> <span class="o">-</span> <span class="n">step</span>
         <span class="k">if</span> <span class="n">steps_taken</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_steps</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_kl_history_tensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kl_divergence</span><span class="p">)</span>
 
-        <span class="c1"># Trim history to avoid memory growth (keep only what&#39;s needed for window)</span>
+        <span class="c1"># Trim history to avoid memory growth (keep only what's needed for window)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kl_history_tensors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_kl_history_tensors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kl_history_tensors</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="p">:]</span>
 
@@ -1172,7 +1174,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Generate samples with KL-guided early stopping.</span>
 
 <span class="sd">        Args:</span>
@@ -1184,7 +1186,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            x_0: Generated samples</span>
 <span class="sd">            metrics: Dict with generation statistics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Reset state for new sampling run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
@@ -1193,10 +1195,10 @@ window.runMermaid = runMermaid;</script>
         <span class="n">max_steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d3pm</span><span class="o">.</span><span class="n">num_timesteps</span>
 
         <span class="n">metrics</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;steps_taken&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;final_kl&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s2">&quot;kl_history&quot;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;early_stopped&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">"steps_taken"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"final_kl"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">"kl_history"</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">"early_stopped"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="c1"># Ensure model is in eval mode during sampling</span>
@@ -1209,7 +1211,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Start from pure noise</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d3pm</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">&quot;absorbing&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d3pm</span><span class="o">.</span><span class="n">transition_type</span> <span class="o">==</span> <span class="s2">"absorbing"</span><span class="p">:</span>
                 <span class="c1"># mask_token is guaranteed set when transition_type == absorbing</span>
                 <span class="n">mask_token</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d3pm</span><span class="o">.</span><span class="n">mask_token</span>  <span class="c1"># type: ignore[assignment]</span>
                 <span class="n">x_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">),</span> <span class="n">mask_token</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
@@ -1234,16 +1236,16 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">kl_div</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span>
                         <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">prev_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
                         <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-                        <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;batchmean&quot;</span><span class="p">,</span>
+                        <span class="n">reduction</span><span class="o">=</span><span class="s2">"batchmean"</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># Use tensor infinity to stay on device</span>
-                    <span class="n">kl_div</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">kl_div</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
                 <span class="c1"># Check if we should stop (uses tensor comparison internally)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_stop</span><span class="p">(</span><span class="n">t_idx</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">,</span> <span class="n">kl_div</span><span class="p">):</span>
-                    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;early_stopped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;steps_taken&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_steps</span> <span class="o">-</span> <span class="n">t_idx</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="s2">"early_stopped"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">metrics</span><span class="p">[</span><span class="s2">"steps_taken"</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_steps</span> <span class="o">-</span> <span class="n">t_idx</span>
                     <span class="n">final_kl_tensor</span> <span class="o">=</span> <span class="n">kl_div</span>
                     <span class="k">break</span>
 
@@ -1254,16 +1256,16 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">prev_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
                 <span class="n">kl_tensors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kl_div</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;early_stopped&quot;</span><span class="p">]:</span>
-                <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;steps_taken&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_steps</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">metrics</span><span class="p">[</span><span class="s2">"early_stopped"</span><span class="p">]:</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="s2">"steps_taken"</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_steps</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">was_training</span><span class="p">:</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 
         <span class="c1"># Convert KL history to Python floats AFTER loop completes (single sync point)</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;kl_history&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kl</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">kl</span> <span class="ow">in</span> <span class="n">kl_tensors</span><span class="p">]</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s2">"kl_history"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">kl</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">kl</span> <span class="ow">in</span> <span class="n">kl_tensors</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">final_kl_tensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;final_kl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_kl_tensor</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">"final_kl"</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_kl_tensor</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">x_t</span><span class="p">,</span> <span class="n">metrics</span></div>
 </div>
@@ -1278,7 +1280,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

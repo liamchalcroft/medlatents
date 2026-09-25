@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.bayesian_flow.solvers.base &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.bayesian_flow.solvers.base &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -473,7 +475,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.bayesian_flow.solvers.base</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Base solver class for BFN ODE/SDE solvers.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Base solver class for BFN ODE/SDE solvers."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -487,7 +489,7 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="BaseBFNSolver">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.BaseBFNSolver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseBFNSolver</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for BFN ODE/SDE solvers.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for BFN ODE/SDE solvers."""</span>
 
 <div class="viewcode-block" id="BaseBFNSolver.__init__">
 <a class="viewcode-back" href="../../../../api/bayesian_flow.html#medlatents.bayesian_flow.BaseBFNSolver.__init__">[docs]</a>
@@ -506,7 +508,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">dt</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Take one solver step.</span>
+<span class="w">        </span><span class="sd">"""Take one solver step.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            params: Current distribution parameters [batch, seq, vocab]</span>
@@ -516,7 +518,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Updated parameters</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -530,7 +532,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">return_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate samples using the solver.</span>
+<span class="w">        </span><span class="sd">"""Generate samples using the solver.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            batch_size: Batch size</span>
@@ -541,7 +543,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns:</span>
 <span class="sd">            samples: [batch, seq] generated samples</span>
 <span class="sd">            metrics: Dict with generation statistics</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">device</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_prior_params</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
@@ -568,19 +570,19 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
 
         <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;steps_taken&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">,</span>
-            <span class="s2">&quot;solver&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="s2">"steps_taken"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_steps</span><span class="p">,</span>
+            <span class="s2">"solver"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">return_trajectory</span><span class="p">:</span>
-            <span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;trajectory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s2">"trajectory"</span><span class="p">]</span> <span class="o">=</span> <span class="n">trajectory</span>
 
         <span class="k">return</span> <span class="n">samples</span><span class="p">,</span> <span class="n">metrics</span></div>
 </div>
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BaseBFNSolver&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"BaseBFNSolver"</span><span class="p">]</span>
 </pre></div>
 
            </div>
@@ -591,7 +593,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

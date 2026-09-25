@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post-Training Guide &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Post-Training Guide &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -168,10 +168,10 @@ method-specific hyperparameters. Construct it directly or from a named preset.</
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
 
 <span class="c1"># Direct construction</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;dpo&quot;</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">"dpo"</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
 
 <span class="c1"># Or from a preset, overriding individual fields</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;dpo_standard&quot;</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"dpo_standard"</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">5e-6</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Ready-made preset constants are also exported:
@@ -201,8 +201,8 @@ with a reward function via
     <span class="n">prompts</span><span class="o">=</span><span class="n">prompts</span><span class="p">,</span>                 <span class="c1"># conditioning labels / prompts</span>
     <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>             <span class="c1"># scores samples; higher is better</span>
     <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">pair_strategy</span><span class="o">=</span><span class="s2">&quot;best_worst&quot;</span><span class="p">,</span>      <span class="c1"># &quot;all&quot;, &quot;adjacent&quot;, or &quot;best_worst&quot;</span>
-    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+    <span class="n">pair_strategy</span><span class="o">=</span><span class="s2">"best_worst"</span><span class="p">,</span>      <span class="c1"># "all", "adjacent", or "best_worst"</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -226,7 +226,7 @@ compute log-probabilities for that model family.</p>
 <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ref_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
     <span class="n">p</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;dpo&quot;</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">"dpo"</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">AutoregressiveDPOTrainer</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>
@@ -253,7 +253,7 @@ so the trainer needs the <a class="reference internal" href="../api/diffusion.ht
     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="n">d3pm</span><span class="o">=</span><span class="n">d3pm</span><span class="p">,</span>                       <span class="c1"># the D3PM diffusion process</span>
     <span class="n">num_timestep_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>         <span class="c1"># Monte-Carlo timesteps for the ELBO</span>
-    <span class="n">elbo_mode</span><span class="o">=</span><span class="s2">&quot;monte_carlo&quot;</span><span class="p">,</span>
+    <span class="n">elbo_mode</span><span class="o">=</span><span class="s2">"monte_carlo"</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -269,7 +269,7 @@ probability path:</p>
     <span class="n">ref_model</span><span class="o">=</span><span class="n">ref_model</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>                       <span class="c1"># e.g. MixtureDiscreteProbPath</span>
-    <span class="n">likelihood_strategy</span><span class="o">=</span><span class="s2">&quot;trajectory&quot;</span><span class="p">,</span>
+    <span class="n">likelihood_strategy</span><span class="o">=</span><span class="s2">"trajectory"</span><span class="p">,</span>
     <span class="n">num_timestep_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -291,7 +291,7 @@ rather than only final samples. It generates <code class="docutils literal notra
 per step and scores intermediate states with a step preference model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span><span class="p">,</span> <span class="n">SPOTrainer</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;spo&quot;</span><span class="p">,</span> <span class="n">num_candidates</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">"spo"</span><span class="p">,</span> <span class="n">num_candidates</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">SPOTrainer</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
@@ -327,7 +327,7 @@ adaptive KL/distance penalty (<code class="docutils literal notranslate"><span c
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.rl</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRPOTrainer</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span>
-    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;grpo&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">"grpo"</span><span class="p">,</span>
     <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">clip_range</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -378,12 +378,12 @@ trains a consistency model from scratch.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.distillation</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConsistencyTrainer</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;consistency&quot;</span><span class="p">,</span> <span class="n">teacher_path</span><span class="o">=</span><span class="s2">&quot;teacher.pt&quot;</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">"consistency"</span><span class="p">,</span> <span class="n">teacher_path</span><span class="o">=</span><span class="s2">"teacher.pt"</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">ConsistencyTrainer</span><span class="p">(</span>
     <span class="n">student</span><span class="o">=</span><span class="n">student</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="n">teacher</span><span class="o">=</span><span class="n">teacher</span><span class="p">,</span>
-    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distillation&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">"distillation"</span><span class="p">,</span>
     <span class="n">s0</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">s1</span><span class="o">=</span><span class="mi">1280</span><span class="p">,</span>                  <span class="c1"># discretization schedule endpoints</span>
 <span class="p">)</span>
 <span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
@@ -409,7 +409,7 @@ scoring callable (e.g. <code class="docutils literal notranslate"><span class="p
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_reward_model</span><span class="p">,</span> <span class="n">RewardModelTrainer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.preference</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIPreferenceScorer</span>
 
-<span class="n">reward_model</span> <span class="o">=</span> <span class="n">create_reward_model</span><span class="p">(</span><span class="n">model_size</span><span class="o">=</span><span class="s2">&quot;small&quot;</span><span class="p">,</span> <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+<span class="n">reward_model</span> <span class="o">=</span> <span class="n">create_reward_model</span><span class="p">(</span><span class="n">model_size</span><span class="o">=</span><span class="s2">"small"</span><span class="p">,</span> <span class="n">vocab_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
 <span class="n">rm_trainer</span> <span class="o">=</span> <span class="n">RewardModelTrainer</span><span class="p">(</span><span class="n">reward_model</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 <span class="n">rm_trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 
@@ -433,14 +433,14 @@ by reward, and fine-tune on those.</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training</span><span class="w"> </span><span class="kn">import</span> <span class="n">PostTrainingConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.post_training.self_play</span><span class="w"> </span><span class="kn">import</span> <span class="n">RFTTrainer</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;rft&quot;</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">"rft"</span><span class="p">,</span> <span class="n">use_fsdp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">trainer</span> <span class="o">=</span> <span class="n">RFTTrainer</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
     <span class="n">reward_fn</span><span class="o">=</span><span class="n">reward_fn</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
     <span class="n">num_samples_per_prompt</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
     <span class="n">top_k</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">seq_length</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
 </pre></div>
@@ -507,7 +507,7 @@ reward function (RFT).</p></td>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

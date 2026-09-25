@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.post_training.configs &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.post_training.configs &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,7 +474,7 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.post_training.configs</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Configuration classes for post-training methods.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Configuration classes for post-training methods."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -484,7 +486,7 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/post_training.html#medlatents.post_training.PostTrainingConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PostTrainingConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for post-training methods.</span>
+<span class="w">    </span><span class="sd">"""Configuration for post-training methods.</span>
 
 <span class="sd">    This config class supports all post-training methods in medlatents:</span>
 <span class="sd">    - DPO variants (standard, IPO, KTO, SPO)</span>
@@ -496,24 +498,24 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    supports sensible defaults that can be overridden as needed.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        &gt;&gt;&gt; config = PostTrainingConfig(method=&quot;dpo&quot;, beta=0.1, lr=1e-5)</span>
-<span class="sd">        &gt;&gt;&gt; config = PostTrainingConfig.from_preset(&quot;dpo_small&quot;)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &gt;&gt;&gt; config = PostTrainingConfig(method="dpo", beta=0.1, lr=1e-5)</span>
+<span class="sd">        &gt;&gt;&gt; config = PostTrainingConfig.from_preset("dpo_small")</span>
+<span class="sd">    """</span>
 
     <span class="c1"># ===== Method Selection =====</span>
     <span class="n">method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span>
-        <span class="s2">&quot;dpo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;spo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ipo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kto&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ddpo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;grpo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;gardo&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;consistency&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;reflow&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;self_play&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;rft&quot;</span><span class="p">,</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dpo&quot;</span>
+        <span class="s2">"dpo"</span><span class="p">,</span>
+        <span class="s2">"spo"</span><span class="p">,</span>
+        <span class="s2">"ipo"</span><span class="p">,</span>
+        <span class="s2">"kto"</span><span class="p">,</span>
+        <span class="s2">"ddpo"</span><span class="p">,</span>
+        <span class="s2">"grpo"</span><span class="p">,</span>
+        <span class="s2">"gardo"</span><span class="p">,</span>
+        <span class="s2">"consistency"</span><span class="p">,</span>
+        <span class="s2">"reflow"</span><span class="p">,</span>
+        <span class="s2">"self_play"</span><span class="p">,</span>
+        <span class="s2">"rft"</span><span class="p">,</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">"dpo"</span>
 
     <span class="c1"># ===== Common Training Parameters =====</span>
     <span class="n">lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span>
@@ -523,7 +525,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">warmup_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">weight_decay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span>
     <span class="n">grad_clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">mixed_precision</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;fp16&quot;</span><span class="p">,</span> <span class="s2">&quot;bf16&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bf16&quot;</span>
+    <span class="n">mixed_precision</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"no"</span><span class="p">,</span> <span class="s2">"fp16"</span><span class="p">,</span> <span class="s2">"bf16"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"bf16"</span>
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">42</span>
 
     <span class="c1"># ===== EMA Settings =====</span>
@@ -532,13 +534,13 @@ window.runMermaid = runMermaid;</script>
 
     <span class="c1"># ===== DPO-Specific Parameters =====</span>
     <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># KL penalty weight</span>
-    <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="s2">&quot;hinge&quot;</span><span class="p">,</span> <span class="s2">&quot;ipo&quot;</span><span class="p">,</span> <span class="s2">&quot;kto&quot;</span><span class="p">,</span> <span class="s2">&quot;disco&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sigmoid&quot;</span>
-    <span class="n">reference_free</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># If True, don&#39;t use reference model</span>
+    <span class="n">loss_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="s2">"hinge"</span><span class="p">,</span> <span class="s2">"ipo"</span><span class="p">,</span> <span class="s2">"kto"</span><span class="p">,</span> <span class="s2">"disco"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"sigmoid"</span>
+    <span class="n">reference_free</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># If True, don't use reference model</span>
     <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Soft labels for robustness</span>
 
     <span class="c1"># ===== SPO-Specific Parameters =====</span>
     <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># Candidates per denoising step</span>
-    <span class="n">step_preference_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Path or &quot;train&quot;</span>
+    <span class="n">step_preference_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Path or "train"</span>
 
     <span class="c1"># ===== RL-Specific Parameters =====</span>
     <span class="n">clip_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># PPO/GRPO clipping</span>
@@ -566,7 +568,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">top_k_samples</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># For RFT</span>
 
     <span class="c1"># ===== Reward Model Settings =====</span>
-    <span class="n">reward_model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;trained&quot;</span><span class="p">,</span> <span class="s2">&quot;ai&quot;</span><span class="p">,</span> <span class="s2">&quot;discriminator&quot;</span><span class="p">,</span> <span class="s2">&quot;external&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ai&quot;</span>
+    <span class="n">reward_model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"trained"</span><span class="p">,</span> <span class="s2">"ai"</span><span class="p">,</span> <span class="s2">"discriminator"</span><span class="p">,</span> <span class="s2">"external"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ai"</span>
     <span class="n">reward_model_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">reward_model_config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 
@@ -574,35 +576,35 @@ window.runMermaid = runMermaid;</script>
     <span class="n">log_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">eval_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">save_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span>
-    <span class="n">logdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./post_training_logs&quot;</span>
+    <span class="n">logdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"./post_training_logs"</span>
     <span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">wandb_project</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">wandb_entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># ===== Distributed Training =====</span>
     <span class="n">use_fsdp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">fsdp_sharding_strategy</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="s2">&quot;shard_grad_op&quot;</span><span class="p">,</span> <span class="s2">&quot;no_shard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span>
+    <span class="n">fsdp_sharding_strategy</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"full"</span><span class="p">,</span> <span class="s2">"shard_grad_op"</span><span class="p">,</span> <span class="s2">"no_shard"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"full"</span>
 
 <div class="viewcode-block" id="PostTrainingConfig.__post_init__">
 <a class="viewcode-back" href="../../../api/post_training.html#medlatents.post_training.PostTrainingConfig.__post_init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate configuration after initialization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Validate configuration after initialization."""</span>
         <span class="c1"># Validate method-specific requirements</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;spo&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_candidates</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;SPO requires at least 2 candidates per step&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"spo"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_candidates</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"SPO requires at least 2 candidates per step"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ddpo&quot;</span><span class="p">,</span> <span class="s2">&quot;grpo&quot;</span><span class="p">,</span> <span class="s2">&quot;gardo&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_samples_per_prompt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;RL methods require at least 2 samples per prompt&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"ddpo"</span><span class="p">,</span> <span class="s2">"grpo"</span><span class="p">,</span> <span class="s2">"gardo"</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_samples_per_prompt</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"RL methods require at least 2 samples per prompt"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;consistency&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Consistency distillation requires a teacher model&quot;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"consistency"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Consistency distillation requires a teacher model"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PostTrainingConfig.from_preset">
 <a class="viewcode-back" href="../../../api/post_training.html#medlatents.post_training.PostTrainingConfig.from_preset">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_preset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">overrides</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;PostTrainingConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create config from a named preset.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_preset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">preset</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">overrides</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"PostTrainingConfig"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create config from a named preset.</span>
 
 <span class="sd">        Available presets:</span>
 <span class="sd">        - dpo_small: Quick DPO for testing</span>
@@ -619,74 +621,74 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            PostTrainingConfig with preset values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">presets</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;dpo_small&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;dpo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-                <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s2">"dpo_small"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"dpo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                <span class="s2">"beta"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;dpo_standard&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;dpo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
-                <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s2">"dpo_standard"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"dpo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+                <span class="s2">"beta"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;dpo_large&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;dpo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
-                <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
-                <span class="s2">&quot;warmup_steps&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+            <span class="s2">"dpo_large"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"dpo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+                <span class="s2">"beta"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+                <span class="s2">"warmup_steps"</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;spo_standard&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;spo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
-                <span class="s2">&quot;beta&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-                <span class="s2">&quot;num_candidates&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">"spo_standard"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"spo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
+                <span class="s2">"beta"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                <span class="s2">"num_candidates"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;ddpo_standard&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;ddpo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
-                <span class="s2">&quot;clip_range&quot;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
-                <span class="s2">&quot;kl_coeff&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-                <span class="s2">&quot;num_samples_per_prompt&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">"ddpo_standard"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"ddpo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>
+                <span class="s2">"clip_range"</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
+                <span class="s2">"kl_coeff"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+                <span class="s2">"num_samples_per_prompt"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;grpo_efficient&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;grpo&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
-                <span class="s2">&quot;clip_range&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-                <span class="s2">&quot;num_samples_per_prompt&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">"grpo_efficient"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"grpo"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
+                <span class="s2">"clip_range"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+                <span class="s2">"num_samples_per_prompt"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">&quot;consistency_fast&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;consistency&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
-                <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-                <span class="s2">&quot;gradient_accumulation_steps&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="s2">&quot;max_steps&quot;</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
-                <span class="s2">&quot;discretization_steps&quot;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+            <span class="s2">"consistency_fast"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"consistency"</span><span class="p">,</span>
+                <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>
+                <span class="s2">"batch_size"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"gradient_accumulation_steps"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">"max_steps"</span><span class="p">:</span> <span class="mi">20000</span><span class="p">,</span>
+                <span class="s2">"discretization_steps"</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">}</span>
 
         <span class="k">if</span> <span class="n">preset</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">presets</span><span class="p">:</span>
-            <span class="n">available</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">presets</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown preset &#39;</span><span class="si">{</span><span class="n">preset</span><span class="si">}</span><span class="s2">&#39;. Available: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">available</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">presets</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown preset '</span><span class="si">{</span><span class="n">preset</span><span class="si">}</span><span class="s2">'. Available: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">config_dict</span> <span class="o">=</span> <span class="n">presets</span><span class="p">[</span><span class="n">preset</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">config_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">overrides</span><span class="p">)</span>
@@ -696,15 +698,15 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PostTrainingConfig.to_dict">
 <a class="viewcode-back" href="../../../api/post_training.html#medlatents.post_training.PostTrainingConfig.to_dict">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert config to dictionary for serialization.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)}</span></div>
+<span class="w">        </span><span class="sd">"""Convert config to dictionary for serialization."""</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)}</span></div>
 
 
 <div class="viewcode-block" id="PostTrainingConfig.from_dict">
 <a class="viewcode-back" href="../../../api/post_training.html#medlatents.post_training.PostTrainingConfig.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;PostTrainingConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create config from dictionary.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">"PostTrainingConfig"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create config from dictionary."""</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
 </div>
 
@@ -712,22 +714,22 @@ window.runMermaid = runMermaid;</script>
 
 <span class="c1"># ===== Convenience presets as module-level constants =====</span>
 
-<span class="n">DPO_SMALL</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;dpo_small&quot;</span><span class="p">)</span>
-<span class="n">DPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;dpo_standard&quot;</span><span class="p">)</span>
-<span class="n">DPO_LARGE</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;dpo_large&quot;</span><span class="p">)</span>
-<span class="n">SPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;spo_standard&quot;</span><span class="p">)</span>
-<span class="n">DDPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;ddpo_standard&quot;</span><span class="p">)</span>
-<span class="n">GRPO_EFFICIENT</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">&quot;grpo_efficient&quot;</span><span class="p">)</span>
+<span class="n">DPO_SMALL</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"dpo_small"</span><span class="p">)</span>
+<span class="n">DPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"dpo_standard"</span><span class="p">)</span>
+<span class="n">DPO_LARGE</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"dpo_large"</span><span class="p">)</span>
+<span class="n">SPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"spo_standard"</span><span class="p">)</span>
+<span class="n">DDPO_STANDARD</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"ddpo_standard"</span><span class="p">)</span>
+<span class="n">GRPO_EFFICIENT</span> <span class="o">=</span> <span class="n">PostTrainingConfig</span><span class="o">.</span><span class="n">from_preset</span><span class="p">(</span><span class="s2">"grpo_efficient"</span><span class="p">)</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;PostTrainingConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPO_SMALL&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPO_STANDARD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DPO_LARGE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SPO_STANDARD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DDPO_STANDARD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GRPO_EFFICIENT&quot;</span><span class="p">,</span>
+    <span class="s2">"PostTrainingConfig"</span><span class="p">,</span>
+    <span class="s2">"DPO_SMALL"</span><span class="p">,</span>
+    <span class="s2">"DPO_STANDARD"</span><span class="p">,</span>
+    <span class="s2">"DPO_LARGE"</span><span class="p">,</span>
+    <span class="s2">"SPO_STANDARD"</span><span class="p">,</span>
+    <span class="s2">"DDPO_STANDARD"</span><span class="p">,</span>
+    <span class="s2">"GRPO_EFFICIENT"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -739,7 +741,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

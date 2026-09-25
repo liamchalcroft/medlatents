@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 3: Inpainting &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Tutorial 3: Inpainting &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -155,7 +155,7 @@ fill. Masks are defined in image space and converted to token space internally.<
 <span class="c1"># Block region in a single 2D slice</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">create_spatial_mask</span><span class="p">(</span>
     <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
-    <span class="n">mask_type</span><span class="o">=</span><span class="s2">&quot;block&quot;</span><span class="p">,</span>
+    <span class="n">mask_type</span><span class="o">=</span><span class="s2">"block"</span><span class="p">,</span>
     <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
     <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span> <span class="mi">192</span><span class="p">),</span>
 <span class="p">)</span>
@@ -171,10 +171,10 @@ masked tokens, and decodes for you:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">inpaint_volume</span>
 
 <span class="n">generator</span> <span class="o">=</span> <span class="n">DiscreteLatentGenerator</span><span class="o">.</span><span class="n">from_checkpoints</span><span class="p">(</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
-    <span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;checkpoints/model.pt&quot;</span><span class="p">,</span>
-    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">&quot;tokenizer.pt&quot;</span><span class="p">,</span>
-    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
+    <span class="n">model_path</span><span class="o">=</span><span class="s2">"checkpoints/model.pt"</span><span class="p">,</span>
+    <span class="n">tokenizer_path</span><span class="o">=</span><span class="s2">"tokenizer.pt"</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">inpainted</span> <span class="o">=</span> <span class="n">inpaint_volume</span><span class="p">(</span>
@@ -182,7 +182,7 @@ masked tokens, and decodes for you:</p>
     <span class="n">tokenizer</span><span class="o">=</span><span class="n">generator</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">,</span>
     <span class="n">volume</span><span class="o">=</span><span class="n">corrupted_image</span><span class="p">,</span>
     <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;maskgit&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">"maskgit"</span><span class="p">,</span>
     <span class="n">num_steps</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -260,7 +260,7 @@ see <a class="reference internal" href="../token_interface.html"><span class="do
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>medlatents.training.parallelism &mdash; MedLatents 0.1.0 documentation</title>
+  <title>medlatents.training.parallelism &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=ab4584ce" />
@@ -13,10 +13,12 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs";
+
+
 
 
 
@@ -472,14 +474,14 @@ window.runMermaid = runMermaid;</script>
            <div itemprop="articleBody">
              
   <h1>Source code for medlatents.training.parallelism</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Distributed training utilities with DDP and FSDP support.</span>
+<span></span><span class="sd">"""Distributed training utilities with DDP and FSDP support.</span>
 
 <span class="sd">Provides easy-to-use wrappers for:</span>
 <span class="sd">- DistributedDataParallel (DDP) for multi-GPU training</span>
 <span class="sd">- FullyShardedDataParallel (FSDP) for memory-efficient large model training</span>
 <span class="sd">- Automatic mixed precision integration</span>
 <span class="sd">- Gradient accumulation helpers</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -500,10 +502,10 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.DistributedConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">DistributedConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for distributed training.</span>
+<span class="w">    </span><span class="sd">"""Configuration for distributed training.</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        backend: Distributed backend (&#39;nccl&#39; for GPU, &#39;gloo&#39; for CPU)</span>
+<span class="sd">        backend: Distributed backend ('nccl' for GPU, 'gloo' for CPU)</span>
 <span class="sd">        world_size: Total number of processes</span>
 <span class="sd">        rank: Rank of current process</span>
 <span class="sd">        local_rank: Local rank on current node</span>
@@ -511,43 +513,43 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        master_port: Master node port</span>
 <span class="sd">        use_fsdp: Use FSDP instead of DDP</span>
 <span class="sd">        fsdp_sharding_strategy: FSDP sharding strategy</span>
-<span class="sd">        mixed_precision: Mixed precision dtype (&#39;fp16&#39;, &#39;bf16&#39;, or None)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        mixed_precision: Mixed precision dtype ('fp16', 'bf16', or None)</span>
+<span class="sd">    """</span>
 
-    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nccl&quot;</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"nccl"</span>
     <span class="n">world_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">rank</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">local_rank</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">master_addr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
-    <span class="n">master_port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;29500&quot;</span>
+    <span class="n">master_addr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"localhost"</span>
+    <span class="n">master_port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"29500"</span>
     <span class="n">use_fsdp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">fsdp_sharding_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;full&quot;</span>  <span class="c1"># &#39;full&#39;, &#39;shard_grad_op&#39;, &#39;no_shard&#39;</span>
-    <span class="n">mixed_precision</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;bf16&quot;</span>
+    <span class="n">fsdp_sharding_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"full"</span>  <span class="c1"># 'full', 'shard_grad_op', 'no_shard'</span>
+    <span class="n">mixed_precision</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">"bf16"</span>
     <span class="n">gradient_checkpointing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="DistributedConfig.from_env">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.DistributedConfig.from_env">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DistributedConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create config from environment variables (set by torchrun).&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"DistributedConfig"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create config from environment variables (set by torchrun)."""</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">backend</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DIST_BACKEND&quot;</span><span class="p">,</span> <span class="s2">&quot;nccl&quot;</span><span class="p">),</span>
-            <span class="n">world_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;WORLD_SIZE&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
-            <span class="n">rank</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RANK&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
-            <span class="n">local_rank</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;LOCAL_RANK&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
-            <span class="n">master_addr</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MASTER_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">),</span>
-            <span class="n">master_port</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MASTER_PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;29500&quot;</span><span class="p">),</span>
+            <span class="n">backend</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"DIST_BACKEND"</span><span class="p">,</span> <span class="s2">"nccl"</span><span class="p">),</span>
+            <span class="n">world_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"WORLD_SIZE"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+            <span class="n">rank</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"RANK"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="n">local_rank</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"LOCAL_RANK"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+            <span class="n">master_addr</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MASTER_ADDR"</span><span class="p">,</span> <span class="s2">"localhost"</span><span class="p">),</span>
+            <span class="n">master_port</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"MASTER_PORT"</span><span class="p">,</span> <span class="s2">"29500"</span><span class="p">),</span>
         <span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_distributed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether distributed training is enabled.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Whether distributed training is enabled."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">world_size</span> <span class="o">&gt;</span> <span class="mi">1</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_main_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether this is the main (rank 0) process.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Whether this is the main (rank 0) process."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
@@ -555,14 +557,14 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="setup_distributed">
 <a class="viewcode-back" href="../../../api/training.html#medlatents.training.setup_distributed">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">setup_distributed</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">DistributedConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DistributedConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize distributed training environment.</span>
+<span class="w">    </span><span class="sd">"""Initialize distributed training environment.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config: Distributed configuration (auto-detects from env if None)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Initialized configuration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">DistributedConfig</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
 
@@ -570,8 +572,8 @@ window.runMermaid = runMermaid;</script>
         <span class="k">return</span> <span class="n">config</span>
 
     <span class="c1"># Set environment variables</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MASTER_ADDR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">master_addr</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MASTER_PORT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">master_port</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"MASTER_ADDR"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">master_addr</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"MASTER_PORT"</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">master_port</span>
 
     <span class="c1"># Initialize process group</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dist</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">():</span>
@@ -590,7 +592,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_distributed</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clean up distributed training resources.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Clean up distributed training resources."""</span>
     <span class="k">if</span> <span class="n">dist</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">():</span>
         <span class="n">dist</span><span class="o">.</span><span class="n">destroy_process_group</span><span class="p">()</span>
 
@@ -603,7 +605,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">find_unused_parameters</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">gradient_as_bucket_view</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap model with DistributedDataParallel.</span>
+<span class="w">    </span><span class="sd">"""Wrap model with DistributedDataParallel.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        model: Model to wrap</span>
@@ -613,7 +615,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        DDP-wrapped model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">is_distributed</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">model</span>
 
@@ -637,7 +639,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">auto_wrap_policy</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">cpu_offload</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap model with FullyShardedDataParallel.</span>
+<span class="w">    </span><span class="sd">"""Wrap model with FullyShardedDataParallel.</span>
 
 <span class="sd">    FSDP shards model parameters across GPUs for memory efficiency.</span>
 
@@ -649,23 +651,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        FSDP-wrapped model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.fsdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullyShardedDataParallel</span> <span class="k">as</span> <span class="n">FSDP</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.fsdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">MixedPrecision</span><span class="p">,</span> <span class="n">ShardingStrategy</span>
 
     <span class="c1"># Determine sharding strategy</span>
     <span class="n">strategy_map</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;full&quot;</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">FULL_SHARD</span><span class="p">,</span>
-        <span class="s2">&quot;shard_grad_op&quot;</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">SHARD_GRAD_OP</span><span class="p">,</span>
-        <span class="s2">&quot;no_shard&quot;</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">NO_SHARD</span><span class="p">,</span>
-        <span class="s2">&quot;hybrid&quot;</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">HYBRID_SHARD</span><span class="p">,</span>
+        <span class="s2">"full"</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">FULL_SHARD</span><span class="p">,</span>
+        <span class="s2">"shard_grad_op"</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">SHARD_GRAD_OP</span><span class="p">,</span>
+        <span class="s2">"no_shard"</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">NO_SHARD</span><span class="p">,</span>
+        <span class="s2">"hybrid"</span><span class="p">:</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">HYBRID_SHARD</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">sharding_strategy</span> <span class="o">=</span> <span class="n">strategy_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">fsdp_sharding_strategy</span><span class="p">,</span> <span class="n">ShardingStrategy</span><span class="o">.</span><span class="n">FULL_SHARD</span><span class="p">)</span>
 
     <span class="c1"># Set up mixed precision</span>
     <span class="n">mp_policy</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mixed_precision</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mixed_precision</span> <span class="o">==</span> <span class="s2">&quot;bf16&quot;</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mixed_precision</span> <span class="o">==</span> <span class="s2">"bf16"</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span>
         <span class="n">mp_policy</span> <span class="o">=</span> <span class="n">MixedPrecision</span><span class="p">(</span>
             <span class="n">param_dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
             <span class="n">reduce_dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
@@ -706,7 +708,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">config</span><span class="p">:</span> <span class="n">DistributedConfig</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap model with appropriate distributed strategy.</span>
+<span class="w">    </span><span class="sd">"""Wrap model with appropriate distributed strategy.</span>
 
 <span class="sd">    Chooses DDP or FSDP based on configuration.</span>
 
@@ -717,7 +719,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Wrapped model</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">is_distributed</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">model</span>
 
@@ -729,7 +731,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="nd">@contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sync_gradients</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Context manager to control gradient synchronization in DDP.</span>
+<span class="w">    </span><span class="sd">"""Context manager to control gradient synchronization in DDP.</span>
 
 <span class="sd">    Use with gradient accumulation to skip synchronization on intermediate steps.</span>
 
@@ -743,7 +745,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            if sync:</span>
 <span class="sd">                optimizer.step()</span>
 <span class="sd">                optimizer.zero_grad()</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">parallel</span><span class="o">.</span><span class="n">DistributedDataParallel</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">model</span><span class="o">.</span><span class="n">no_sync</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">sync</span> <span class="k">else</span> <span class="n">contextmanager</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="k">yield</span><span class="p">))():</span>
             <span class="k">yield</span>
@@ -752,7 +754,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GradientAccumulator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper for gradient accumulation with DDP sync control.</span>
+<span class="w">    </span><span class="sd">"""Helper for gradient accumulation with DDP sync control.</span>
 
 <span class="sd">    Automatically handles gradient synchronization, accumulation,</span>
 <span class="sd">    and optimizer stepping.</span>
@@ -764,7 +766,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            with accumulator.accumulate():</span>
 <span class="sd">                loss = model(batch)</span>
 <span class="sd">                loss.backward()</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -774,7 +776,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">max_grad_norm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">scaler</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">amp</span><span class="o">.</span><span class="n">GradScaler</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize gradient accumulator.</span>
+<span class="w">        </span><span class="sd">"""Initialize gradient accumulator.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            model: Model (may be DDP/FSDP wrapped)</span>
@@ -782,7 +784,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            steps: Number of accumulation steps</span>
 <span class="sd">            max_grad_norm: Gradient clipping threshold</span>
 <span class="sd">            scaler: AMP grad scaler (for mixed precision)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">steps</span> <span class="o">=</span> <span class="n">steps</span>
@@ -793,11 +795,11 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">accumulate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Context manager for a single accumulation step.</span>
+<span class="w">        </span><span class="sd">"""Context manager for a single accumulation step.</span>
 
 <span class="sd">        Yields:</span>
 <span class="sd">            bool: Whether this step should trigger an optimizer update</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_step_count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">should_sync</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_count</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span>
 
@@ -809,7 +811,7 @@ window.runMermaid = runMermaid;</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">_step_count</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_do_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform optimizer step with optional gradient clipping.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Perform optimizer step with optional gradient clipping."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_grad_norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">unscale_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
@@ -825,12 +827,12 @@ window.runMermaid = runMermaid;</script>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_sync_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether current step will trigger synchronization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Whether current step will trigger synchronization."""</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">all_reduce_mean</span><span class="p">(</span><span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;All-reduce tensor and compute mean across processes.</span>
+<span class="w">    </span><span class="sd">"""All-reduce tensor and compute mean across processes.</span>
 
 <span class="sd">    Useful for aggregating loss values across distributed processes.</span>
 
@@ -839,7 +841,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Reduced tensor (averaged across all processes)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dist</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">tensor</span>
 
@@ -849,7 +851,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">broadcast_object</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">src</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Broadcast Python object from source rank to all processes.</span>
+<span class="w">    </span><span class="sd">"""Broadcast Python object from source rank to all processes.</span>
 
 <span class="sd">    Useful for sharing configuration or random seeds.</span>
 
@@ -859,7 +861,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Broadcast object</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dist</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">():</span>
         <span class="k">return</span> <span class="n">obj</span>
 
@@ -869,23 +871,23 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">barrier</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synchronization barrier across all processes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Synchronization barrier across all processes."""</span>
     <span class="k">if</span> <span class="n">dist</span><span class="o">.</span><span class="n">is_initialized</span><span class="p">():</span>
         <span class="n">dist</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;DistributedConfig&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;setup_distributed&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;cleanup_distributed&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrap_model_ddp&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrap_model_fsdp&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrap_model&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;sync_gradients&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;GradientAccumulator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;all_reduce_mean&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;broadcast_object&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;barrier&quot;</span><span class="p">,</span>
+    <span class="s2">"DistributedConfig"</span><span class="p">,</span>
+    <span class="s2">"setup_distributed"</span><span class="p">,</span>
+    <span class="s2">"cleanup_distributed"</span><span class="p">,</span>
+    <span class="s2">"wrap_model_ddp"</span><span class="p">,</span>
+    <span class="s2">"wrap_model_fsdp"</span><span class="p">,</span>
+    <span class="s2">"wrap_model"</span><span class="p">,</span>
+    <span class="s2">"sync_gradients"</span><span class="p">,</span>
+    <span class="s2">"GradientAccumulator"</span><span class="p">,</span>
+    <span class="s2">"all_reduce_mean"</span><span class="p">,</span>
+    <span class="s2">"broadcast_object"</span><span class="p">,</span>
+    <span class="s2">"barrier"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -897,7 +899,7 @@ window.runMermaid = runMermaid;</script>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 

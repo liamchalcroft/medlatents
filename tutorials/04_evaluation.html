@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial 4: Evaluating Models &mdash; MedLatents 0.1.0 documentation</title>
+  <title>Tutorial 4: Evaluating Models &mdash; MedLatents 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ab4584ce" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/documentation_options.js?v=a58bc63e"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -140,7 +140,7 @@ super-resolution), use PSNR and SSIM:</p>
 
 <span class="n">psnr</span> <span class="o">=</span> <span class="n">calculate_psnr</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
 <span class="n">ssim</span> <span class="o">=</span> <span class="n">calculate_ssim</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PSNR: </span><span class="si">{</span><span class="n">psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB  SSIM: </span><span class="si">{</span><span class="n">ssim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PSNR: </span><span class="si">{</span><span class="n">psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB  SSIM: </span><span class="si">{</span><span class="n">ssim</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -168,7 +168,7 @@ generated images to real ones. The one-call helpers cover the common cases:</p>
 calculators instead:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">medlatents.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FIDCalculator</span><span class="p">,</span> <span class="n">PrecisionRecallCalculator</span>
 
-<span class="n">fid_calc</span> <span class="o">=</span> <span class="n">FIDCalculator</span><span class="p">(</span><span class="n">extractor_type</span><span class="o">=</span><span class="s2">&quot;radimagenet&quot;</span><span class="p">)</span>
+<span class="n">fid_calc</span> <span class="o">=</span> <span class="n">FIDCalculator</span><span class="p">(</span><span class="n">extractor_type</span><span class="o">=</span><span class="s2">"radimagenet"</span><span class="p">)</span>
 <span class="n">pr_calc</span> <span class="o">=</span> <span class="n">PrecisionRecallCalculator</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -190,7 +190,7 @@ noise floor so improvements can be judged against measurement noise:</p>
 
 <span class="n">mean</span><span class="p">,</span> <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">bootstrap_fid_real_vs_gen</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">gen_features</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">floor</span> <span class="o">=</span> <span class="n">bootstrap_fid_noise_floor</span><span class="p">(</span><span class="n">real_features</span><span class="p">,</span> <span class="n">n_boot</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FID </span><span class="si">{</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (95% CI [</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]), noise floor </span><span class="si">{</span><span class="n">floor</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"FID </span><span class="si">{</span><span class="n">mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (95% CI [</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]), noise floor </span><span class="si">{</span><span class="n">floor</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -242,7 +242,7 @@ the exact benchmarking methodology used in this project.</p>
 
   <div role="contentinfo">
     <p>&#169; Copyright 2026, Liam Chalcroft.
-      <span class="lastupdated">Last updated on Aug 07, 2026.
+      <span class="lastupdated">Last updated on Sep 25, 2026.
       </span></p>
   </div>
 
