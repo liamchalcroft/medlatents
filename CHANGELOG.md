@@ -8,6 +8,21 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-25
+
+### Changed
+
+- The README now points to the paper's reproduction repository,
+  [tokenizer-generator-coupling](https://github.com/liamchalcroft/tokenizer-generator-coupling),
+  which holds the experiments, result files and figure scripts.
+- The paper is linked from the README (arXiv badge), from `pyproject.toml`
+  (`Paper` project URL), and from `CITATION.cff`, whose preferred citation is
+  now the NeurIPS 2026 conference paper (arXiv:2608.07713). The README BibTeX
+  entry is updated to match.
+- `scripts/tokenize_medmnist.py` imports the installed `medtokenizers` package
+  instead of prepending a sibling source checkout (located via
+  `MRI_DISCRETE_ROOT` / `MEDTOKENIZERS_ROOT`) to `sys.path`.
+
 ## [0.1.0] - 2026-08-07
 
 Initial public release, accompanying the paper "Tokenizer-Generator Coupling in
@@ -47,5 +62,6 @@ Medical Image Generation".
 - All `torch.load` call sites default to `weights_only=True`, so loading a
   checkpoint does not deserialize arbitrary pickled objects.
 
-[Unreleased]: https://github.com/liamchalcroft/medlatents/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/liamchalcroft/medlatents/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/liamchalcroft/medlatents/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/liamchalcroft/medlatents/releases/tag/v0.1.0

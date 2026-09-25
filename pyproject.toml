@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "medlatents"
-version = "0.1.0"
+version = "0.1.1"
 description = "Latent generative models interoperable with medtokenizers."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -50,6 +50,7 @@ Documentation = "https://liamchalcroft.github.io/medlatents/"
 Repository = "https://github.com/liamchalcroft/medlatents"
 Issues = "https://github.com/liamchalcroft/medlatents/issues"
 Changelog = "https://github.com/liamchalcroft/medlatents/blob/main/CHANGELOG.md"
+Paper = "https://arxiv.org/abs/2608.07713"
 
 [project.optional-dependencies]
 test = [

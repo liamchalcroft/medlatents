@@ -30,23 +30,14 @@ import json
 import logging
 import math
 import os
-import sys
 from pathlib import Path
 
-REPO_ROOT = Path(os.environ.get("MRI_DISCRETE_ROOT", Path(__file__).resolve().parents[1])).resolve()
-MEDTOKENIZERS_ROOT = Path(
-    os.environ.get("MEDTOKENIZERS_ROOT", REPO_ROOT.parent / "medtokenizers")
-).resolve()
-
-# Use source medtokenizers (newer API) over the older pinned wheel.
-sys.path.insert(0, str(MEDTOKENIZERS_ROOT / "src"))
-
-import medmnist  # noqa: E402
-import numpy as np  # noqa: E402
-import torch  # noqa: E402
-from medtokenizers.networks import ContinuousTokenizer, DiscreteTokenizer  # noqa: E402
-from safetensors.torch import load_file  # noqa: E402
-from tqdm import tqdm  # noqa: E402
+import medmnist
+import numpy as np
+import torch
+from medtokenizers.networks import ContinuousTokenizer, DiscreteTokenizer
+from safetensors.torch import load_file
+from tqdm import tqdm
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

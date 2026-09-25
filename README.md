@@ -1,5 +1,7 @@
 # medlatents
 
+[![arXiv](https://img.shields.io/badge/arXiv-2608.07713-b31b1b.svg)](https://arxiv.org/abs/2608.07713)
+
 Discrete and continuous latent generative models for medical imagery, designed to work with pretrained tokenizers from `medtokenizers`.
 
 ## Ecosystem
@@ -116,6 +118,14 @@ python scripts/benchmark_models.py
 ```
 
 See `PERF_SCOREBOARD.md` for measured baselines and methodology.
+
+### Reproducing the paper
+
+The experiments, result files and figure scripts for the paper
+([arXiv:2608.07713](https://arxiv.org/abs/2608.07713)) live in a separate
+repository,
+[tokenizer-generator-coupling](https://github.com/liamchalcroft/tokenizer-generator-coupling),
+which depends on `medlatents` and `medtokenizers` as released packages.
 
 ### Profiling
 
@@ -353,11 +363,12 @@ paper and the software. Citation metadata is provided in
 [`CITATION.cff`](CITATION.cff):
 
 ```bibtex
-@article{chalcroft2026coupling,
-  author = {Chalcroft, Liam},
-  title  = {Tokenizer--Generator Coupling in Medical Image Generation},
-  year   = {2026},
-  note   = {arXiv preprint, to appear}
+@inproceedings{chalcroft2026tokenizer,
+  title     = {Tokenizer--Generator Coupling in Medical Image Generation},
+  author    = {Chalcroft, Liam},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026},
+  note      = {arXiv:2608.07713}
 }
 
 @software{medlatents2026,
@@ -368,8 +379,9 @@ paper and the software. Citation metadata is provided in
 }
 ```
 
-MedLatents accompanies the paper *Tokenizer-Generator Coupling in Medical
-Image Generation*, a controlled factorial study of medical
+MedLatents accompanies the NeurIPS 2026 paper
+[*Tokenizer-Generator Coupling in Medical Image Generation*](https://arxiv.org/abs/2608.07713),
+a controlled factorial study of medical
 image tokenizers, latent generators, and sampling budgets. The paper and its
 companion library [medtokenizers](https://github.com/liamchalcroft/medtokenizers)
 share the same citation.

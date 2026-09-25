@@ -58,7 +58,7 @@ from .networks import (
 )
 from .training import ContinuousLatentTrainer, DiscreteLatentTrainer
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def _warmup_cuda_rng_state() -> None:

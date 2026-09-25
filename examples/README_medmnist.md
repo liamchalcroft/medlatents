@@ -186,6 +186,11 @@ scripts/
 └── generate_medmnist.sh         # Shell shortcut for generation
 ```
 
+The paper's factorial sweeps, sampling-hyperparameter sweep and figure scripts
+live in the separate
+[tokenizer-generator-coupling](https://github.com/liamchalcroft/tokenizer-generator-coupling)
+repository.
+
 ## Model Architectures
 
 ### Discrete Models

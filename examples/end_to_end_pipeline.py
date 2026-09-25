@@ -8,8 +8,8 @@ scale so it runs on CPU in a couple of minutes.
     python examples/end_to_end_pipeline.py --dataset chestmnist
 
 The scale knobs (image count, epochs, model width) are the only things that
-change between this file and a full-scale experiment; the API
-calls are identical.
+change between this file and the ChestMNIST factorial in the paper repository
+(github.com/liamchalcroft/tokenizer-generator-coupling); the API calls are identical.
 """
 
 from __future__ import annotations
