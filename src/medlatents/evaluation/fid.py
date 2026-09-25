@@ -8,9 +8,9 @@ script:
 
   * Bootstrap CI estimation for FID --- both the "real-vs-real noise floor"
     (split a held-out set in two, repeat) and "real-vs-gen estimator CI"
-    (resample (real_idx, gen_idx) pairs, repeat) --- is a defensible answer
-    to the standard reviewer concern that single-seed FID numbers are
-    indistinguishable from noise. Exposing it as a library function lets
+    (resample (real_idx, gen_idx) pairs, repeat) --- shows whether a gap
+    between two FID numbers is larger than the estimator's sampling noise.
+    Exposing it as a library function lets
     users of medlatents reproduce the same uncertainty bound on their own
     generators with three lines of code.
 
