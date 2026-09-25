@@ -272,6 +272,20 @@ class TestBayesianFlowMethods:
         assert samples.shape == (batch_size, seq_len)
         assert_valid_samples(samples, bfn.num_classes)
 
+    def test_sample_masks_forbidden_tokens_in_posterior(self, bfn, bfn_config, monkeypatch):
+        """Test sampling survives a posterior that concentrates on a forbidden token."""
+        pad = bfn.special_tokens.pad
+
+        def receiver(x_current, t, alpha, **kwargs):
+            y = torch.zeros(*x_current.shape, bfn.num_classes)
+            y[..., pad] = 1e4
+            return y
+
+        monkeypatch.setattr(bfn, "sample_receiver_distribution", receiver)
+        samples = bfn.sample(shape=(2, bfn_config["seq_length"]), num_steps=3)
+
+        assert not torch.isin(samples, torch.tensor(sorted(bfn._forbidden_tokens))).any()
+
     def test_sample_with_temperature(self, bfn, bfn_config):
         """Test sampling with different temperatures."""
         batch_size = 2

@@ -303,8 +303,7 @@ class BayesianFlowTransformer(DiscreteDiT):
                 continuous_time=False,
             )
 
-            probs = F.softmax(params / temp, dim=-1)
-            probs = self._sanitize_probs(probs)
+            probs = F.softmax(self._mask_logits(params / temp), dim=-1)
             x_current = torch.multinomial(
                 probs.view(-1, self.num_classes),
                 num_samples=1,
@@ -330,8 +329,7 @@ class BayesianFlowTransformer(DiscreteDiT):
             if temperature_schedule is not None
             else temperature
         )
-        final_probs = F.softmax(params / final_temp, dim=-1)
-        final_probs = self._sanitize_probs(final_probs)
+        final_probs = F.softmax(self._mask_logits(params / final_temp), dim=-1)
         samples = torch.multinomial(
             final_probs.view(-1, self.num_classes),
             num_samples=1,

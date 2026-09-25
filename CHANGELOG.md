@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- `BayesianFlowTransformer.sample` masks the pad and mask tokens in log space
+  before the softmax. Previously they were zeroed after it, so when the
+  posterior concentrated on one of them (for example, from an untrained or
+  weakly trained model over many steps) every remaining probability underflowed
+  and `torch.multinomial` failed.
+
 ## [0.1.1] - 2026-09-25
 
 ### Changed
