@@ -1272,7 +1272,7 @@ wheels = [
 
 [[package]]
 name = "medlatents"
-version = "0.1.1"
+version = "0.1.2"
 source = { editable = "." }
 dependencies = [
     { name = "accelerate" },
@@ -1355,7 +1355,7 @@ requires-dist = [
     { name = "medlatents", extras = ["dev", "docs"], marker = "extra == 'all'" },
     { name = "medlatents", extras = ["test"], marker = "extra == 'dev'" },
     { name = "medrs", specifier = ">=0.2.0" },
-    { name = "medtokenizers", specifier = ">=0.1.0" },
+    { name = "medtokenizers", specifier = ">=0.1.2" },
     { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=2.0" },
     { name = "nibabel", specifier = ">=4.0" },
     { name = "numpy", specifier = ">=1.23" },
@@ -1413,7 +1413,7 @@ wheels = [
 
 [[package]]
 name = "medtokenizers"
-version = "0.1.0"
+version = "0.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beartype" },
@@ -1430,9 +1430,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "transformers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/4c/35717c02d804f714a25d962e271d7ac80c7010250ca12c733f543543c033/medtokenizers-0.1.0.tar.gz", hash = "sha256:c14b02aae6ff31922ac0ab6685c31e3840fc8b04926e730a59a48b07dc613407", size = 5921955, upload-time = "2026-08-07T20:39:09.641Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/68/47/a7eecbdf36e3e3cab725e107c27ddb11ff6300e429d08362321745f2a634/medtokenizers-0.1.2.tar.gz", hash = "sha256:fb4825753deaa5f28fcd26ae19cc4385d8f82cc8584920a1c0717e65b435e3fa", size = 5923803, upload-time = "2026-09-27T18:18:02.153Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bb/49/5fd356133fcc4cda8a091f4ddf83eb0ceaba031e161e6e3f8f5a49ac6cbe/medtokenizers-0.1.0-py3-none-any.whl", hash = "sha256:304ace399f3785ee1b5fa30c8b3f6105bfe0900c1f686118a944049e69043e80", size = 5823539, upload-time = "2026-08-07T20:39:06.548Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/8c/e7ac198ba314faaf9b1953849f1da53d41daf9b9b922260c52c75863666d/medtokenizers-0.1.2-py3-none-any.whl", hash = "sha256:b58cf2e8b841d3d93ae0b5fc22d1ec800c95916001e1067ca6fb6561a5cfdcdf", size = 5823449, upload-time = "2026-09-27T18:18:00.443Z" },
 ]
 
 [[package]]

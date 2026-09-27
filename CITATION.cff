@@ -9,7 +9,7 @@ authors:
   - given-names: Liam
     family-names: Chalcroft
     email: liamchalcroft@gmail.com
-version: 0.1.1
+version: 0.1.2
 date-released: "2026-09-25"
 license: MIT
 repository-code: "https://github.com/liamchalcroft/medlatents"

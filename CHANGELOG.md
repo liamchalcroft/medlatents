@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.2] - 2026-09-25
+
+### Changed
+
+- Requires medtokenizers 0.1.2 or later, which decodes VQ tokens with the
+  same codebook normalisation as the forward pass. Earlier medtokenizers
+  versions decode `use_norm=True` VQ tokens incorrectly through `detokenize`,
+  which the evaluation utilities in this package use.
 
 ### Fixed
 
