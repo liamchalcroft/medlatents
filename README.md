@@ -18,6 +18,8 @@ Typical pipeline:
 images -> medrs (load) -> medtokenizers (tokenize) -> medlatents (generate) -> medtokenizers (detokenize) -> images
 ```
 
+The [Tokenizer-Generator Coupling research page](https://liamchalcroft.com/publication/2026-tokenizer-generator-coupling/) includes a paper summary, figures and related software.
+
 ## Features
 
 ### Core Models
